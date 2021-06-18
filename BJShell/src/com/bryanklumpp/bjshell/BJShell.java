@@ -292,16 +292,21 @@ public class BJShell extends JFrame implements CommandContext {
 	 */
 	public Map<String, Command> buildInstanceCommands() {
 		Map<String, Command> cmdMap = CollectionsB.newMap();
-		String[] keys = { "cls", "cl" };
 		CollectionsB.putMultipleKeys(cmdMap, (argsv, args, w, context) -> {
 			ta.setText("");
-		}, keys);
-		String[] keys1 = { "unicode" };
+		}, "cls", "cl");
+		CollectionsB.putMultipleKeys(cmdMap, (argsv, args, w, context) -> {
+			Font taFont = ta.getFont();
+			ta.setFont(taFont.deriveFont(Float.valueOf(args.get(0))));
+			Font tfFont = tf.getFont();
+			tf.setFont(tfFont.deriveFont(Float.valueOf(args.get(0))));
+			pack(); //needed because JTextField does not automatically resize
+		}, "font");
 		CollectionsB.putMultipleKeys(cmdMap, (argsv, args, w, context) -> {
 			w.println(ta.getFont());
 			ta.setFont(new Font("unifont", java.awt.Font.PLAIN, 14));
 			w.println("0x0702: \u0702");
-		}, keys1);
+		}, "unicode");
 		CollectionsB.putMultipleKeys(cmdMap, (argsv, args, w, context) -> {
 			Runnable r = () -> {
 				ThreadUtil.sleepSeconds(.3); // ok this is a big-time hack, but just give a bit of time to ensure that the
