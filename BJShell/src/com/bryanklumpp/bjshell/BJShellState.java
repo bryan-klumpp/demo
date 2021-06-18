@@ -1,4 +1,4 @@
-package com.bryanklumpp.jash;
+package com.bryanklumpp.bjshell;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -16,14 +16,14 @@ import com.bryanklumpp.core.StringUtil;
  *
  *         Serialization is used to persist this state to disk for short-term
  *         persistence across invocations. This allows developers to make code
- *         changes, re-launch (or clone) the Jash window (an AutoHotkey script
+ *         changes, re-launch (or clone) the shell window (an AutoHotkey script
  *         can make this a one-key operation), and resume right where they left
- *         off (same context directory, etc.) with the new code. As this is
- *         short-term, non-critical data, object serialization has proven to be
- *         "good enough" so far.
+ *         off (same context directory, etc.) with the new code using type-safe
+ *         mapping. Object serialization has proven to be "good enough" so far
+ *         for this short-term, single-PC, non-critical data, .
  *
  */
-public class JashState implements Serializable, CommandContext {
+public class BJShellState implements Serializable, CommandContext {
 	private File workingDir = null; //storing as File instead of Path because Path isn't Serializable.
 	/**
 	 * Note that the persisted* fields will get out of sync as soon as the
@@ -39,7 +39,7 @@ public class JashState implements Serializable, CommandContext {
 	private Point persistedLocationOnScreen = null;
 	
 	private static final long serialVersionUID = 1L;
-	static Path SERIALIZATION_FILE = Paths.get("c:/temp/jash.ser");
+	static Path SERIALIZATION_FILE = Paths.get("c:/temp/BJShell.ser");
 
 	public String getPersistedTaText() {
 		return persistedTaText;

@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.bryanklumpp.jash.DesktopUtil;
+import com.bryanklumpp.bjshell.DesktopUtil;
 
 public class StringUtil {
 	

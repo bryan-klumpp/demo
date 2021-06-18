@@ -5,9 +5,12 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.bryanklumpp.bjshell.StatefulCommands;
+
 import bec.desktop.LinuxSpecifics;
 import bec.desktop.OSSpecifics;
 import bec.desktop.WindowsSpecifics;
+import bec.file.FileUtil;
 
 /**
  * @author Bryan Klumpp
@@ -38,6 +41,18 @@ public class ContextEnvironment {
 			OS = new LinuxSpecifics();
 		}
 		return OS;
+	}
+	/**
+	 * Has not been tested with spaces and other special characters in workspace
+	 * path. Might work, but those are generally best to avoid anyway.
+	 * 
+	 * @return
+	 */
+	public static Path getWorkspacePath() {
+		String resource = StatefulCommands.class.getName();
+		Path resourcePath = FileUtil.locateResource(resource);
+		Path wsPath = Paths.get(resourcePath.toString().replaceAll("/[^/]*/target/.*$", ""));
+		return wsPath;
 	}
 
 	

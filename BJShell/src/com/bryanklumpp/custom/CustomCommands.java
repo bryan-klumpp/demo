@@ -6,10 +6,10 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
+import com.bryanklumpp.bjshell.DesktopUtil;
 import com.bryanklumpp.core.CollectionsB;
 import com.bryanklumpp.core.Command;
 import com.bryanklumpp.core.CommandContext;
-import com.bryanklumpp.jash.DesktopUtil;
 
 public class CustomCommands {
 	public static final Map<String, Command> COMMANDS = buildCommands();

@@ -12,6 +12,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -67,7 +69,16 @@ public class FileUtil {
 		return Paths.get(pathString);
 	}
 	
-	public static String forwardSlash(String s) {
+	/**
+	 * It's generally easier to work with Windows file paths if the backslashes are
+	 * turned to forward slashes, and Windows itself even allows this in many
+	 * places. This also allows more commands to operate on relative file paths
+	 * without worry about Windows vs. Linux
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public static String forwardSlashFilePath(String s) {
 		return s.replace('\\', '/');
 	}
 
@@ -261,24 +272,13 @@ public class FileUtil {
 			});
 		}
 	}
-//	public static void prettyPrintChildren(Path dir, PrintWriter w) {
-//		List<Path> l = collect(Files.list(dir));
-//	}
-//	public static <T> List<Path> collect(Stream<Path> list) {
-//		list.forEach(new Consumer<Path>() {
-//				@Override
-//				public void accept(Path p) {
-//					prettyPrint(p, w);
-//				}
-//			});
-//	} 
 
 	public static Stream<Path> children(Path dir) throws IOException {
 		return Files.list(dir);
 	}
 
 	public static void prettyPrintChildren(Path dir, PrintWriter w) throws IOException {
-		//note that the sort does force reading the entire list before printing any output: https://stackoverflow.com/questions/58383060/some-of-the-stateful-intermediate-operation-in-java-8-stream-are-still-lazy-seek
+		//note that performance-wise the sort does force reading the entire list before printing any output: https://stackoverflow.com/questions/58383060/some-of-the-stateful-intermediate-operation-in-java-8-stream-are-still-lazy-seek
 		
 		try (Stream<Path> s = children(dir).sorted(LAST_MODIFIED_COMPARATOR);) {
 			s.forEach(new Consumer<Path>() {
@@ -291,8 +291,8 @@ public class FileUtil {
 		}
 	}
 
-	public static String forwardSlash(Path p) {
-		return forwardSlash(p.toString());
+	public static String forwardSlashFilePath(Path p) {
+		return forwardSlashFilePath(p.toString());
 	}
 
 	protected static boolean isDirectory(Path p) {
@@ -311,7 +311,7 @@ public class FileUtil {
 	}
 
 	public static void prettyPrint(Path p, PrintWriter w) {
-		String ps = FileUtil.forwardSlash(p.toString());
+		String ps = FileUtil.forwardSlashFilePath(p.toString());
 		w.println(isDirectory(p) ? ps + DIR_DECORATION_LABEL : ps);
 	}
 	public static void prettyPrint(List<Path> paths, PrintWriter w) {
@@ -339,7 +339,7 @@ public class FileUtil {
 	}
 
 	public static void printContextDirectory(PrintWriter w, Path workingDirectory) {
-		w.println(FileUtil.forwardSlash(workingDirectory) + WORKING_DIR_DECORATION_LABEL);
+		w.println(FileUtil.forwardSlashFilePath(workingDirectory) + WORKING_DIR_DECORATION_LABEL);
 	}
 
 	public static List<Path> getChildrenAbsolute(Path parent) throws IOException {
@@ -450,6 +450,20 @@ public class FileUtil {
 
 	public static List<Path>sortByLastModified(List<Path> list) {
 		return list.stream().sorted(LAST_MODIFIED_COMPARATOR).collect(Collectors.toList());
+	}
+
+	public static Path locateResource(String resource) {
+		URL resourceURL = ClassLoader
+				.getSystemResource(resource.replaceAll("\\.", "/").concat(".class"));
+		String fullPathString;
+		try {
+			fullPathString = Paths.get(resourceURL.toURI()).toString();
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+		String s = forwardSlashFilePath(fullPathString);
+		Path resourcePath = Paths.get(s);
+		return resourcePath;
 	}
 
 }

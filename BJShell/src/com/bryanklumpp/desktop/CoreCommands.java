@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.bryanklumpp.bjshell.BJShell;
+import com.bryanklumpp.bjshell.DesktopUtil;
 import com.bryanklumpp.core.CollectionsB;
 import com.bryanklumpp.core.Command;
 import com.bryanklumpp.core.CommandContext;
 import com.bryanklumpp.core.StringUtil;
 import com.bryanklumpp.file.FileTypeMatcher;
-import com.bryanklumpp.jash.DesktopUtil;
-import com.bryanklumpp.jash.Jash;
 
 import bec.desktop.DraftCommands;
 import bec.desktop.Run;
@@ -93,50 +93,10 @@ public class CoreCommands {
 		putMultipleKeys(cmds, new Command() {
 			@Override
 			public void exec(String argsv, List<String> args, PrintWriter cmdWriter, CommandContext context) throws Exception {
-				Path parent = context.getContextDir().getParent();
-				context.setContextDir(parent);
-				FileUtil.prettyPrintChildren(parent, cmdWriter);
-			}
-		}, "u" );
-		putMultipleKeys(cmds, new Command() {
-			@Override
-			public void exec(String argsv, List<String> args, PrintWriter cmdWriter, CommandContext context) throws Exception {
-				Path parent = context.getContextDir().getParent().getParent();
-				context.setContextDir(parent);
-				FileUtil.prettyPrintChildren(parent, cmdWriter);
-			}
-		}, "uu" );
-		putMultipleKeys(cmds, new Command() {
-			@Override
-			public void exec(String argsv, List<String> args, PrintWriter cmdWriter, CommandContext context) throws Exception {
-				Path parent = context.getContextDir().getParent().getParent().getParent();
-				context.setContextDir(parent);
-				FileUtil.prettyPrintChildren(parent, cmdWriter);
-			}
-		}, "uuu" );
-		putMultipleKeys(cmds, new Command() {
-			@Override
-			public void exec(String argsv, List<String> args, PrintWriter cmdWriter, CommandContext context) throws Exception {
 //				Run.execOSText(cmdWriter, CollectionsB.newList(Run.BAT_DIR + "/b.bat", "alarm", args), context.getContextDir());
 				Run.execExternalJavaB(cmdWriter, context.getContextDir(), CollectionsB.newList("alarm", args));
 			}
 		}, "alarm" );
-		putMultipleKeys(cmds, new Command() {
-			@Override
-			public void exec(String argsv, List<String> args, PrintWriter cmdWriter, CommandContext context) throws Exception {
-				Path bestMatch = FileUtil.getBestMatch(context.getContextDir(), args, 
-						PathSearchStrategy.EXACT_MATCH_DIRS_ONLY, 
-						PathSearchStrategy.B_SPECIAL_PATHS,
-						PathSearchStrategy.REGEX_DIRS_ONLY);
-				if(bestMatch != null) {
-					context.setContextDir(bestMatch);
-					FileUtil.prettyPrintChildren(context.getContextDir(), cmdWriter);
-				}else {
-					cmdWriter.println("no directory match found");
-					FileUtil.printContextDirectory(cmdWriter, context.getContextDir());
-				}
-			}
-		}, "c" );
 		return cmds;
 	}
 }

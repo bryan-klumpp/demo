@@ -134,7 +134,7 @@ public abstract class PathSearchStrategy {
 					boolean fullMatchConfirmed = false;
 					DepthStats depthStats = cust.res.depthStats.get(depth);
 					if (ftm.isMatch(child)) {
-						fullMatchConfirmed = StringUtil.containsAll(FileUtil.forwardSlash(root.relativize(child)),
+						fullMatchConfirmed = StringUtil.containsAll(FileUtil.forwardSlashFilePath(root.relativize(child)),
 								patterns);
 						if (fullMatchConfirmed) {
 							depthStats.ctMatches++;

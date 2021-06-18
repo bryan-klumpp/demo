@@ -1,4 +1,4 @@
-package com.bryanklumpp.jash;
+package com.bryanklumpp.bjshell;
 
 import java.awt.Color;
 import java.awt.Desktop;
@@ -39,7 +39,8 @@ import bec.desktop.Run;
  *
  */
 public class DesktopUtil {
-	private static final ColorUIResource LIGHT_GRAY = new ColorUIResource(Color.lightGray);
+	public static final ColorUIResource LIGHT_GRAY = new ColorUIResource(Color.lightGray);
+	public static final ColorUIResource FOREST_GREEN = new ColorUIResource(1, 68, 33);
 
 	public static void web(String url) {
 		try {
@@ -65,10 +66,10 @@ public class DesktopUtil {
 		}
 	}
 
-	public static void setLightGrayMetalLookAndFeel(JFrame f) {
+	public static void setMetalLookAndFeel(ColorUIResource color, JFrame f) {
 		f.setUndecorated(true);
 		f.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
-		MetalLookAndFeel.setCurrentTheme(allLightGrayMetalTheme());
+		MetalLookAndFeel.setCurrentTheme(buildSingleColorMetalTheme(color));
 		try {
 			UIManager.setLookAndFeel(new MetalLookAndFeel());
 		} catch (UnsupportedLookAndFeelException e) {
@@ -76,216 +77,216 @@ public class DesktopUtil {
 		}
 	}
 
-	public static DefaultMetalTheme allLightGrayMetalTheme() {
+	public static DefaultMetalTheme buildSingleColorMetalTheme(ColorUIResource color) {
 		return new DefaultMetalTheme() {
 			@Override
 			protected ColorUIResource getPrimary1() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			protected ColorUIResource getPrimary2() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			protected ColorUIResource getPrimary3() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			protected ColorUIResource getSecondary1() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			protected ColorUIResource getSecondary2() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			protected ColorUIResource getSecondary3() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			protected ColorUIResource getWhite() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			protected ColorUIResource getBlack() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getFocusColor() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getDesktopColor() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getControl() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getControlShadow() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getControlDarkShadow() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getControlInfo() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getControlHighlight() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getControlDisabled() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getPrimaryControl() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getPrimaryControlShadow() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getPrimaryControlDarkShadow() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getPrimaryControlInfo() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getPrimaryControlHighlight() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getSystemTextColor() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getControlTextColor() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getInactiveControlTextColor() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getInactiveSystemTextColor() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getUserTextColor() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getTextHighlightColor() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getHighlightedTextColor() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getWindowBackground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getWindowTitleBackground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getWindowTitleForeground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getWindowTitleInactiveBackground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getWindowTitleInactiveForeground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getMenuBackground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getMenuForeground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getMenuSelectedBackground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getMenuSelectedForeground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getMenuDisabledForeground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getSeparatorBackground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getSeparatorForeground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getAcceleratorForeground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 
 			@Override
 			public ColorUIResource getAcceleratorSelectedForeground() {
-				return LIGHT_GRAY;
+				return color;
 			}
 		};
 	}

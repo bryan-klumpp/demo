@@ -1,13 +1,16 @@
 .metadata
-bweblib
-bxargs
-JCmd
-lib
-sbw
-Servers
-sow
-bin
-target
+/JDemoWebLegacy/
+/JDemoWeb/
+/scrapbook_howto_code/
+/bweblib/
+/bxargs/
+/JCmd/
+/lib/
+/sbw/
+/Servers/
+/sow/
+bin/
+target/
 
 # Compiled class file
 *.class

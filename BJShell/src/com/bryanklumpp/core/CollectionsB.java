@@ -101,6 +101,15 @@ public class CollectionsB {
 		return res;
 	}
 
+	/**
+	 * Searches through multiple hashmaps and returns the value for the first key match found
+	 * 
+	 * @param <K>
+	 * @param <V>
+	 * @param key
+	 * @param maps
+	 * @return
+	 */
 	@SafeVarargs
 	public static <K, V> V getFirstMatch(K key, Map<K, V>... maps) {
 		for (Map<K, V> map : maps) {

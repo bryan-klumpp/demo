@@ -1,4 +1,4 @@
-package com.bryanklumpp.jash;
+package com.bryanklumpp.bjshell;
 
 import static com.bryanklumpp.custom.ShortcutsStaticImport.f;
 
@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
@@ -32,14 +31,11 @@ import javax.swing.event.CaretListener;
 import com.bryanklumpp.core.CollectionsB;
 import com.bryanklumpp.core.Command;
 import com.bryanklumpp.core.CommandContext;
-import com.bryanklumpp.core.ContextEnvironment;
 import com.bryanklumpp.core.StringUtil;
 import com.bryanklumpp.core.TeeWriter;
 import com.bryanklumpp.core.ThreadUtil;
 import com.bryanklumpp.custom.CustomCommands;
-import com.bryanklumpp.custom.ShortcutsStaticImport;
 import com.bryanklumpp.desktop.CoreCommands;
-import com.bryanklumpp.desktop.DebugUtil;
 
 import bec.desktop.ExceptionUtil;
 import bec.desktop.Run;
@@ -72,7 +68,7 @@ import bec.file.FileUtil;
  *        to easily close the current window and re-launch after code
  *        modification.
  */
-public class Jash extends JFrame implements CommandContext {
+public class BJShell extends JFrame implements CommandContext {
 	
 	// This initialization could be done in a constructor, but this
 	// just feels natural here and allows final fields which are generally a good
@@ -81,7 +77,7 @@ public class Jash extends JFrame implements CommandContext {
 	private final JTextArea ta = new JTextArea();
 	private final JScrollPane scrollPane = new JScrollPane(ta);
 	private final PrintWriter printWriter = buildPrintWriter(ta, scrollPane);
-	private final JashState jashState = attemptLoadState(printWriter);
+	private final BJShellState shellState = attemptLoadState(printWriter);
 	private final Map<String, Command> instanceCommands = buildInstanceCommands();
 	private final JTextField tf = new JTextField();
 	private static final long serialVersionUID = 1L; // unused, just to make the validator happy
@@ -123,14 +119,14 @@ public class Jash extends JFrame implements CommandContext {
 	}
 
 	public Path getContextDir() {
-		return getJashState().getContextDir();
+		return getShellState().getContextDir();
 	}
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new Jash();
+				new BJShell();
 			}
 		});
 	}
@@ -139,13 +135,14 @@ public class Jash extends JFrame implements CommandContext {
 		w.println(getContextDir());
 	}
 
-	public Jash() {
-		// Remove this to default to the system L&F. There is some issue on my PC with
-		// the system L&F delayed painting of the title bar when switching to that
-		// Window from an AutoHotkey script which I found annoying.
-		DesktopUtil.setLightGrayMetalLookAndFeel(this);  
+	public BJShell() {
+		// With the default system L&F, there was some issue on my PC with
+		// delayed painting of the title bar when switching to that
+		// Window from an AutoHotkey script.  This can be commented out to
+		// revert to the system L&F
+		DesktopUtil.setMetalLookAndFeel(DesktopUtil.LIGHT_GRAY, this);  
 
-		setTitle("Jash");
+		setTitle("BJShell");
 		addWindowFocusListener(new WindowFocusListener() {
 			@Override
 			public void windowGainedFocus(WindowEvent e) {
@@ -178,12 +175,12 @@ public class Jash extends JFrame implements CommandContext {
 		add(tf, BorderLayout.SOUTH);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		ta.addCaretListener(getCaretListener());
-		applyStateAndPack(jashState);
+		applyStateAndPack(shellState);
 		setVisible(true);
 		getWriter().flush(); // forces scroll to the bottom of the JTextArea in the case
 		tf.requestFocusInWindow();
 	}
-	private void applyStateAndPack(JashState s) {
+	private void applyStateAndPack(BJShellState s) {
 		setContextDir(s.getContextDir());
 		scrollPane.setPreferredSize(s.getPersistedSize());
 		setLocation(s.getPersistedLocationOnScreen());
@@ -192,32 +189,32 @@ public class Jash extends JFrame implements CommandContext {
 		// doing it in the reverse order proved quite slow if there was a lot of saved text
 		ta.setText(s.persistedTaText);
 	}
-	public JashState getJashState() {
-		return jashState;
+	public BJShellState getShellState() {
+		return shellState;
 	}
 
-	public JashState attemptLoadState(PrintWriter printWriter2) {
-		JashState state1;
+	public BJShellState attemptLoadState(PrintWriter printWriter2) {
+		BJShellState state1;
 		try {
-			state1 = (JashState) FileUtil.loadObject(JashState.SERIALIZATION_FILE);
+			state1 = (BJShellState) FileUtil.loadObject(BJShellState.SERIALIZATION_FILE);
 		} catch (Exception e) {
 			e.printStackTrace(printWriter2);
-			state1 = new JashState();
+			state1 = new BJShellState();
 		}
 		return state1;
 	}
 	/**
-	 * This method updates the record of visual elements of JashState that are
+	 * This method updates the record of visual elements of BJShellState that are
 	 * probably out of sync by now and saves the state to disk
 	 * 
 	 * @param w
 	 */
 	public void syncAndSaveState(PrintWriter errorWriter) {
 		try {
-			getJashState().persistedTaText = StringUtil.lastNChars(100000, ta.getText()); // Keeping history forever will impact performance eventually... 
-			getJashState().setPersistedSize(scrollPane.getSize());
-			getJashState().setPersistedLocationOnScreen(getLocationOnScreen());// https://support.oracle.com/knowledge/Middleware/2355820_1.html
-			FileUtil.saveObject(JashState.SERIALIZATION_FILE, getJashState());
+			getShellState().persistedTaText = StringUtil.lastNChars(100000, ta.getText()); // Keeping history forever will impact performance eventually... 
+			getShellState().setPersistedSize(scrollPane.getSize());
+			getShellState().setPersistedLocationOnScreen(getLocationOnScreen());// https://support.oracle.com/knowledge/Middleware/2355820_1.html
+			FileUtil.saveObject(BJShellState.SERIALIZATION_FILE, getShellState());
 		} catch (Exception e) {
 			e.printStackTrace(errorWriter);
 		}
@@ -261,11 +258,11 @@ public class Jash extends JFrame implements CommandContext {
 				final String[] piecesA = text.split(" ");
 				List<String> pieces = Arrays.asList(piecesA);
 				String cmdString = pieces.get(0);
-				final Command cmd = getJashCmd(cmdString);
+				final Command cmd = getCmd(cmdString);
 				Runnable r = () -> {
 					try {
 						if (cmd != null) {
-							cmd.exec(args, pieces.subList(1, pieces.size()), printWriter, getJashState());
+							cmd.exec(args, pieces.subList(1, pieces.size()), printWriter, getShellState());
 						} else {
 							Run.execProcessOSTextGuts(getContextDir(), printWriter, pieces);
 						}
@@ -278,12 +275,21 @@ public class Jash extends JFrame implements CommandContext {
 				ThreadUtil.start(r);
 			}
 
-			Command getJashCmd(String cmdString) {
-				return CollectionsB.getFirstMatch(cmdString, instanceCommands, CustomCommands.COMMANDS, CoreCommands.cmds);
+			Command getCmd(String cmdString) {
+				return CollectionsB.getFirstMatch(cmdString, 
+						instanceCommands,
+						CustomCommands.COMMANDS,
+						StatefulCommands.COMMANDS,
+						CoreCommands.cmds);
 			}
 		};
 	}
 
+	/**
+	 * These are commands that require a reference to a BJShell GUI window
+	 * 
+	 * @return
+	 */
 	public Map<String, Command> buildInstanceCommands() {
 		Map<String, Command> cmdMap = CollectionsB.newMap();
 		String[] keys = { "cls", "cl" };
@@ -314,8 +320,8 @@ public class Jash extends JFrame implements CommandContext {
 				System.exit(0);
 			};
 			SwingUtilities.invokeLater(r);
-			Run.execExternalJavaB(w, getContextDir(), f("jash"));
-		}, new String[] { "jashr", "jash", "jj" });
+			Run.execExternalJavaB(w, getContextDir(), f("bjshell"));
+		}, new String[] { "newsh", "jj" });
 		String[] keys3 = { "ser" };
 		CollectionsB.putMultipleKeys(cmdMap, new Command() {
 			@Override
@@ -329,7 +335,7 @@ public class Jash extends JFrame implements CommandContext {
 	
 	@Override
 	public void setContextDir(Path contextDir) {
-		getJashState().setContextDir(contextDir);
+		getShellState().setContextDir(contextDir);
 	}
 
 

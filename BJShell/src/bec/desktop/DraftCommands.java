@@ -33,6 +33,8 @@ import java.util.regex.Pattern;
 
 import org.sqlite.JDBC;
 
+import com.bryanklumpp.bjshell.BJShell;
+import com.bryanklumpp.bjshell.DesktopUtil;
 import com.bryanklumpp.core.CollectionsB;
 import com.bryanklumpp.core.Command;
 import com.bryanklumpp.core.CommandContext;
@@ -40,8 +42,6 @@ import com.bryanklumpp.core.MakeTheValidatorHappyException;
 import com.bryanklumpp.core.StringUtil;
 import com.bryanklumpp.core.ThreadUtil;
 import com.bryanklumpp.file.FileTypeMatcher;
-import com.bryanklumpp.jash.DesktopUtil;
-import com.bryanklumpp.jash.Jash;
 
 import bec.file.FileUtil;
 import bec.file.PathSearchStrategy;
@@ -86,8 +86,8 @@ public class DraftCommands {
 			}
 		}, "urlencode");
 		addCommand((argsv, a, w, context) ->  {
-			new Jash();
-		}, "jash");
+			new BJShell();
+		}, "bjshell");
 		addCommand((argsv, args, w, context) ->  {
 			args = StringUtil.argsWithClipboardDefault(args);
 			int maxDepth = Integer.MAX_VALUE; //maybe limit this default if you have crazy number of files
