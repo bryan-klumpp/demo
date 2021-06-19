@@ -130,7 +130,8 @@ public class BJShellAWTExperimental extends Frame implements CommandContext {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new BJShellAWTExperimental();
+//				new BJShellAWTExperimental();
+				new BJShell();
 			}
 		});
 	}
@@ -197,7 +198,7 @@ public class BJShellAWTExperimental extends Frame implements CommandContext {
 		pack(); 
 		// it is important to set size/location and pack before populating the TextArea; 
 		// doing it in the reverse order proved quite slow if there was a lot of saved text
-		ta.setText(s.persistedTaText);
+		ta.setText(s.getPersistedTaText());
 	}
 	public BJShellState getShellState() {
 		return shellState;
@@ -221,7 +222,7 @@ public class BJShellAWTExperimental extends Frame implements CommandContext {
 	 */
 	public void syncAndSaveState(PrintWriter errorWriter) {
 		try {
-			getShellState().persistedTaText = StringUtil.lastNChars(100000, ta.getText()); // Keeping history forever will impact performance eventually... 
+			getShellState().setPersistedTaText(StringUtil.lastNChars(100000, ta.getText()) ); // Keeping history forever will impact performance eventually... 
 			getShellState().setPersistedSize(scrollPane.getSize());
 			getShellState().setPersistedLocationOnScreen(getLocationOnScreen());// https://support.oracle.com/knowledge/Middleware/2355820_1.html
 //			FileUtil.saveObject(BJShellState.SERIALIZATION_FILE, getShellState());

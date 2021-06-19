@@ -2,6 +2,8 @@ package com.bryanklumpp.core;
 
 import java.nio.file.Path;
 
+import javax.naming.OperationNotSupportedException;
+
 public interface CommandContext {
 	
 	final CommandContext DEFAULT_CMD_CONTEXT = new CommandContext() {
@@ -21,5 +23,18 @@ public interface CommandContext {
 
 	void setContextDir(Path contextDir);
 	Path getContextDir();
+	static CommandContext readOnlyContext(final Path path) {
+		return new CommandContext() {
+			@Override
+			public void setContextDir(Path contextDir) {
+				throw new RuntimeException("read only path - runtime equivalent of OperationNotSupportedException");
+			}
+			
+			@Override
+			public Path getContextDir() {
+				return path;
+			}
+		};
+	}
 
 }

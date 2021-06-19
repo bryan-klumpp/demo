@@ -90,13 +90,7 @@ public class DraftCommands {
 		}, "bjshell");
 		addCommand((argsv, args, w, context) ->  {
 			args = StringUtil.argsWithClipboardDefault(args);
-			int maxDepth = Integer.MAX_VALUE; //maybe limit this default if you have crazy number of files
-			if(StringUtil.isInteger(args.get(0))) {
-				maxDepth = Integer.valueOf(args.get(0));
-				args = CollectionsB.newSubList(1, args);
-			}
-			List<Path> matches = FileUtil.getMatches(context.getContextDir(), args, FileTypeMatcher.ALL, maxDepth).matches;
-			FileUtil.prettyPrint(matches, w);
+			FileUtil.findAndPrint(args, context, w);
 			w.println("## done searching for: "+argsv+" ##");
 			FileUtil.printContextDirectory(w, context.getContextDir());
 		}, "f");

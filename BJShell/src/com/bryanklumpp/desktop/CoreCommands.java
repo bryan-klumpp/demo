@@ -60,20 +60,15 @@ public class CoreCommands {
 		}, "7ze" );
 		putMultipleKeys(cmds, new Command() {
 			public void exec(String argsv, List<String> args, PrintWriter cmdWriter, CommandContext context) throws Exception {
-				Path best;
-				if (args.isEmpty()) {
-					best = context.getContextDir();
-				} else {
-					// TODO make this search more strategies
-					FileTypeMatcher ftm = FileTypeMatcher.ALL;
-					PathSearchStrategy[] strategies = { PathSearchStrategy.getExactMatchStrategy(ftm), 
-							                            PathSearchStrategy.B_SPECIAL_PATHS, 
-							                            PathSearchStrategy.getRegexClosestLevelMatchStrategy(ftm) };
-					best = FileUtil.getBestMatch(context.getContextDir(), args, strategies);
-				}
-				DesktopUtil.fileExplorer(cmdWriter, best);
+				DesktopUtil.fileExplorer(cmdWriter, FileUtil.getExplorerPath(args, context));
 			}
 		}, "explorer", "e" );
+		putMultipleKeys(cmds, new Command() {
+			public void exec(String argsv, List<String> args, PrintWriter cmdWriter, CommandContext context) throws Exception {
+				DesktopUtil.fileExplorerSelect(cmdWriter, FileUtil.getExplorerPath(args, context));
+			}
+
+		}, "eselect", "sel" );
 		putMultipleKeys(cmds, new Command() {
 			public void exec(String argsv, List<String> args, PrintWriter cmdWriter, CommandContext context) throws Exception {
 				Path best;
@@ -87,7 +82,7 @@ public class CoreCommands {
 							                            PathSearchStrategy.getRegexClosestLevelMatchStrategy(ftm) };
 					best = FileUtil.getBestMatch(context.getContextDir(), args, strategies);
 				}
-				DesktopUtil.fileExplorerSelected(cmdWriter, best);
+				DesktopUtil.fileExplorerSelect(cmdWriter, best);
 			}
 		}, "explorerselect", "es" );
 		putMultipleKeys(cmds, new Command() {

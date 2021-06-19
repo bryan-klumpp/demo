@@ -15,6 +15,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -114,10 +115,6 @@ public class BJShell extends JFrame implements CommandContext {
 		};
 	}
 
-	private String getContextDirectoryS() {
-		return getContextDir().toString();
-	}
-
 	public Path getContextDir() {
 		return getShellState().getContextDir();
 	}
@@ -182,12 +179,14 @@ public class BJShell extends JFrame implements CommandContext {
 	}
 	private void applyStateAndPack(BJShellState s) {
 		setContextDir(s.getContextDir());
+		ta.setFont(s.getPersistedFont());
+		tf.setFont(s.getPersistedFont());
 		scrollPane.setPreferredSize(s.getPersistedSize());
 		setLocation(s.getPersistedLocationOnScreen());
 		pack(); 
 		// it is important to set size/location and pack before populating the JTextArea; 
 		// doing it in the reverse order proved quite slow if there was a lot of saved text
-		ta.setText(s.persistedTaText);
+		ta.setText(s.getPersistedTaText());
 	}
 	public BJShellState getShellState() {
 		return shellState;
@@ -200,6 +199,7 @@ public class BJShell extends JFrame implements CommandContext {
 		} catch (Exception e) {
 			e.printStackTrace(printWriter2);
 			state1 = new BJShellState();
+			state1.setPersistedTaText("Exception loading saved state: "+e+"\nThis is to be expected if it's the first run on this computer.\nThe state will be set to defaults and saved when window closes.\n");
 		}
 		return state1;
 	}
@@ -211,7 +211,8 @@ public class BJShell extends JFrame implements CommandContext {
 	 */
 	public void syncAndSaveState(PrintWriter errorWriter) {
 		try {
-			getShellState().persistedTaText = StringUtil.lastNChars(100000, ta.getText()); // Keeping history forever will impact performance eventually... 
+			getShellState().setPersistedFont(ta.getFont());
+			getShellState().setPersistedTaText(StringUtil.lastNChars(100000, ta.getText())); // Truncating because keeping history forever will impact performance eventually... 
 			getShellState().setPersistedSize(scrollPane.getSize());
 			getShellState().setPersistedLocationOnScreen(getLocationOnScreen());// https://support.oracle.com/knowledge/Middleware/2355820_1.html
 			FileUtil.saveObject(BJShellState.SERIALIZATION_FILE, getShellState());
@@ -296,12 +297,25 @@ public class BJShell extends JFrame implements CommandContext {
 			ta.setText("");
 		}, "cls", "cl");
 		CollectionsB.putMultipleKeys(cmdMap, (argsv, args, w, context) -> {
+			ta.setText("");
+			FileUtil.findAndPrint(CollectionsB.list(".{240,}"), CommandContext.readOnlyContext(Paths.get("z:/")), w);
+		}, "a");
+		CollectionsB.putMultipleKeys(cmdMap, (argsv, args, w, context) -> {
+			float fontSize = Float.valueOf(args.get(0));
 			Font taFont = ta.getFont();
-			ta.setFont(taFont.deriveFont(Float.valueOf(args.get(0))));
+			ta.setFont(taFont.deriveFont(fontSize));
 			Font tfFont = tf.getFont();
-			tf.setFont(tfFont.deriveFont(Float.valueOf(args.get(0))));
+			tf.setFont(tfFont.deriveFont(fontSize));
 			pack(); //needed because JTextField does not automatically resize
-		}, "font");
+			w.println(ta.getFont());
+		}, "fontsize", "font");
+		CollectionsB.putMultipleKeys(cmdMap, (argsv, args, w, context) -> {
+			Font taFont = ta.getFont();
+			String name = (taFont.getFontName().startsWith(Font.MONOSPACED) ? Font.DIALOG : Font.MONOSPACED);
+			ta.setFont(new Font(name, Font.PLAIN, taFont.getSize()));
+			tf.setFont(new Font(name, Font.PLAIN, tf.getFont().getSize()));
+			pack(); // needed because JTextField does not automatically resize
+		}, "mono");
 		CollectionsB.putMultipleKeys(cmdMap, (argsv, args, w, context) -> {
 			w.println(ta.getFont());
 			ta.setFont(new Font("unifont", java.awt.Font.PLAIN, 14));
@@ -337,7 +351,7 @@ public class BJShell extends JFrame implements CommandContext {
 
 		return cmdMap;
 	}
-	
+
 	@Override
 	public void setContextDir(Path contextDir) {
 		getShellState().setContextDir(contextDir);

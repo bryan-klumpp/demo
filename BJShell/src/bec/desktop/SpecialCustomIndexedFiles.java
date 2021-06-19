@@ -21,7 +21,7 @@ import bec.file.FileUtil;
  */
 public class SpecialCustomIndexedFiles {
 
-	public static final Pattern NON_MASTER_FILE_PATTERN = Pattern.compile("(\\.lnk$|backup|copy|archive|RecentDocuments|transfer|wav_masters|tmp|hardlink|deleteme|coreboot)");
+	public static final Pattern NON_MASTER_FILE_PATTERN = Pattern.compile("(\\.lnk$|RECYCLE.BIN|backup|copy|archive|RecentDocuments|transfer|wav_masters|tmp|hardlink|deleteme|coreboot)");
 	public static final Pattern SPECIAL_CUSTOM_INDEXED_FILE_PATTERN = Pattern.compile("/b([0-9]{1,})_[^/]*$");
 
 	public static final String SHOPPING_LIST = "18";

@@ -303,26 +303,21 @@ public class DesktopUtil {
 			if (Files.isDirectory(p, LinkOption.NOFOLLOW_LINKS)) {
 				Desktop.getDesktop().open(p.toFile());
 			} else {
-				fileExplorerSelected(w, p);
+				fileExplorerSelect(w, p);
 			} 
 		} catch (IOException e) {
 			ExceptionUtil.rethrowRuntime(e);
 		}
 	}
 
-	public static void fileExplorerSelected(PrintWriter w, Path p) {
-		/*
-		 * It just seems like there should be a better way, but the only way I've found
-		 * to get this to properly select a file with spaces in the name is to use the
-		 * spaces to split the file name into pieces and attach the first piece to the
-		 * /select,  ; using the entire file name as one String doesn't work.
-		 * For example, "c:\\temp\\this has spaces.txt" would be selected using:
-		 * new ArrayList("...\\explorer.exe", "/select,c:\\temp\\this", "has", "spaces.txt")
-		 */
-		List<String> filePieces = StringUtil.tokenize(p.toString(), " ");
-		List<String> s = CollectionsB.newList(Run.EXPLORER_EXE, 
-				"/select,"+filePieces.get(0), filePieces.subList(1, filePieces.size()));
-		Run.execProcessOSTextGuts(p.getParent(), w, s);
+	public static void fileExplorerSelect(PrintWriter w, Path p) {
+		// This will be passed to ProcessBuilder as a List containing only one string
+		// with spaces in it. This doesn't seem like normal use of ProcessBuilder, but I
+		// couldn't find a way to get this to work with
+		// spaces/commas in filenames any other way
+		String oneExecString = Run.EXPLORER_EXE+" /select,\""+p.toString()+"\"";
+		List<String> listWithOnlyOneString = CollectionsB.newList(oneExecString);
+		Run.execProcessOSTextGuts(null, w, listWithOnlyOneString);
 	}
 
 	public static void comWebsite(String domainNameBase) {

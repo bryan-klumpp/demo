@@ -12,7 +12,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Lots of convenience methods, etc.
+ * Convenience methods, etc. for dealing with Collections, Lists, Sets,
+ * Maps, etc.
  * 
  * @author Bryan Klumpp
  */
@@ -47,17 +48,12 @@ public class CollectionsB {
 		collection.addAll(Arrays.asList(items));
 	} 
 	
-	/**
-	 * In the spirit of convenience methods like List.of(...)
-	 * 
-	 * @param <T>
-	 * @param o1
-	 * @param o2
-	 * ...and so on...
-	 * @param l1
-	 * ...or whatever... not repeating this javadoc for all of these but variants will be added as needed
-	 * @return
-	 */
+
+	@SafeVarargs
+	public static <T> List<T> list(T... elements) {
+		return Arrays.asList(elements);
+	}
+
 	public static <T> List<T> newList() {
 		return new ArrayList<T>();
 	}
@@ -150,5 +146,6 @@ public class CollectionsB {
 	public static String[] toStringArray(List<String> elements) {
 		return elements.toArray(EMPTY_STRING_ARRAY);
 	}
+
 
 }

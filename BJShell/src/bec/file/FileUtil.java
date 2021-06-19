@@ -29,6 +29,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.bryanklumpp.core.CollectionsB;
+import com.bryanklumpp.core.CommandContext;
 import com.bryanklumpp.core.MakeTheValidatorHappyException;
 import com.bryanklumpp.core.StringUtil;
 import com.bryanklumpp.file.FileSearchResult;
@@ -38,6 +40,12 @@ import bec.desktop.ExceptionUtil;
 import bec.desktop.FileVisitorB;
 import bec.desktop.j;
 
+/**
+ * @author Bryan Klumpp
+ * 
+ * TODO all file operations should not follow symbolic links
+ *
+ */
 public class FileUtil {
 	private static final String DIR_DECORATION_LABEL = "_________(dir)";
 	private static final Comparator<Path> LAST_MODIFIED_COMPARATOR = Comparator.comparing(t -> {
@@ -93,6 +101,20 @@ public class FileUtil {
 	
 	public static Pattern getPatternFromFileFrags(List<String> fileFrags) {
 		return Pattern.compile(StringUtil.delimit(" ", fileFrags), Pattern.CASE_INSENSITIVE); //TODO not necessarily an accurate reconstruction...
+	}
+	public static Path getExplorerPath(List<String> args, CommandContext context) {
+		Path best;
+		if (args.isEmpty()) {
+			best = context.getContextDir();
+		} else {
+			// TODO make this search more strategies
+			FileTypeMatcher ftm = FileTypeMatcher.ALL;
+			PathSearchStrategy[] strategies = { PathSearchStrategy.getExactMatchStrategy(ftm), 
+					                            PathSearchStrategy.B_SPECIAL_PATHS, 
+					                            PathSearchStrategy.getRegexClosestLevelMatchStrategy(ftm) };
+			best = FileUtil.getBestMatch(context.getContextDir(), args, strategies);
+		}
+		return best;
 	}
 
 	/**
@@ -464,6 +486,16 @@ public class FileUtil {
 		String s = forwardSlashFilePath(fullPathString);
 		Path resourcePath = Paths.get(s);
 		return resourcePath;
+	}
+
+	public static void findAndPrint(List<String> args, CommandContext context, PrintWriter w) {
+		int maxDepth = Integer.MAX_VALUE; //maybe limit this default if you have crazy number of files
+		if(StringUtil.isInteger(args.get(0))) {
+			maxDepth = Integer.valueOf(args.get(0));
+			args = CollectionsB.newSubList(1, args);
+		}
+		List<Path> matches = getMatches(context.getContextDir(), args, FileTypeMatcher.ALL, maxDepth).matches;
+		prettyPrint(matches, w);
 	}
 
 }
