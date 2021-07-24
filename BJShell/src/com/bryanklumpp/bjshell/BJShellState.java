@@ -18,28 +18,28 @@ import com.bryanklumpp.core.CommandContext;
  *         short-term persistence across invocations. This allows developers to
  *         make code changes, re-launch (or clone) the shell window (an
  *         AutoHotkey script can make this a one-key operation), and resume
- *         right where they left off (same context directory, etc.) with the new
- *         code using type-safe mapping. Object serialization has proven to be
- *         "good enough" so far for this short-term, single-PC, non-critical
- *         data.
+ *         right where they left off. Object serialization has proven to be
+ *         efficient and not too brittle (so far) for this short-term, single-PC,
+ *         non-critical data.
  *
  */
 public class BJShellState implements Serializable, CommandContext {
 	/**
-	 * With serialization this class is a optimistic in that it sets default values
-	 * in getters rather than in the field declaration, so that if one field is
-	 * renamed (for example) it will fail to deserialize but can recover with the
-	 * default value and hopefully not affect other fields.
+	 * With serialization this class is "optimistic" in that it attempts partial
+	 * recovery if serialization is broken by one field. To handle this, default
+	 * values are set/returned (if needed) in getters rather than specified in the
+	 * field declaration (the latter approach, when tested, left all values null if
+	 * any one field broke serialization).
 	 */ 
 	private static final long serialVersionUID = 1L;
-	private File contextDir = null; // storing as File instead of Path because Path isn't Serializable.
+	private File workingDir = null; // storing as File instead of Path because Path isn't Serializable.
 	/**
-	 * Note that the persisted* fields will get out of sync as soon as the
+	 * Note that the persisted_____ fields will get out of sync as soon as the
 	 * corresponding GUI elements are changed. Also, some memory could be saved by
 	 * setting the persistedTaText, in particular, to null after applying it to the
 	 * GUI, but to be consistent it's left in memory for now like the others.
 	 * Ideally this could be reworked to separate the out-of-sync GUI attributes
-	 * from fields like the contextDirectory for which this class is actually the
+	 * from fields like the workingDirectory for which this class is actually the
 	 * safe source
 	 */
 	private Font persistedFont = null;
@@ -58,7 +58,7 @@ public class BJShellState implements Serializable, CommandContext {
 		this.persistedFont = font;
 	}
 
-	static Path SERIALIZATION_FILE = Paths.get(System.getProperty("java.io.tmpdir") + "/BJShell.ser");
+	public static Path SERIALIZATION_FILE = Paths.get(System.getProperty("java.io.tmpdir") + "/BJShell.ser");
 
 	public String getPersistedTaText() {
 		if (persistedTaText == null) {
@@ -71,15 +71,15 @@ public class BJShellState implements Serializable, CommandContext {
 		this.persistedTaText = taText;
 	}
 
-	public Path getContextDir() {
-		if (contextDir == null) {
-			contextDir = CommandContext.DEFAULT_CMD_CONTEXT.getContextDir().toFile();
+	public Path getWorkingDir() {
+		if (workingDir == null) {
+			workingDir = CommandContext.DEFAULT_CMD_CONTEXT.getWorkingDir().toFile();
 		}
-		return contextDir.toPath();
+		return workingDir.toPath();
 	}
 
-	public void setContextDir(Path workingDir) {
-		this.contextDir = workingDir.toFile();
+	public void setWorkingDir(Path workingDir) {
+		this.workingDir = workingDir.toFile();
 	}
 
 	public Dimension getPersistedSize() {

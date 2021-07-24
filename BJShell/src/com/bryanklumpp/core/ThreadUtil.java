@@ -1,6 +1,6 @@
 package com.bryanklumpp.core;
 
-import bec.desktop.ExceptionUtil;
+import java.util.regex.Pattern;
 
 public class ThreadUtil {
 
@@ -34,7 +34,18 @@ public class ThreadUtil {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
-			ExceptionUtil.rethrowRuntime(e);
+			throw new RuntimeInterruptedException(e);
+		}
+	}
+
+	public static <T> void runWithThreadLocal(InheritableThreadLocal<? super T> tl,
+			T val, Runnable r) {
+		assert tl.get() == null;
+		try {
+			tl.set(val);
+			r.run();
+		} finally {
+			tl.set(null);
 		}
 	}
 }

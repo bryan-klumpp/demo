@@ -2,8 +2,10 @@
 /JDemoWebLegacy/
 /JDemoWeb/
 /scrapbook_howto_code/
+/b/
 /bweblib/
 /bxargs/
+/javadoc/
 /JCmd/
 /lib/
 /sbw/
@@ -36,3 +38,4 @@ target/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+BJShell/archivebin/b998_scrapbook_code.txt

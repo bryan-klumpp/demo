@@ -2,6 +2,7 @@ package com.bryanklumpp.core;
 
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -19,5 +20,13 @@ public interface Command {
      * @param context - contains information on context (working) directory, etc.
      * @throws Exception
      */
-    void exec(String argsOneString, List<String> args, PrintWriter cmdWriter, CommandContext context) throws Exception;
+    void exec0(String argsOneString, List<String> args, PrintWriter cmdWriter, CommandContext context) throws Exception;
+    
+    static void listCommands(Map<String, Command> cmds, PrintWriter outputWriter) {
+        outputWriter.println((Object) "commands:");
+        for (String key : cmds.keySet()) {
+            outputWriter.println((Object) key);
+        }
+    }
+
 }

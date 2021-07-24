@@ -1,5 +1,6 @@
 package com.bryanklumpp.core;
 
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -10,6 +11,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -158,12 +160,37 @@ public class StringUtil {
 		return s.substring(0, (s.length() < i ? s.length() : i));
 	}
 
-	public static <T> String printAsLines(Collection<T> lines) {
+	/**
+	 * @param <T>
+	 * @param lines
+	 * @return one String, multiple lines, but no endline character after last line
+	 */
+	public static <T> String toStringMultiLine(Collection<T> lines) {
 		StringBuffer sb = new StringBuffer();
+		boolean first = true;
 		for(T next : lines) {
-			sb.append(next); sb.append(StringUtil.N);
+			if (first) {
+				first = false;
+			} else {
+				sb.append(StringUtil.N);
+			}
+			sb.append(next);
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Prints multiple lines to a PrintWriter, a println for each line (including
+	 * the last one, so an endline character will be the last thing printed
+	 * 
+	 * @param <T>
+	 * @param lines
+	 * @param outputWriter
+	 */
+	public static <T> void printAsLines(Collection<T> lines, PrintWriter outputWriter) {
+		for(T line : lines) {
+			outputWriter.println(line);
+		}
 	}
 
 	public static String lastNChars(int len, String text) {
@@ -209,5 +236,24 @@ public class StringUtil {
 			l.add(String.valueOf(o));
 		}
 		return l;
+	}
+
+	public static Iterable<String> stringIterable(Collection<Object> coll) {
+		Iterator<Object> iterO = coll.iterator();
+		return new Iterable<String>() {
+			@Override
+			public Iterator<String> iterator() {
+				return new Iterator<String>() {
+					@Override
+					public boolean hasNext() {
+						return iterO.hasNext();
+					}
+					@Override
+					public String next() {
+						return String.valueOf(iterO.next());
+					}
+				};
+			}
+		};
 	}
 }

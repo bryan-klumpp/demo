@@ -1,0 +1,578 @@
+	private static String grep(String s, String regex, GrepOptionSet_Fcilnvx GrepOptions) {
+		Unix4jCommandBuilder builder = Unix4j.builder();
+		StringOutput output = new StringOutput();
+
+//		builder.gre
+		builder.grep(GrepOptions, regex, new StringInput(s)).toOutput(output);
+
+		return output.toString();
+	}
+
+	static public String bgrep(String s, String regex, String splitBy, String replacementDelim) {
+//		List<String> lines = Collections.emptyList();
+//		if(splitBy == null) {
+//			lines.add(s);
+//		} else {
+//		   String[] splitA = s.split(splitBy);
+//			Arrays.
+//		}
+		return null;
+
+	}
+
+		static public String grep(String s, String regex) {
+		Unix4jCommandBuilder builder = Unix4j.builder();
+		StringOutput output = new StringOutput();
+
+//		builder.gre
+		builder.grep(regex, new StringInput(s)).toOutput(output);
+
+		return output.toString();
+	}
+	static public String grepV(String s, String regex) {
+		GrepOptionSet_Fcilnvx GrepOptions = Grep.Options.invertMatch;
+		return grep(s, regex, GrepOptions);
+	}
+
+	
+	static public String reverseLines(String s) {
+		Unix4jCommandBuilder builder = Unix4j.builder();
+		StringOutput output = new StringOutput();
+		builder.cat(new StringInput(s)).sort(Sort.Options.reverse);
+		builder.toOutput(output);
+		return output.toString();
+	}
+
+
+	/* SAMPLE REGEX REGULAR EXPRESSIONS 
+	 * 
+	 * ^[^/\n]*.close\(\)  //find cases of close( ) that need try-with-resources
+	 * 
+	 * */
+
+	/**
+	 * @deprecated review this before using
+	 * 
+	 * @param <T>
+	 * @param c
+	 * @return
+	 */
+	protected static <T> List<T> getSortedList(Collection<T> c) {
+		List<T> l = new ArrayList<T>();
+		l.addAll(c);
+		Collections.sort(l, StringUtil.getToStringComparator());
+		return l;
+//		l.sort(new Comparator<T>() {
+//			@Override
+//			public int compare(T o1, T o2) {
+//				// TODO Auto-generated method stub
+//				return 0;
+//			}
+//		};
+//		return null;
+	}
+
+
+//					sp2.validate(); //attempt to enable accurate scrolling, failed
+//							Rectangle rect = new Rectangle(new Point(1, -99999));
+//								scrollPane.scrollRectToVisible(rect); //not working
+//							JScrollBar vsb  = scrollPane.getVerticalScrollBar();
+//							vsb.setValue(vsb.getMaximum()); //not sure why this doesn't work consis
+
+
+//find duplicate file_rec reord
+List<file_rec> existing = DBUtil.findByYourField(file_rec.class, "bKey", bKey);
+						fdr.setPath(f);
+						DBUtil.newRow(fdr, SALES_DB);
+
+
+	/**
+	 * This needs some hardening, but it is a way to print "orphan" text-based
+	 * System.out messages to the GUI in addition to the default System.out. Binary
+	 * data will get written to System.out but not to the PrintWriter. It will
+	 * result in textual System.out messages being written to all active BJShell
+	 * windows/tabs if more than one window is active in a JVM, but this is more of
+	 * a way to find orphan System.out invocations than a long-term solution.
+	 * 
+	 * @param printWriter2
+	 */
+	private void teeWriterToSysout(PrintWriter printWriter2) {
+		PrintStream oldSysOut = System.out;
+		System.setOut(new PrintStream(oldSysOut) {
+			
+			@Override
+			public void flush() {
+				super.flush();
+				printWriter2.flush();
+			}
+
+			@Override
+			public void close() {
+				super.close();
+				printWriter2.close();
+			}
+
+			@Override
+			public boolean checkError() {
+				return super.checkError();
+				// ignoring error handling of PrintWriter for now
+			}
+
+			@Override
+			protected void setError() {
+				super.setError();
+				// ignoring error handling of PrintWriter for now
+			}
+
+			@Override
+			protected void clearError() {
+				super.clearError();
+				// ignoring error handling of PrintWriter for now
+			}
+
+			@Override
+			public void write(int b) {
+				super.write(b);
+				printWriter2.write("Orphan System.out message: " + b);
+			}
+
+			@Override
+			public void write(byte[] buf, int off, int len) {
+				super.write(buf, off, len);
+				printWriter2.println("for now this code is not converting binary bytes to String, not doing write(byte[] buf, int off, int len) here, but see System.out");
+			}
+		});
+	}
+	private PrintWriter buildPrintWriter(JTextArea ta2, JScrollPane sp2) {
+		StringWriter stringWriter = buildStringWriter(ta2, sp2);
+		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(System.out);
+		return new PrintWriter(new TeeWriter(stringWriter, outputStreamWriter), true);
+	}
+	
+		public static void winExplorerSpecial(PrintWriter outputWriter, String... args) {
+		Run.execProcessOSTextGuts(null, outputWriter, CollectionsB.list(Run.EXPLORER_EXE+"shell:startup"));
+	}
+	
+
+		addCommand(new AbstractCommand("") {
+			public void exec(String argsv, List<String> args, PrintWriter outputWriter, CommandContext context) throws Exception { // options FileVisitResult.SKIP_SUBTREE,
+																				// SKIP_SIBLINGS, CONTINUE, and
+																				// TERMINATE in javadoc
+				if (args.size() > 0 && new File(args.get(0)).exists()) {
+					B.sop(args.get(0));
+					return;
+				}
+				final List<Pattern> patterns = new ArrayList<>();
+				for (String arg : args) {
+					patterns.add(B.getPatternI(arg));
+				}
+				final Mutable<Boolean> found = new Mutable<Boolean>(Boolean.FALSE);
+				// TODO following is just not working, need to write my own walker
+				for (int i = 2; i < 10 && !found.get(); i++) { // try deeper each time - a little crude
+																			// because we are doing some re-visiting,
+																			// but simple
+					Files.walkFileTree(context.getWorkingDir(), new HashSet<FileVisitOption>(), i, new SimpleFileVisitor<Path>() {
+						@Override
+						public FileVisitResult visitFileFailed(Path path, IOException e) {
+							if (!(e instanceof AccessDeniedException
+									|| e.toString().matches(".*AccessDeniedException.*/(lost\\+found|root)$"))) {
+								ExceptionUtil.rethrowRuntime(e);
+								throw new MakeTheValidatorHappyException(e);
+							} else {
+								return FileVisitResult.CONTINUE;
+							}
+						}
+
+						@Override
+						public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+							return FileVisitResult.CONTINUE; // only care about directories
+						}
+
+						@Override
+						public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+								throws IOException {
+
+							String abs = FileUtil.getAbsolutePathString(dir);
+							if (abs.matches("/(proc)")) {
+								return FileVisitResult.SKIP_SUBTREE;
+							}
+
+							for (Pattern p : patterns) {
+								if (B.group(0, p, abs) == null) {
+									return FileVisitResult.CONTINUE; // ALL patterns need to match
+								}
+							}
+							System.out.println(abs);
+							found.o = Boolean.TRUE;
+							return FileVisitResult.TERMINATE; // simplify things for now and don't try to choose between
+																// results
+						}
+
+						@Override
+						public FileVisitResult postVisitDirectory(Path dir, IOException e) throws IOException {
+							if (e != null) {
+								// directory iteration failed
+								throw e;
+							}
+							return FileVisitResult.CONTINUE;
+						}
+					});
+				}
+			}
+		}, "findDir");
+
+
+    protected void makeBare(File filePath, File outputDir) {
+        final String ignoreLine = "renee_kids_desktop_dates.txt";
+        tru(filePath.getPath().contains("."));
+        List<String> pathSplit = pathSplit(filePath);
+        String genBarePath = outputDir + "/" + pathSplit.get(1) + "_bare_generated." + pathSplit.get(2);
+        deleteFile(genBarePath);
+        try {
+//            final ;
+
+            
+			try (FileOutputStream out = new FileOutputStream(genBarePath, true);
+					Writer bareWriter = new OutputStreamWriter(out, "Cp1252")) {
+                String charsetName = "Cp1252"; //hard to recall but I think this was needed for processing Windows-written files from a Linux PC
+                final Mutable<String> curDir = new Mutable<String>();
+                final Adapter<String, String> lineVisitor = new Adapter<String, String>() {
+                    @Override
+                    public String adapt(String line) {
+                        try {
+                            Pattern p = getPatternI("Directory of (.*)$");
+                            Pattern p2 = getPatternI("^((.{24}<\\w{3,8}> {5,10})|(.{37}\\d ))(.*?)( \\[.*\\])?$");
+                            String s1 = group(1, p, line);
+                            String outputLine = null;
+                            if (s1 != null) {
+                                curDir.set(s1);
+                            } else if (curDir.get() != null) {
+                                String s2 = group(4, p2, line);
+                                if (s2 != null && !s2.matches("\\.\\.?") && !s2.contains(ignoreLine)) {
+                                    outputLine = (curDir + (curDir.get().endsWith("\\") ? "" : "\\") + s2);
+                                }
+                            }
+                            if (outputLine != null) {
+                                bareWriter.write(outputLine + "\r\n"); //preserve Windows line terminator, not Linux
+                            }
+                        } catch (IOException e) {
+                            ExceptionUtil.rethrowRuntime(e);
+                        }
+                        return null;
+                    }
+                };
+                visitLines(filePath, charsetName, lineVisitor);
+            }
+        } catch (Exception e) {
+            ExceptionUtil.rethrowRuntime(e);
+        }
+    }
+    protected void makeBare() {
+        File sourceDir = new File("/media/b/5tb/Cat/0_MASTER_Caterpillar_originally_from_crisis_hpt_home/crisis/file_list/other_peoples_computers_list_grabbed_during_2015_crisis/dates_original");
+        File outputDir = new File("/media/b/5tb/Cat/0_MASTER_Caterpillar_originally_from_crisis_hpt_home/crisis/file_list/other_peoples_computers_list_grabbed_during_2015_crisis");
+        for (File path : dir(sourceDir)) {
+            makeBare(path, outputDir);
+        }
+    }
+
+
+		addCommand(new AbstractCommand("") {
+			public void exec(String argsv, List<String> args, PrintWriter outputWriter, CommandContext context) throws Exception {
+				File currentDir = new File(context.getWorkingDir().toString());
+				new FileTreeBWalker(new Visitor<File>() {
+					public void visit(File next) {
+						if (next.useFileUtilIsDirectory() && next.list().length == 0) {
+							B.deleteFile(next);
+						}
+					}
+				}).walk(currentDir);
+			}
+		}, "prune");
+
+
+//pdftk pdf toolkit
+	private static void copyBankStatementsWithoutPwd() {
+		final String fin = home + "1/fin/";
+		walk(fin + "bank_statements_password", new FileVisitorB() {
+			public void visitFile(File f) {
+				try {
+					final String[] cmdArray = new String[] { "pdftk", f.getPath(), "input_pw", getPwd("b"), "output",
+							fin + "bank_statements/" + f.getName() };
+					j.o(delimit(" ", cmdArray));
+					Runtime.getRuntime().exec(cmdArray);
+				} catch (IOException e) {
+					ExceptionUtil.rethrowRuntime(e);
+				}
+			}
+
+			public void visitDirectory(File f) {
+			}
+		});
+	}
+	
+	   /**
+     * actually searches for all folders that still need to be scanned for
+     * offensive content
+     */
+    static void findMoth(Path workingDir) throws Exception {
+        String higherDir = workingDir.toString();
+        final List<Path> possibleOffenders = new ArrayList<>();
+        final Path root = getPath(higherDir);
+        Files.walkFileTree(root, new java.nio.file.FileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFileFailed(Path path, IOException e) throws IOException {
+                if (e instanceof AccessDeniedException) {
+                    if (path.toString().contains("lost+found")) { //harmless
+                        return FileVisitResult.SKIP_SUBTREE;
+                    }
+                }
+                throw e;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                    throws IOException {
+                FileUtil.read(S.toString(file));
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes attrs)
+                    throws IOException {
+                //~ Path targetdir = target.resolve(source.relativize(dir));
+                File pathF = path.toFile();
+                pathF.getAbsolutePath();
+                String dirNameShort = pathF.getName();
+                if (path.equals(root)) {
+                    return FileVisitResult.CONTINUE;
+                }
+                if (FileUtil.containsFileNameFrag(path, "flag_recursive_Moth0.txt") || dirNameShort.contains("Moth0")) {
+                    return FileVisitResult.SKIP_SUBTREE;
+                }
+                if (FileUtil.containsFileNameFrag(path, "flag_filesonly_Moth0.txt")) {
+                    return FileVisitResult.CONTINUE;
+                }
+                possibleOffenders.add(path);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException e)
+                    throws IOException {
+                if (e != null) {
+                    // directory iteration failed
+                    throw e;
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        sysOutMultiLine(possibleOffenders);
+    }
+	
+	
+			addCommand(new AbstractCommand("") {
+			public void exec(String argsv, List<String> args, PrintWriter outputWriter, CommandContext context) throws Exception {
+				final Pattern slashPattern = B.getPatternI("(.*?)/");
+				InputStreamReader isr = new InputStreamReader(System.in);
+				BufferedReader br = new BufferedReader(isr);
+				List<String> lines = new ArrayList<>();
+				String nextLine = br.readLine();
+				while (nextLine != null) {
+					lines.add(nextLine);
+					nextLine = br.readLine();
+				}
+				Collections.sort(lines, new Comparator<String>() {
+					@Override
+					public int compare(String s1, String s2) {
+						B.group(1, slashPattern, s1);
+						B.group(1, slashPattern, s2);
+						// TODO finish logic
+						return 0;
+					}
+				});
+				for (String sLine : lines) {
+					System.out.println(sLine);
+				}
+			}
+		}, "sortShortestLast");
+	
+	//find long filenames
+			CollectionsB.putMultipleKeys(cmdMap, (argsv, args, w, context) -> {
+			ta.setText("");
+			FileUtil.findAndPrint(CommandContext.readOnlyContext(Paths.get("z:/")), w, CollectionsB.list(".{240,}"));
+		}, "a");
+	
+	
+		/**
+	 * @Deprecated
+	 * 
+	 * @param filePath
+	 * @param bufSize
+	 * @param encoding
+	 * @return
+	 */
+	public static String readFileCustomArrayBuffer(String filePath, int bufSize, String encoding) {
+		StringBuffer sb = new StringBuffer();
+		try (  FileInputStream fileInput = new FileInputStream(filePath);
+			   Reader reader = encoding == null ? new InputStreamReader(fileInput)	: new InputStreamReader(fileInput, encoding);) {
+			char[] buf = new char[bufSize > 0 ? bufSize : 1024 ^ 3];
+			int ct = reader.read(buf, 0, buf.length);
+			while (ct > 0) {
+				if (ct == buf.length) {
+					sb.append(buf);
+				} else {
+					char[] endbuf = new char[ct];
+					System.arraycopy(buf, 0, endbuf, 0, ct);
+					sb.append(endbuf);
+				}
+				ct = reader.read(buf, 0, buf.length);
+			}
+		} catch (IOException e) {
+			ExceptionUtil.rethrowRuntime(e);
+		}
+		return sb.toString();
+	}
+	
+	
+			addCommand(new AbstractCommand("Honestly don't remember the purpose of this code") {
+			public void exec(String argsv, List<String> args, PrintWriter outputWriter, CommandContext context) throws Exception {
+				B.processLinesWithStreamClose(new Adapter<String, String>() {
+					public String adapt(String nextFilePath) {
+						String[] charsets = new String[] { "US-ASCII", "ISO-8859-1", "Cp1252" };
+						new HashMap<>();
+						String utf8Contents = FileUtil.readFileCustomArrayBuffer(nextFilePath, 1024 ^ 3, "UTF-8");
+						for (String cs : charsets) {
+							String otherCharsetContents = FileUtil.readFileCustomArrayBuffer(nextFilePath, 1024 ^ 3, cs);
+							if (!otherCharsetContents.equals(utf8Contents)) {
+								System.out.println("mismatch with charset " + cs + " for file " + nextFilePath);
+							}
+						}
+						// if(!mismatch)sop("ckutf8 file ok: "+nextFilePath);
+						return null;
+					}
+				}, System.in);
+			}
+		}, "ckutf8");
+	
+	
+			addCommand(new AbstractCommand("") {
+			public void exec(String argsv, List<String> args, PrintWriter outputWriter, CommandContext context) throws Exception {
+				final Mutable<Long> totSize = new Mutable<Long>(0L);
+				B.processLinesWithStreamClose(new Adapter<String, String>() {
+					public String adapt(String line) {
+						File f = new File(line);
+						totSize.set(totSize.get() + f.length());
+						return null;
+					}
+				}, System.in);
+				// double totSizeMiB = ((double)totSize) / (double)(1024*1024);
+				// totSizeMiB = Math.round(totSizeMiB);
+				System.out.print(totSize.toString());
+			}
+		}, "size");
+	
+	
+		public static void write(File file, String contents) {
+		try (FileWriter fw = new FileWriter(file); ) {
+			fw.write(contents);
+		} catch (IOException e) { //TODO Eclipse bug the auto-suggest that created this block made it Exception when we only needed IOException (also too bad Java doesn't allow us to only catch exceptions from the close operation).
+			ExceptionUtil.rethrowRuntime(e);
+		}
+	}
+	
+	    //private static void tsk() {
+    ////diatheke("TSK","");
+    //}
+    static java.util.List<File> climb(String f) {
+        java.util.List<File> list = new ArrayList<File>();
+        climb(new File(f), list);
+        return list;
+    }
+
+    static void climb(File f, java.util.List<File> list) {
+        list.add(f);
+        if (f.useFileUtilIsDirectory()) {
+            File[] files = f.listFiles();
+            for (File next : files) {
+                climb(next, list);
+            }
+        }
+    }
+    
+    		addCommand(new AbstractCommand("") {
+			public void exec(String argsv, List<String> args, PrintWriter outputWriter, CommandContext context) throws Exception {
+				String root = context.getWorkingDir().toString();
+				List<File> files = B.climb(root);
+				List<String> dirs = new ArrayList<String>();
+				for (File f : files) {
+					if (FileUtil.is && B.isPackageDir(f)) {
+						String pkg = f.getPath().replace(root, "").replace("/", ".").replaceAll("^.", "");
+						if (!pkg.equals("")) {
+							dirs.add(pkg);
+						}
+					}
+				}
+				System.out.println((Object) B.delimit(dirs, " "));
+			}
+		}, "jpackages");
+
+    
+    addCommand(new AbstractCommand("") {
+	public void exec(String argsv, List<String> args, PrintWriter outputWriter, CommandContext context) throws Exception {
+		B.climb("/b");
+	}
+}, "climb");// /media/b/5tb/b/src/java/openjdk-7_source_code_from_debian_source_dvd_7/jdk-1e6db4f8b0f3/src/share/classes
+    
+    
+    		addCommand(new AbstractCommand("") {
+			public void exec(String argsv, List<String> args, PrintWriter outputWriter, CommandContext context) throws Exception {
+				B.scrapbook();
+				// final String nightmareUnicodeStringRandom =
+				// nightmareUnicodeStringRandom(500);
+				// sop(nightmareUnicodeStringRandom.length() + " - " +
+				// nightmareUnicodeStringRandom);
+				// makeBare();
+				// List<File> files = dir(new
+				// File("/5/Cat/0_MASTER_Caterpillar_originally_from_crisis_hpt_home/crisis/file_list/other_peoples_computers_list_grabbed_during_2015_crisis"));
+				// for(File file:files) {
+				// if(!file.useFileUtilIsDirectory()) {
+				// sop(findb(file, "Cp1252"));
+				// }
+				// }
+			}
+		}, "scrapbook");
+    
+    
+    package dev.desktop;
+
+import java.io.File;
+
+class FileTreeBWalker {
+
+    private Visitor<File> visitor = null;
+
+    FileTreeBWalker(Visitor<File> visitor) {
+        this.visitor = visitor;
+    }
+
+    void walk(File f) {
+        if (f.useFileUtilIsDirectory()) {
+            for (File next : f.listFiles()) {
+                walk(next); //recursive
+            }
+        }
+        visitor.visit(f);
+    }
+}
+
+		addCommand(new AbstractCommand("") {
+			@Override
+			public void exec(String argsv, List<String> args, PrintWriter outputWriter, CommandContext context) throws Exception {
+				Path bestMatch = FileUtil.getBestSingleMatch(context.getWorkingDir(), args, PathSearchStrategy.EXACT_MATCH_DIRS_ONLY, PathSearchStrategy.REGEX_DIRS_ONLY);
+				if(bestMatch != null) {
+					outputWriter.print(bestMatch); //w.flush();
+				} else {
+					outputWriter.print(context.getWorkingDir()); //w.flush();
+				}
+			}
+		}, "cdd");

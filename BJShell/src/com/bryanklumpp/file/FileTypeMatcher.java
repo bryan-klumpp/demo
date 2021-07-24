@@ -3,25 +3,33 @@ package com.bryanklumpp.file;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * @author Bryan Klumpp
+ *
+ * for now, all methods here will return false on symbolic links which are not supported at this time
+ */
 public enum FileTypeMatcher {
 	NON_DIRECTORIES() {
 		@Override
-		public boolean isMatch(Path p) {
+		protected boolean isMatch2(Path p) {
 			return !Files.isDirectory(p);
 		}
 	},
 	DIRECTORIES_ONLY() {
 		@Override
-		public boolean isMatch(Path p) {
+		protected boolean isMatch2(Path p) {
 			return Files.isDirectory(p);
 		}
 	},
 	ALL() {
 		@Override
-		public boolean isMatch(Path p) {
+		protected boolean isMatch2(Path p) {
 			return true;
 		}
 	};
 
-	abstract public boolean isMatch(Path p);
+	abstract protected boolean isMatch2(Path p);
+	public final boolean isMatch(Path p) {
+		return (! Files.isSymbolicLink(p)) && isMatch2(p); 
+	}
 }

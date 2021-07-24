@@ -4,8 +4,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import bec.file.DepthStats;
-
 public class FileSearchResult {
 	public List<Path> matches = new ArrayList<Path>();
 	

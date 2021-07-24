@@ -5,11 +5,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import com.bryanklumpp.file.PathSearchStrategy;
 
 /**
  * Convenience methods, etc. for dealing with Collections, Lists, Sets,
@@ -117,7 +121,7 @@ public class CollectionsB {
 		return null;
 	}
 
-	public static <T> Iterable<T> iterate(final Enumeration<T> e) {
+	public static <T> Iterable<T> iterable(final Enumeration<T> e) {
 		return new Iterable<T>() {
 			@Override
 			public Iterator<T> iterator() {
@@ -145,6 +149,18 @@ public class CollectionsB {
 
 	public static String[] toStringArray(List<String> elements) {
 		return elements.toArray(EMPTY_STRING_ARRAY);
+	}
+
+	public static <K, V> Map<K, V> mergeMaps(Map<K, V> ... maps) {
+		Map<K, V> res = newMap();
+		for(Map<K, V> map : maps) {
+			res.putAll(map);
+		}
+		return res;
+	}
+
+	public static <T> Set<T> newSet() {
+		return new HashSet<T>();
 	}
 
 
