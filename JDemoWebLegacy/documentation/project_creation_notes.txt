@@ -1,0 +1,1 @@
+I think this was created with Eclipse new project under the Spring legacy project type category, then selected Spring MVC at the bottom.  Then was able (after much fiddling and finally got transaction started properly) to get JPA working.
