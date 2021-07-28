@@ -10,7 +10,7 @@ The main purpose at the moment is to demonstrate my coding knowledge, style, and
 
 **JDemoWeb**: A "Hello World" type project for various Spring features. It was difficult to find wizards or online sample templates to create the Spring plumbing for the latest (as of June 2021) versions of Eclipse and Spring with JPA (multiple datasource capability) and Thymeleaf, so this is the template that I created. Needs some cleanup, but works as a reference. Note that it also includes an example of including another Eclipse project as a library. See documentation/server_config_and_test_setup.html
 
-**JDemoWebLegacy**: A "Hello World" type project for various legacy Spring features. I was struggling to find wizards or online sample templates to create the Spring plumbing for the latest (as of June 2021) version of Eclipse with an older version of Spring with JPA and Spring MVC, so this is the template that I created. Needs some cleanup, but works as a reference. See documentation/server_config_and_test_setup.html
+**JDemoWebLegacy**: A "Hello World" type project for various legacy Spring features. I was struggling to find wizards or online sample templates to create the Spring plumbing for the latest (as of June 2021) version of Eclipse with an older version of Spring with JPA and Spring MVC, so this is the template that I created. Needs some cleanup, but works as a reference. See documentation/server_config_and_test_setup.html  CAUTION: some of the Maven-referenced libraries are old enough to be flagged for security vulnerabilities, so I don't recommending using this except as absolutely necessary to assist in keeping legacy apps (which should be upgraded ASAP) functioning.
 
 **JDemoWebLib**: A sample web library project, see JDemoWeb
 
