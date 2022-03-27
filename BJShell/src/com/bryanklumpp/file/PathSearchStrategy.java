@@ -32,8 +32,6 @@ public abstract class PathSearchStrategy {
 	/**
 	 * User-customizable strategies to be used by default in File Search commands
 	 * that typically employ most available strategies.
-	 * TODO roll this in with a customizer framework instead of making the user
-	 * find and set this.
 	 */
 	public static final List<PathSearchStrategy> CUSTOM_EXTRA_MATCH_STRATEGIES = CollectionsB.newList();
 	
