@@ -126,6 +126,7 @@ public class SwingShell extends JFrame implements CommandContext {
 	}
 	public SwingShell(BJShellCustomizer customizer) {
 		this.customizer = customizer;
+		PathSearchStrategy.CUSTOM_EXTRA_MATCH_STRATEGIES.addAll(customizer.getCustomExtraFileMatchStrategies());
 		
 		setTitle("BJShell");
 		addWindowFocusListener(new WindowFocusListener() {
