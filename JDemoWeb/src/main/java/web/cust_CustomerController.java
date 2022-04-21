@@ -23,7 +23,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 /**
  * Handles requests for the application home page.
  */
-@EnableWebMvc
+//@EnableWebMvc //For whatever reason, enabling this breaks loading of CSS (and maybe other static) files when served from Tomcat.  Not sure why, but see https://stackoverflow.com/questions/29562471/springboot-with-thymeleaf-css-not-found 
 @Controller
 public class cust_CustomerController {
 	

@@ -53,7 +53,7 @@ public class Main_sbw_SpringBootApplicationEmbeddedWebServer {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			appExit(context);
+//			appExit(context);
 		}
 	}
 

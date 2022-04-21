@@ -1,4 +1,4 @@
-package web;
+package web.greeting;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Controller;

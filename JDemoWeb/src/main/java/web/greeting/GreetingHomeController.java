@@ -1,4 +1,4 @@
-package web;
+package web.greeting;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -10,9 +10,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import web.CustomerDemo;
 
 /**
  * Handles requests for the application home page.
@@ -25,8 +28,8 @@ public class GreetingHomeController {
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/greeting", method = RequestMethod.GET)
-	public String home(@RequestParam(name="name", required=false, defaultValue="World")String name, Locale locale, Model model) {
+	@GetMapping("/greeting")
+	public String home(@RequestParam(name="name", required=false, defaultValue="Wooorld")String name, Locale locale, Model model) {
 		System.out.println("Hit homecontroller");
 		try {
 			CustomerDemo.demoCustomer();
@@ -40,6 +43,8 @@ public class GreetingHomeController {
 			model.addAttribute("serverTime", formattedDate );
 
 			model.addAttribute("name",name);
+			
+			model.addAttribute(new Greeting());
 
 			return "greeting";
 		} catch (Exception e) {
@@ -51,5 +56,11 @@ public class GreetingHomeController {
 			return "error";
 		}
 	}
+	@PostMapping("/greeting")
+	  public String greetingSubmit(@ModelAttribute Greeting greeting, Model model) {
+	    model.addAttribute("greeting", greeting);
+	    return "result";
+	  }
+	
 	
 }
