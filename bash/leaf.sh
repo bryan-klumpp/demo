@@ -1,0 +1,1 @@
+nocolor | g $leaf

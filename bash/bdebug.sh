@@ -1,0 +1,1 @@
+test -z $bdebugflag || { echo bdebug:"$@"; }

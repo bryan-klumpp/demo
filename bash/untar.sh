@@ -1,0 +1,1 @@
+tar --extract -v -f "$1"

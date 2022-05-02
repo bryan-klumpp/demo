@@ -1,0 +1,1 @@
+sudo ln -s /media/*/ext4 /b

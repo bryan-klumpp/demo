@@ -1,0 +1,11 @@
+bin
+iso
+jpg
+mp4
+mov
+deb
+rpm
+zip
+7z
+img
+gz

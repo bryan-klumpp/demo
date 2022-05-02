@@ -1,0 +1,1 @@
+sd umount /dev/mapper/zuluCrypt-1000-NAAN-sda2-4071757814

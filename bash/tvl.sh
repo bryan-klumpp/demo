@@ -1,0 +1,3 @@
+echo 'https://download.teamviewer.com/download/TeamViewerQS.exe'|clip
+echo 'QuickSupport download link copied to clipboard; also see all links at https://www.teamviewer.com/en-us/download/windows/?_hsenc=p2ANqtz--u67wHcWLcZE87qOhIZehXBmvHORQR5vgms8FL95Gx6ExZyThil6AKIPP2TRDuqjRhzHOGuKCzYrn1TT3rH3avwMJ5rw&_hsmi=63738159?_hsenc=p2ANqtz--u67wHcWLcZE87qOhIZehXBmvHORQR5vgms8FL95Gx6ExZyThil6AKIPP2TRDuqjRhzHOGuKCzYrn1TT3rH3avwMJ5rw&_hsmi=63738159?utm_campaign=2018_Q2_HelpDesk_HDI&utm_source=hs_automation&utm_medium=email&utm_content=63738159&_hsenc=p2ANqtz--u67wHcWLcZE87qOhIZehXBmvHORQR5vgms8FL95Gx6ExZyThil6AKIPP2TRDuqjRhzHOGuKCzYrn1TT3rH3avwMJ5rw&_hsmi=63738159'
+

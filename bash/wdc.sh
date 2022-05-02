@@ -1,0 +1,1 @@
+echo "$(readlink -e "$(pwd)")";

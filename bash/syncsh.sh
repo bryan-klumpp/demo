@@ -1,0 +1,1 @@
+rsync -a /sh /l/8/setup/sync
