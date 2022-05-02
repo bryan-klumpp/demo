@@ -30,6 +30,10 @@ public class DemoSwingShellLauncher {
 			@Override
 			public void applyLookAndFeel(JFrame shellWindow) {
 			}
+			@Override
+			public List<PathSearchStrategy> getCustomExtraFileMatchStrategies() {
+				return CollectionsB.newList();
+			}
 		}).setVisible(true);
 
 	}

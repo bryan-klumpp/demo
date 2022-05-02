@@ -26,6 +26,11 @@ public interface BJShellCustomizer {
 	 * @param shellWindow a JFrame to which a custom look and feel is to be applied
 	 */
 	public void applyLookAndFeel(JFrame shellWindow);
+	/**
+	 * Add your own personal methods of searching the file system
+	 * @return 
+	 */
+	public List<PathSearchStrategy> getCustomExtraFileMatchStrategies();
 	
 	/**
 	 * Singleton for use when no customization is needed; does basically nothing.
@@ -39,6 +44,11 @@ public interface BJShellCustomizer {
 		@Override
 		public void applyLookAndFeel(JFrame shellWindow) {
 			// just leave the default L&F
+		}
+
+		@Override
+		public List<PathSearchStrategy> getCustomExtraFileMatchStrategies() {
+			return CollectionsB.newList();
 		}
 
 	};
