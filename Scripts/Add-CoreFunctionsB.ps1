@@ -90,6 +90,17 @@ Function AdminShell() {
   start-process -Credential (get-credential) -verb runas powershell
 }
 
+Function robobak() {
+    $bakDir='c:\bak'
+    $userProfile=$env:USERPROFILE
+    md $bakDir  #make the filename shorter than c:\users to attempt to avoid total path length issues, although still possible
+    # not using /Z, possible better performance, TODO measure it; also re-evaluate /B, may need admin elevation
+    $cmdString = "`@echo off`r`nrobocopy $userProfile $bakDir /E /SEC /SJ /SL /DCOPY:DAT /XD `"$userProfile\AppData`" /XJ /R:0 /W:0 /V /FP /LOG:$bakDir\robocopy_log.txt /TEE`necho Please screenshot this text and send to IT if there are any questions about whether it was totally successful, especially if more than 0 files show up as FAILED`r`npause`r`npause`r`npause"
+    $bat = ($bakDir + "\_go.bat")
+    Write-Output $cmdString | Out-File -Encoding utf8 $bat
+    Write-Host ("run batch file " + $bat + " as Administrator")
+}
+
 # IP3 https://web.archive.org/web/20160115183554/http://blogs.msdn.com/b/daiken/archive/2007/02/12/compress-files-with-windows-powershell-then-package-a-windows-vista-sidebar-gadget.aspx
 #usage: new-zip c:\demo\myzip.zip 
 function New-Zip

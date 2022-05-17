@@ -1,1 +1,1 @@
-start C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Unrestricted -NoProfile -NoExit -File "C:\Users\b\eclipse\w1\PowerShell\Add-CoreFunctionsB.ps1" C:\Users\b\eclipse\w1\PowerShell\_start.bat
+start C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Unrestricted -NoProfile -NoExit -File "Add-CoreFunctionsB.ps1" C:\Users\b\eclipse\w1\PowerShell\_start.bat
