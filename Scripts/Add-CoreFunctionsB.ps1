@@ -1,3 +1,6 @@
+Add-Type -AssemblyName System.Web
+
+
 $myPath = Get-Item $MyInvocation.MyCommand.Path
 $myDir = $myPath.Directory
 
@@ -45,6 +48,7 @@ function Prompt   #Override default prompt to set color scheme
 }
 #---------------- Set Color Scheme - end -------------------
 
+New-Alias restartScript -Name rr  #bprs
 New-Alias restartScript -Name boot  #bprs
 function  restartScript() {
     Start-Process (Get-ChildItem -Path $myDir "_b73_*")  #the reason the batch file starts with a strange key pattern like _b73_ is so that the rest of it can be renamed for clarity, but another user would be less likely to touch a pattern like _b73_
@@ -75,11 +79,51 @@ function act() { Param($titleFrag)
     (New-Object -ComObject WScript.Shell).AppActivate((Get-Process | Where-Object { $_.MainWindowTitle -like ('*'+$titleFrag+'*') }).MainWindowTitle)
 }
 
+function toArrayList() {
+    $al = [System.Collection.ArrayList](New-Object System.Collections.ArrayList($null))
+    $al.AddRange($args)
+    return $al
+}
+
+
+function whatisit() {
+    Write-Host (whatisitO $args[0] $args[1])
+}
+function whatisitO() {
+    $s = ($args[0])
+    $x = $args[1]
+    if($x -is [Array]) {
+        $xa = [Array]$x
+        $s = ($s + '@(')
+        for($i = 0; $i -lt $xa.Count; $i++) {
+            $s += (whatisitO '' $xa[$i])
+            if($i -lt $xa.Count - 1) {
+                $s += ','
+            }
+        }
+        $s += ')'
+    } else {
+        $s = ($s + ($x.GetType().FullName) )
+    }
+    return $s
+}
+
+function w() {
+    se "https://www.google.com/search?q=_searchFor_" $args
+}
 function se() { 
-    Add-Type -AssemblyName System.Web
-    $joined=($args -join ' ')
-    $encodedSearch=[System.Web.HTTPUtility]::UrlEncode($joined)
-    Start-Process ("https://www.google.com/search?q="+$encodedSearch)
+    #Add-Type -AssemblyName System.Web  #included at beginning of file?
+    $base      = $args[0]
+    $searchStrings = @($args[1])
+    for(($i=0); $i -lt $SearchStrings.length; $i++){
+        if($SearchStrings[$i] -Match ' ' -and (-not($SearchStrings[$i] -Match '$"'))) { #make sure it doesn't already start with a quote, but if not, and it has spaces, quote it
+            $SearchStrings[$i] = ('"'+$SearchStrings[$i]+'"')
+        }
+    }
+    $searchFor=($SearchStrings -join ' ')
+    $encodedSearch=[System.Web.HTTPUtility]::UrlEncode($searchFor)
+    $combinedUrl = $base -replace '_searchFor_',$encodedSearch
+    Start-Process ($combinedUrl)  #uses default browser
 }
 
 function ww() {
@@ -101,65 +145,6 @@ Function robobak() {
     Write-Host ("run batch file " + $bat + " as Administrator")
 }
 
-# IP3 https://web.archive.org/web/20160115183554/http://blogs.msdn.com/b/daiken/archive/2007/02/12/compress-files-with-windows-powershell-then-package-a-windows-vista-sidebar-gadget.aspx
-#usage: new-zip c:\demo\myzip.zip 
-function New-Zip
-{
-	param([string]$zipfilename)
-	set-content $zipfilename ("PK" + [char]5 + [char]6 + ("$([char]0)" * 18))
-	(dir $zipfilename).IsReadOnly = $false
-}
-
-# IP3 https://web.archive.org/web/20160115183554/http://blogs.msdn.com/b/daiken/archive/2007/02/12/compress-files-with-windows-powershell-then-package-a-windows-vista-sidebar-gadget.aspx
-#usage: dir c:\demo\files -Recurse | add-Zip c:\demo\myzip.zip
-
-function Add-Zip
-{
-	param([string]$zipfilename)
-
-	if(-not (test-path($zipfilename)))
-	{
-		set-content $zipfilename ("PK" + [char]5 + [char]6 + ("$([char]0)" * 18))
-		(dir $zipfilename).IsReadOnly = $false	
-	}
-	
-	$shellApplication = new-object -com shell.application
-	$zipPackage = $shellApplication.NameSpace($zipfilename)
-	
-	foreach($file in $input) 
-	{ 
-            $zipPackage.CopyHere($file.FullName)
-            Start-sleep -milliseconds 500  #hopefully there was a good reason for this expensive line
-	}
-}
-
-# IP3 https://web.archive.org/web/20160115183554/http://blogs.msdn.com/b/daiken/archive/2007/02/12/compress-files-with-windows-powershell-then-package-a-windows-vista-sidebar-gadget.aspx
-#usage: Get-Zip c:\demo\myzip.zip
-function Get-Zip
-{
-	param([string]$zipfilename)
-	if(test-path($zipfilename))
-	{
-		$shellApplication = new-object -com shell.application
-		$zipPackage = $shellApplication.NameSpace($zipfilename)
-		$zipPackage.Items() | Select Path
-	}
-}
-
-# IP3 https://web.archive.org/web/20160115183554/http://blogs.msdn.com/b/daiken/archive/2007/02/12/compress-files-with-windows-powershell-then-package-a-windows-vista-sidebar-gadget.aspx
-#usage: extract-zip c:\demo\myzip.zip c:\demo\destination
-function Extract-Zip
-{
-	param([string]$zipfilename, [string] $destination)
-
-	if(test-path($zipfilename))
-	{	
-		$shellApplication = new-object -com shell.application
-		$zipPackage = $shellApplication.NameSpace($zipfilename)
-		$destinationFolder = $shellApplication.NameSpace($destination)
-		$destinationFolder.CopyHere($zipPackage.Items())
-	}
-}
 
 function AltTab() {
     [System.Windows.Forms.SendKeys]::SendWait("%({TAB})")

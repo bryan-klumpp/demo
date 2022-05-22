@@ -215,3 +215,36 @@ $ANSIColorSequenceBW+"PS $($executionContext.SessionState.Path.CurrentLocation)$
 # .ExternalHelp System.Management.Automation.dll-help.xml
 #return $promptString  #this was not in the built-in function definition but seems to be needed to avoid duplicate printing
 }
+
+
+
+#no worky
+    write-host ('0:'+($arr[0])+':0')
+    write-host ('1:'+($arr[1])+':1')
+    return @($arr)
+
+    Write-Host ("isarray"+  ($args -is [Array]) )
+    $argsAL=[System.Collection.ArrayList](toArrayList($args))
+    write-host ('0:'+$argsAL[0]+':0')
+    write-host ('1:'+$argsAL[1]+':1')
+    $argsAL | get-member
+    $argsAL.RemoveAt(0)
+    write-host ("shrunk: "+$argsAL.ToArray()[0])
+    return $argsAL.ToArray()
+
+
+function from1() {
+    $inA = $args[0]
+    #$al=[System.Collections.ArrayList]::new()
+    #$a = New-Object int[] ($inA.Count - 1)
+    for($i=1; $i -lt $inA.Count; $i=$i + 1) {
+        $al.add($inA[$i])
+    }
+    write-host $a
+}
+function se_old_deleteme() { 
+    Add-Type -AssemblyName System.Web
+    $joined=($args -join ' ')
+    $encodedSearch=[System.Web.HTTPUtility]::UrlEncode($joined)
+    Start-Process ("https://www.google.com/search?q="+$encodedSearch)
+}
