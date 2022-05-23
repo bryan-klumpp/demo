@@ -107,12 +107,19 @@ function whatisitO() {
     }
     return $s
 }
+
+
+
+################# web/intranet searching ###################
 #/table/incident?sysparm_query=sys_id=bbc2ddcedba51300b2bd711ebf961944^category=enquiry&sysparm_exclude_reference_link=true&sysparm_view=false&sysparm_display_value=false&sysparm_suppress_pagination=false&sysparm_limit=500  https://community.servicenow.com/community?id=community_question&sys_id=a3a50c1edbd7d3001cd8a345ca961942  IP1
 function inc() {
     searchByURL 'https://<instance name>.service-now.com/incident_list.do?HTML&sysparm_query=priority=1&sysparm_orderby=assigned_to'
 }
-function task() {
-    searchByURL 'https://<instance name>.service-now.com/task_list.do?HTML&sysparm_query=priority=1&sysparm_orderby=assigned_to'
+New-Alias task -Name ta
+function  task() {
+    $searchFor = ('number='+$args[0])
+    #searchByURL 'https://<instance name>.service-now.com/task_list.do?HTML&sysparm_query=priority=1&sysparm_orderby=assigned_to'
+    searchByURL 'https://<instance name>.service-now.com/task_list.do?HTML&sysparm_query=_searchFor_&sysparm_orderby=assigned_to' $searchFor
 }
 function w() {
     searchByURL "https://www.google.com/search?q=_searchFor_" $args
@@ -141,6 +148,8 @@ function ww() {
   Write-Output $args
 }
 
+
+
 Function AdminShell() {
   start-process -Credential (get-credential) -verb runas powershell
 }
@@ -154,7 +163,8 @@ Function robobak() {
     $cmdString = "`@echo off`r`nrobocopy $userProfile $bakDir /E /SEC /SJ /SL /DCOPY:DAT /XD `"$userProfile\AppData`" /XJ /R:0 /W:0 /V /FP /LOG:$bakDir\robocopy_log.txt /TEE`necho Please screenshot this text and send to IT if there are any questions about whether it was totally successful, especially if more than 0 files show up as FAILED`r`npause`r`npause`r`npause"
     $bat = ($bakDir + "\_go.bat")
     Write-Output $cmdString | Out-File -Encoding utf8 $bat
-    Write-Host ("run batch file " + $bat + " as Administrator")
+    Write-Host ("run batch file " + $bat + " as Administrator, copying to clipboard")
+    $bat | Set-Clipboard
 }
 
 
