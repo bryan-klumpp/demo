@@ -191,5 +191,17 @@ function nitt() {
     AltTabPasteArg0 "Now is the time`nfor all good men to come to the aid of their country."
 }
 
+
 #startup
+. .\custom_functions_0.ps1
+. .\custom_functions_1.ps1
+. .\custom_functions_2.ps1
+. .\custom_functions_3.ps1
+. .\custom_functions_4.ps1
+. .\custom_functions_5.ps1
+. .\custom_functions_6.ps1
+. .\custom_functions_7.ps1
+. .\custom_functions_8.ps1
+. .\custom_functions_9.ps1
 bw
+. .\*custom_functions*ps1  #not working
