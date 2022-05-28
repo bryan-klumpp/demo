@@ -168,8 +168,11 @@ Function robobak() {
 }
 
 
+function SendKeys() {
+    [System.Windows.Forms.SendKeys]::SendWait($args[0])
+}
 function AltTab() {
-    [System.Windows.Forms.SendKeys]::SendWait("%({TAB})")
+    SendKeys "%({TAB})"
 }
 function AltTabTab() {
     [System.Windows.Forms.SendKeys]::SendWait("%({TAB}{TAB})")
