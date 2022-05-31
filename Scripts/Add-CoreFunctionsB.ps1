@@ -1,4 +1,5 @@
-<#### Commented out code but might be useful executing in some environments like PowerShell ISE or computers without existing shortcuts
+<#### Commented out code but might be useful executing in some environments
+      like PowerShell ISE or computers without existing shortcuts
 
 Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
 
@@ -7,8 +8,10 @@ Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
                                         ( $Env:USERPROFILE   + '\IT\Add-CoreFunctionsB.ps1')
 
 # execute non-admin, then admin, on user's PC 
-Start-Process ($PSHOME + "\powershell.exe") -ArgumentList ('-ExecutionPolicy Unrestricted -NoProfile -NoExit -File ' + $psISE.CurrentFile.FullPath)
-Start-Process ($PSHOME + "\powershell.exe") -ArgumentList ('-ExecutionPolicy Unrestricted -NoProfile -NoExit -File ' + $psISE.CurrentFile.FullPath) -Verb RunAs
+Start-Process ($PSHOME + "\powershell.exe") -ArgumentList ('-ExecutionPolicy Unrestricted `
+   -NoProfile -NoExit -File ' + $psISE.CurrentFile.FullPath)
+Start-Process ($PSHOME + "\powershell.exe") -ArgumentList ('-ExecutionPolicy Unrestricted `
+   -NoProfile -NoExit -File ' + $psISE.CurrentFile.FullPath) -Verb RunAs
 
 ####>
 
@@ -62,14 +65,18 @@ Function bw() {
 
 function Prompt   #Override default prompt to set color scheme
 {
-    $ANSIColorSequenceBW+"PS $($executionContext.SessionState.Path.CurrentLocation)$('>' * ($nestedPromptLevel + 1)) "
+    $ANSIColorSequenceBW+"PS $($executionContext.SessionState.Path.CurrentLocation)$('>' `
+    * ($nestedPromptLevel + 1)) "
 }
 #---------------- Set Color Scheme - end -------------------
 
 New-Alias restartScript -Name rr  #bprs
 New-Alias restartScript -Name boot  #bprs
 function  restartScript() {
-    Start-Process (Get-ChildItem -Path $myDir "_b73_*")  #the reason the batch file starts with a strange key pattern like _b73_ is so that the rest of it can be renamed for clarity, but another user would be less likely to touch a pattern like _b73_
+    # the reason the batch file starts with a strange key pattern like _b73_ 
+    # is so that the rest of it can be renamed for clarity, but another user 
+    # would be less likely to touch a pattern like _b73_
+    Start-Process (Get-ChildItem -Path $myDir "_b73_*")  
     exit
 }
 
