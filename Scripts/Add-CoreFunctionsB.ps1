@@ -1,11 +1,29 @@
+<#### Commented out code but might be useful executing in some environments like PowerShell ISE or computers without existing shortcuts
+
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
+
+#command snippets
+([System.Environment]::GetEnvironmentVariable('USERPROFILE') + '\IT\Add-CoreFunctionsB.ps1')
+                                        ( $Env:USERPROFILE   + '\IT\Add-CoreFunctionsB.ps1')
+
+# execute non-admin, then admin, on user's PC 
+Start-Process ($PSHOME + "\powershell.exe") -ArgumentList ('-ExecutionPolicy Unrestricted -NoProfile -NoExit -File ' + $psISE.CurrentFile.FullPath)
+Start-Process ($PSHOME + "\powershell.exe") -ArgumentList ('-ExecutionPolicy Unrestricted -NoProfile -NoExit -File ' + $psISE.CurrentFile.FullPath) -Verb RunAs
+
+####>
+
 Add-Type -AssemblyName System.Web
 Add-Type -AssemblyName System.Windows.Forms
-
 
 $myPath = Get-Item $MyInvocation.MyCommand.Path
 $myDir = $myPath.Directory
 
-#--------------- Set Color Scheme - begin ------------------
+new-alias getEnvironmentVariable -Name env   #bshort
+function  getEnvironmentVariable() {
+    return [System.Environment]::GetEnvironmentVariable($args[0])
+}
+
+#--------- Set Color Scheme Black on White - begin -------------
 $ANSIColorSequenceBW="$([char]0x1b)[38;2;0;0;0;48;2;255;255;255;m"
 Function bw() {
     $host.ui.rawui.ForegroundColor = 'Black'
@@ -121,14 +139,24 @@ function  task() {
     #searchByURL 'https://<instance name>.service-now.com/task_list.do?HTML&sysparm_query=priority=1&sysparm_orderby=assigned_to'
     searchByURL 'https://<instance name>.service-now.com/task_list.do?HTML&sysparm_query=_searchFor_&sysparm_orderby=assigned_to' $searchFor
 }
-function w() {
+new-alias googleSearch -Name se #bshort
+function  googleSearch() {
     searchByURL "https://www.google.com/search?q=_searchFor_" $args
 }
-New-Alias dellSupport -Name d
-function  dellSupport() {
-    AltTab; CtrlC; Start-Process "https://www.dell.com/support/home/en-us"
+
+
+function matches() {
+    return $args[0] -Match ('^' + $args[1] + '$')
 }
-New-Alias -Name se searchByURL
+
+function autoClipParm() {
+    if( matches (Get-Clipboard) $args[0] ) {
+        return (Get-Clipboard)
+    } else {
+        return $args[1]
+    }
+}
+
 function searchByURL() { 
     #Add-Type -AssemblyName System.Web  #included at beginning of file?
     $base      = $args[0]
@@ -141,14 +169,30 @@ function searchByURL() {
     $searchFor=($SearchStrings -join ' ')
     $encodedSearch=[System.Web.HTTPUtility]::UrlEncode($searchFor)
     $combinedUrl = $base -replace '_searchFor_',$encodedSearch
-    Start-Process ($combinedUrl)  #uses default browser
+    web $combinedUrl
+}
+
+function web() {
+    Start-Process $args[0] #uses default browser
 }
 
 function ww() {
   Write-Output $args
 }
 
+function myServiceTag() {
+    return (wmic bios get serialnumber | select -index 2)
+}
 
+New-Alias dellSupport -Name d
+function  dellSupport() {
+    AltTab; CtrlC; Start-Process "https://www.dell.com/support/home/en-us"
+}
+
+new-alias dells -Name st
+function  dells() {
+    searchByURL https://www.dell.com/support/home/en-us/product-support/servicetag/_searchFor_ (autoclipparm '[A-Za-z0-9]{7}')
+}
 
 Function AdminShell() {
   start-process -Credential (get-credential) -verb runas powershell
@@ -194,17 +238,9 @@ function nitt() {
     AltTabPasteArg0 "Now is the time`nfor all good men to come to the aid of their country."
 }
 
+foreach ($nextCustScript in (dir .\*custom*functions*ps1) ) {
+    . $nextCustScript
+}
 
-#startup
-. .\custom_functions_0.ps1
-. .\custom_functions_1.ps1
-. .\custom_functions_2.ps1
-. .\custom_functions_3.ps1
-. .\custom_functions_4.ps1
-. .\custom_functions_5.ps1
-. .\custom_functions_6.ps1
-. .\custom_functions_7.ps1
-. .\custom_functions_8.ps1
-. .\custom_functions_9.ps1
+#non-function code executed on startup
 bw
-. .\*custom_functions*ps1  #not working
