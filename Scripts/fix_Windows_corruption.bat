@@ -23,6 +23,9 @@ goto End
 
 :LabelChkdskFail
 @echo off
-echo Because errors were found on your disk, you will need to restart the computer (at your convenience) in order to continue the corruption repair procedure.  Upon restart, you will see a disk repair process running for a few minutes before Windows comes up, so bear in mind this could take 5 minutes, or possibly much longer if there are serious issues.  After Windows comes back up, please reach out to the analyst.
+echo "------------------------------------------------------"
+echo Because chkdsk-level errors were found on your disk, please answer Y to the next prompt, and you will need to restart the computer (but you can wait and restart at your convenience) in order to continue the corruption repair procedure.  Upon restart, you will see a disk repair process running for a few minutes before Windows comes up, so bear in mind this could take 5 minutes, or possibly much longer if there are serious issues.  After Windows comes back up, please reach out to the analyst.
+echo "------------------------------------------------------"
 @echo on
-echo y | chkdsk c: /f
+chkdsk c: /f
+pause
