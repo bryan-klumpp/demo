@@ -63,11 +63,14 @@ Function bw() {
     #Note that the overriden Prompt method fixes the remaining color piece
 }
 
-function Prompt   #Override default prompt to set color scheme
-{
-    $ANSIColorSequenceBW+"PS $($executionContext.SessionState.Path.CurrentLocation)$('>' `
-    * ($nestedPromptLevel + 1)) "
-}
+<#Override default prompt to set color scheme; commented out for now 
+  because I'm using PowerShell ISE exclusively for now, and this is 
+  for a normal Powershell window; TODO2 make this context-sensitive#>
+#function Prompt   
+#{
+#    $ANSIColorSequenceBW+"PS $($executionContext.SessionState.Path.CurrentLocation)$('>' `
+#    * ($nestedPromptLevel + 1)) "
+#}
 #---------------- Set Color Scheme - end -------------------
 
 New-Alias restartScript -Name rr  #bprs
@@ -101,7 +104,8 @@ function f() { Param($regex)
 function act() { Param($titleFrag)
     #Set-ForegroundWindow (Get-Process "Edge").MainWindowHandle
     #(Get-Process | Where-Object { $_.MainWindowTitle -like '*Edge' })
-    (New-Object -ComObject WScript.Shell).AppActivate((Get-Process | Where-Object { $_.MainWindowTitle -like ('*'+$titleFrag+'*') }).MainWindowTitle)
+    (New-Object -ComObject WScript.Shell).AppActivate((Get-Process `
+     | Where-Object { $_.MainWindowTitle -like ('*'+$titleFrag+'*') }).MainWindowTitle)
 }
 
 function toArrayList() {
@@ -136,15 +140,20 @@ function whatisitO() {
 
 
 ################# web/intranet searching ###################
-#/table/incident?sysparm_query=sys_id=bbc2ddcedba51300b2bd711ebf961944^category=enquiry&sysparm_exclude_reference_link=true&sysparm_view=false&sysparm_display_value=false&sysparm_suppress_pagination=false&sysparm_limit=500  https://community.servicenow.com/community?id=community_question&sys_id=a3a50c1edbd7d3001cd8a345ca961942  IP1
-function inc() {
-    searchByURL 'https://<instance name>.service-now.com/incident_list.do?HTML&sysparm_query=priority=1&sysparm_orderby=assigned_to'
+<#/table/incident?sysparm_query=sys_id=bbc2ddcedba51300b2bd711ebf961944
+  ^category=enquiry&sysparm_exclude_reference_link=true&sysparm_view=false
+  &sysparm_display_value=false&sysparm_suppress_pagination=false&sysparm_limit=500  
+  https://community.servicenow.com/community?id=community_question&sys_id=a3a50c1edbd7d3001cd8a345ca961942  IP1 #>
+
+function inctempl() {
+    searchByURL ('https://<instance name>.service-now.com/incident_list.do?HTML' +`
+                 '&sysparm_query=priority=1&sysparm_orderby=assigned_to')
 }
 New-Alias task -Name ta
-function  task() {
+function  tasktempl() {
     $searchFor = ('number='+$args[0])
-    #searchByURL 'https://<instance name>.service-now.com/task_list.do?HTML&sysparm_query=priority=1&sysparm_orderby=assigned_to'
-    searchByURL 'https://<instance name>.service-now.com/task_list.do?HTML&sysparm_query=_searchFor_&sysparm_orderby=assigned_to' $searchFor
+    searchByURL ('https://<instance name>.service-now.com/task_list.do?HTML' +`
+    '&sysparm_query=_searchFor_&sysparm_orderby=assigned_to') $searchFor
 }
 new-alias googleSearch -Name se #bshort
 function  googleSearch() {
@@ -157,10 +166,11 @@ function matches() {
 }
 
 function autoClipParm() {
-    if( matches (Get-Clipboard) $args[0] ) {
-        return (Get-Clipboard)
+    $clipt = (Get-Clipboard).trim()
+    if( matches ($clipt) $args[0] ) {
+        return ($clipt)
     } else {
-        return $args[1]
+        return $args[1].trim()
     }
 }
 
@@ -169,7 +179,8 @@ function searchByURL() {
     $base      = $args[0]
     $searchStrings = @($args[1])
     for(($i=0); $i -lt $SearchStrings.length; $i++){
-        if($SearchStrings[$i] -Match ' ' -and (-not($SearchStrings[$i] -Match '$"'))) { #make sure it doesn't already start with a quote, but if not, and it has spaces, quote it
+        #make sure it doesn't already start with a quote, but if not, and it has spaces, quote it
+        if($SearchStrings[$i] -Match ' ' -and (-not($SearchStrings[$i] -Match '$"'))) { 
             $SearchStrings[$i] = ('"'+$SearchStrings[$i]+'"')
         }
     }
@@ -198,7 +209,8 @@ function  dellSupport() {
 
 new-alias dells -Name st
 function  dells() {
-    searchByURL https://www.dell.com/support/home/en-us/product-support/servicetag/_searchFor_ (autoclipparm '[A-Za-z0-9]{7}')
+    searchByURL https://www.dell.com/support/home/en-us/product-support/servicetag/_searchFor_ `
+     (autoclipparm '[A-Za-z0-9]{7}')
 }
 
 Function AdminShell() {
@@ -208,10 +220,14 @@ Function AdminShell() {
 Function robobak() {
     $bakDir='c:\backup'
     $userProfile=$env:USERPROFILE
-    md $bakDir  #make the filename shorter than c:\users to attempt to avoid total path length issues, although still possible
+    #make the filename shorter than c:\users to attempt to avoid total path length issues, although still possible
     # not using /Z, possible better performance, TODO measure it; also re-evaluate /B, may need admin elevation
     # remove /SEC if wanting to execute with non-admin user
-    $cmdString = "`@echo off`r`nrobocopy $userProfile $bakDir /E /SEC /SJ /SL /DCOPY:DAT /XD `"$userProfile\AppData`" /XJ /R:0 /W:0 /V /FP /LOG:$bakDir\robocopy_log.txt /TEE`necho Please screenshot this text and send to IT if there are any questions about whether it was totally successful, especially if more than 0 files show up as FAILED`r`npause`r`npause`r`npause"
+    md $bakDir  
+    $cmdString = ("`@echo off`r`nrobocopy $userProfile $bakDir /E /SEC /SJ /SL /DCOPY:DAT /XD" + `
+       " `"$userProfile\AppData`" /XJ /R:0 /W:0 /V /FP /LOG:$bakDir\robocopy_log.txt /TEE`n" + `
+       "echo Please screenshot this text and send to IT if there are any questions about whether " + `
+       "it was totally successful, especially if more than 0 files show up as FAILED`r`npause`r`npause`r`npause")
     $bat = ($bakDir + "\_go.bat")
     Write-Output $cmdString | Out-File -Encoding utf8 $bat
     Write-Host ("run batch file " + $bat + " as Administrator, copying to clipboard")
@@ -250,4 +266,4 @@ foreach ($nextCustScript in (dir .\*custom*functions*ps1) ) {
 }
 
 #non-function code executed on startup
-bw
+#bw
