@@ -250,6 +250,7 @@ function CtrlC() {
 function CtrlV() {
     [System.Windows.Forms.SendKeys]::SendWait("^v")
 }
+New-Alias -Name AltTabPaste AltTabPasteArg0
 function AltTabPasteArg0() {
     $text = $args[0]
     set-clipboard $text
@@ -260,10 +261,113 @@ function AltTabPasteArg0() {
 function nitt() {
     AltTabPasteArg0 "Now is the time`nfor all good men to come to the aid of their country."
 }
+function psISEColorDefault() {
+    $psISE.Options.ErrorForegroundColor           ='#FFFF9494'
+    $psISE.Options.ErrorBackgroundColor           ='#00FFFFFF'
+    $psISE.Options.WarningForegroundColor         ='#FFFF8C00'
+    $psISE.Options.WarningBackgroundColor         ='#00FFFFFF'
+    $psISE.Options.VerboseForegroundColor         ='#FF00FFFF'
+    $psISE.Options.VerboseBackgroundColor         ='#00FFFFFF'
+    $psISE.Options.DebugForegroundColor           ='#FF00FFFF'
+    $psISE.Options.DebugBackgroundColor           ='#00FFFFFF'
+    $psISE.Options.ConsolePaneBackgroundColor     ='#FF000080'
+    $psISE.Options.ConsolePaneTextBackgroundColor ='#FF012456'
+    $psISE.Options.ConsolePaneForegroundColor     ='#FFF5F5F5'
+    $psISE.Options.ScriptPaneBackgroundColor      ='#FFFFFFFF'
+    $psISE.Options.ScriptPaneForegroundColor      ='#FF000000'
+}
+function psISEColorInverted() {
+    $psISE.Options.ErrorBackgroundColor           ='#FFFF9494'
+    $psISE.Options.ErrorForegroundColor           ='#00FFFFFF'
+    $psISE.Options.WarningBackgroundColor         ='#FFFF8C00'
+    $psISE.Options.WarningForegroundColor         ='#00FFFFFF'
+    $psISE.Options.VerboseBackgroundColor         ='#FF00FFFF'
+    $psISE.Options.VerboseForegroundColor         ='#00FFFFFF'
+    $psISE.Options.DebugBackgroundColor           ='#FF00FFFF'
+    $psISE.Options.DebugForegroundColor           ='#00FFFFFF'
+    $psISE.Options.ConsolePaneForegroundColor     ='#FF000080'
+    $psISE.Options.ConsolePaneTextForegroundColor ='#FF012456'
+    $psISE.Options.ConsolePaneBackgroundColor     ='#FFF5F5F5'
+    $psISE.Options.ScriptPaneForegroundColor      ='#FFFFFFFF'
+    $psISE.Options.ScriptPaneBackgroundColor      ='#FF000000'
+}
+function psISEColorBY() { #TODO finish/fix
+    $psISE.Options.ErrorForegroundColor           ='#FFFF9494'
+    $psISE.Options.ErrorBackgroundColor           ='#00FFFFFF'
+    $psISE.Options.WarningForegroundColor         ='#FFFF8C00'
+    $psISE.Options.WarningBackgroundColor         ='#00FFFFFF'
+    $psISE.Options.VerboseForegroundColor         ='#FF00FFFF'
+    $psISE.Options.VerboseBackgroundColor         ='#00FFFFFF'
+    $psISE.Options.DebugForegroundColor           ='#FF00FFFF'
+    $psISE.Options.DebugBackgroundColor           ='#00FFFFFF'
+    $psISE.Options.ConsolePaneBackgroundColor     ='#FFFFFFFF'
+    $psISE.Options.ConsolePaneTextBackgroundColor ='#FFFFFFFF'
+    $psISE.Options.ConsolePaneForegroundColor     ='#FF000000'
+    $psISE.Options.ScriptPaneBackgroundColor      ='#FFFFFFFF'
+    $psISE.Options.ScriptPaneForegroundColor      ='#FF000000'
+    
+    #https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/object-model/the-iseoptions-object?view=powershell-7.2
+$psISE.Options.ConsoleTokenColors["Attribute"]='black'
+$psISE.Options.ConsoleTokenColors["Command"]='black'
+$psISE.Options.ConsoleTokenColors["CommandArgument"]='black'
+$psISE.Options.ConsoleTokenColors["CommandParameter"]='black'
+$psISE.Options.ConsoleTokenColors["Comment"]='black'
+$psISE.Options.ConsoleTokenColors["GroupEnd"]='black'
+$psISE.Options.ConsoleTokenColors["GroupStart"]='black'
+$psISE.Options.ConsoleTokenColors["Keyword"]='black'
+$psISE.Options.ConsoleTokenColors["LineContinuation"]='black'
+$psISE.Options.ConsoleTokenColors["LoopLabel"]='black'
+$psISE.Options.ConsoleTokenColors["Member"]='black'
+$psISE.Options.ConsoleTokenColors["NewLine"]='black'
+$psISE.Options.ConsoleTokenColors["Number"]='black'
+$psISE.Options.ConsoleTokenColors["Operator"]='black'
+$psISE.Options.ConsoleTokenColors["Position"]='black'
+$psISE.Options.ConsoleTokenColors["StatementSeparator"]='black'
+$psISE.Options.ConsoleTokenColors["String"]='black'
+$psISE.Options.ConsoleTokenColors["Type"]='black'
+$psISE.Options.ConsoleTokenColors["Unknown"]='black'
+$psISE.Options.ConsoleTokenColors["Variable"]='black' 
 
+   #$psISE.Options.RestoreDefaultConsoleTokenColors()  
+
+    <# default ConsoleTokenColors
+    PS C:\Users\b> $psISE.Options.ConsoleTokenColors
+
+               Key Value    
+               --- -----    
+         Attribute #FFB0C4DE
+           Command #FF000000
+   CommandArgument #FFEE82EE
+  CommandParameter #FFFFE4B5
+           Comment #FF98FB98
+          GroupEnd #FFF5F5F5
+        GroupStart #FFF5F5F5
+           Keyword #FFE0FFFF
+  LineContinuation #FFF5F5F5
+         LoopLabel #FFE0FFFF
+            Member #FFF5F5F5
+           NewLine #FFF5F5F5
+            Number #FFFFE4C4
+          Operator #FFD3D3D3
+          Position #FFF5F5F5
+StatementSeparator #FFF5F5F5
+            String #FFDB7093
+              Type #FF8FBC8F
+           Unknown #FFF5F5F5
+          Variable #FFFF4500
+    #>
+}
+
+function atpdemo1() {
+    alttabpaste ("asdf" `
+                + "`nasdf")
+}
+
+#inline
 foreach ($nextCustScript in (dir .\*custom*functions*ps1) ) {
     . $nextCustScript
 }
 
 #non-function code executed on startup
 #bw
+
