@@ -1,3 +1,5 @@
 SFC / dism order: https://support.microsoft.com/en-us/topic/use-the-system-file-checker-tool-to-repair-missing-or-corrupted-system-files-79aa86cb-ca52-166a-92a3-966e85d4094e
 https://www.dell.com/support/home/en-us/product-support/servicetag/asdf/overview
 filter serviceNow report  current user: https://community.servicenow.com/community?id=community_question&sys_id=855683e1db1cdbc01dcaf3231f961912 
+https://docs.microsoft.com/en-us/previous-versions/troubleshoot/winautomation/process-development-tips/ui-automation/how-to-send-keys-and-key-combinations  SEndkeys Save8
+https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/call#batch-parameters  windows batch parameters delete myself etc

@@ -26,6 +26,12 @@ because refining complex shared tools is not currently in my job description
 
 $ShellObj = (New-Object -ComObject WScript.Shell)  #more reliable than PowerShell sendkeys etc
 
+function finalize() {
+    [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$ShellObj)
+    [System.GC]::Collect()
+    [System.GC]::WaitForPendingFinalizers()
+}
+
 Add-Type -AssemblyName System.Web
 Add-Type -AssemblyName System.Windows.Forms
 
@@ -36,6 +42,12 @@ $myDir=[String](([System.IO.DirectoryInfo]$myPath).Parent.FullName)
 new-alias getEnvironmentVariable -Name env   #bshort
 function  getEnvironmentVariable() {
     return [System.Environment]::GetEnvironmentVariable($args[0])
+}
+$windir=getEnvironmentVariable('WINDIR')
+
+new-alias skimFileForSecurity -Name ssk
+function  skimFileForSecurity() {
+    Start-Process ($windir+'\notepad.exe') -ArgumentList $myPath -WindowStyle Maximized
 }
 
 #--------- Set Color Scheme Black on White - begin -------------
@@ -251,7 +263,7 @@ function SendKeys() {
     SendKeys2($args[0])
 }
 function AltTab() {
-    SendKeys "%({TAB})"
+    SendKeys2 "%({TAB})"
 }
 function AltTabTab() {
     SendKeys2("%({TAB}{TAB})")
@@ -260,22 +272,34 @@ function CtrlC() {
     SendKeys2("^c")
 }
 function CtrlV() {
-    SendKeys2("^v")
+    Ctrl("v")
+}
+function ctrl() {
+    SendKeys2('^'+$args[0])
 }
 
 New-Alias AltTabText -Name att
 
-function  AltTabText() {
-    $text = $args[0]
-    AltTab
-    sleep 1
-    SendKeys1($text -replace "`r`n", "{Enter}"`
+function rawTextToSendKeys() {
+    return $args[0] -replace "`r`n", "{Enter}"`
+                    -replace   "`n", "{Enter}"`
                     -replace "\(","{(}" `
                     -replace "\)","{)}" `
                     -replace "\+","{+}" `
                     -replace "\^","{^}" `
                     -replace "\%","{%}" `
-                    -replace "\~","{~}")
+                    -replace "\~","{~}"
+}
+
+function SendKeysFromRawText() {
+    SendKeys1 (rawTextToSendKeys $args[0])
+}
+
+function  AltTabText() {
+    $text = $args[0]
+    AltTab
+    sleep 1   #below, we escape/translate characters that are special to SendKeys
+    SendKeys1 (rawTextToSendKeys $args[0])
 }
 
 function SendKeys1() {
@@ -283,6 +307,10 @@ function SendKeys1() {
 }
 function SendKeys2() {
     [System.Windows.Forms.SendKeys]::SendWait($args[0])
+}
+function SendKeys3() {
+    #for this option to actually work we need to SetActiveWindow() somehow as per https://stackoverflow.com/questions/32077050/sending-a-keypress-to-the-active-window-that-doesnt-handle-windows-message-in-c
+    [System.Windows.Forms.SendKeys]::Send($args[0])
 }
 
 New-Alias -Name AltTabPaste AltTabPasteArg0
@@ -411,19 +439,39 @@ function exists() {
 
 new-alias filetostring -Name f2s
 function  filetostring() {
-    $key=$args[0]
-    $keyFileN=($myDir+'\strings\'+$key+'.txt')
-    if(exists($keyFileN)) {
-        return get-content $keyFileN -raw
+    if(exists($args[0])) {
+        fileN=$args[0]
+        return get-content $args[0] -raw
     } else {
-        $props = convertfrom-stringdata (get-content 'C:\Users\b\eclipse\w1\Scripts\strings.txt' <#-raw#>)
-        return $props.get_item($key)
+        $key=$args[0]
+        $keyFileN=($myDir+'\strings\'+$key+'.txt')
+        if(exists($keyFileN)) {
+            return get-content $keyFileN -raw
+        } else {
+            $props = convertfrom-stringdata (get-content 'C:\Users\b\eclipse\w1\Scripts\strings.txt' -raw)
+            return $props.get_item($key)
+        }
     }
+}
+
+
+function newNotepad() {
+    Ctrl '{Esc}'
+    SendKeys1 'notepad'
+    sleep 2
+    SendKeys2 '{Enter}'
 }
 
 new-alias EnableHibernateInstructions -Name hibi
 function  EnableHibernateInstructions() {
-    AltTabText (f2s 'EnableHibernateInstructions')
+    newNotepad
+    sleep 2
+    SendKeysFromRawText (f2s 'EnableHibernateInstructions')
+}
+
+new-alias fixWindowsCorruption -Name fwc
+function  fixWindowsCorruption() {
+    AltTabText (f2s ($myDir+'\DO_NOT_SHARE___fix_Windows_corruption.bat') )
 }
 
 #inline/startup/init code (end of function declarations)
