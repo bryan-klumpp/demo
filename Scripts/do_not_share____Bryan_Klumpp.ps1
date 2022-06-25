@@ -120,6 +120,10 @@ function userProfileDir() {
     return $env:USERPROFILE
 }
 
+function wait() {
+    start-sleep -Milliseconds ($args[0] * 1000)
+}
+
 function f() { Param($regex)
     get-childitem -Recurse -Path . | select-Object FullName | select-String "$regex" | Select-Object "Line"
 }
@@ -298,7 +302,7 @@ function SendKeysFromRawText() {
 function  AltTabText() {
     $text = $args[0]
     AltTab
-    sleep 1   #below, we escape/translate characters that are special to SendKeys
+    wait 1   #below, we escape/translate characters that are special to SendKeys
     SendKeys1 (rawTextToSendKeys $args[0])
 }
 
@@ -318,6 +322,7 @@ function AltTabPasteArg0() {
     $text = $args[0]
     set-clipboard $text
     AltTab
+    wait 1
     CtrlV
 }
 
@@ -458,14 +463,14 @@ function  filetostring() {
 function newNotepad() {
     Ctrl '{Esc}'
     SendKeys1 'notepad'
-    sleep 2
+    wait 1.5
     SendKeys2 '{Enter}'
 }
 
 new-alias EnableHibernateInstructions -Name hibi
 function  EnableHibernateInstructions() {
     newNotepad
-    sleep 2
+    wait 1.5
     SendKeysFromRawText (f2s 'EnableHibernateInstructions')
 }
 
