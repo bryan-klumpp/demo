@@ -1,25 +1,37 @@
-<#### Commented out code but might be useful executing in some environments
-      like PowerShell ISE or computers without existing shortcuts
 
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
 
-#command snippets
-([System.Environment]::GetEnvironmentVariable('USERPROFILE') + '\IT\Add-CoreFunctionsB.ps1')
-                                        ( $Env:USERPROFILE   + '\IT\Add-CoreFunctionsB.ps1')
 
-# execute non-admin, then admin, on user's PC 
-Start-Process ($PSHOME + "\powershell.exe") -ArgumentList ('-ExecutionPolicy Unrestricted `
-   -NoProfile -NoExit -File ' + $psISE.CurrentFile.FullPath)
-Start-Process ($PSHOME + "\powershell.exe") -ArgumentList ('-ExecutionPolicy Unrestricted `
-   -NoProfile -NoExit -File ' + $psISE.CurrentFile.FullPath) -Verb RunAs
 
-####>
+
+
+
+<#  This file is labeled do_not_share because I (Bryan Klumpp) have written it so that it
+is quite useful to me, but not at this point documented or packaged for general consumption,
+because refining complex shared tools is not currently in my job description 
+ (as much as I would like it to be...).  #>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$ShellObj = (New-Object -ComObject WScript.Shell)  #more reliable than PowerShell sendkeys etc
 
 Add-Type -AssemblyName System.Web
 Add-Type -AssemblyName System.Windows.Forms
 
-$myPath = Get-Item $MyInvocation.MyCommand.Path
-$myDir = $myPath.Directory
+#$myPath = Get-Item $MyInvocation.MyCommand.Path #non-ISE
+$myPath=$psISE.CurrentFile.FullPath
+$myDir=[String](([System.IO.DirectoryInfo]$myPath).Parent.FullName)
 
 new-alias getEnvironmentVariable -Name env   #bshort
 function  getEnvironmentVariable() {
@@ -79,7 +91,7 @@ function  restartScript() {
     # the reason the batch file starts with a strange key pattern like _b73_ 
     # is so that the rest of it can be renamed for clarity, but another user 
     # would be less likely to touch a pattern like _b73_
-    Start-Process (Get-ChildItem -Path $myDir "_b73_*")  
+    Start-Process (Get-ChildItem -Path $myDir "_b73_*")  #TODO verify still works after $myDir creation as String
     exit
 }
 
@@ -104,7 +116,7 @@ function f() { Param($regex)
 function act() { Param($titleFrag)
     #Set-ForegroundWindow (Get-Process "Edge").MainWindowHandle
     #(Get-Process | Where-Object { $_.MainWindowTitle -like '*Edge' })
-    (New-Object -ComObject WScript.Shell).AppActivate((Get-Process `
+    $shellObj.AppActivate((Get-Process `
      | Where-Object { $_.MainWindowTitle -like ('*'+$titleFrag+'*') }).MainWindowTitle)
 }
 
@@ -116,16 +128,16 @@ function toArrayList() {
 
 
 function whatisit() {
-    Write-Host (whatisitO $args[0] $args[1])
+    Write-Host (whatisitRecurse '' $args[0])
 }
-function whatisitO() {
+function whatisitRecurse() {
     $s = ($args[0])
     $x = $args[1]
     if($x -is [Array]) {
         $xa = [Array]$x
         $s = ($s + '@(')
         for($i = 0; $i -lt $xa.Count; $i++) {
-            $s += (whatisitO '' $xa[$i])
+            $s += (whatisitRecurse '' $xa[$i])
             if($i -lt $xa.Count - 1) {
                 $s += ','
             }
@@ -236,20 +248,43 @@ Function robobak() {
 
 
 function SendKeys() {
-    [System.Windows.Forms.SendKeys]::SendWait($args[0])
+    SendKeys2($args[0])
 }
 function AltTab() {
     SendKeys "%({TAB})"
 }
 function AltTabTab() {
-    [System.Windows.Forms.SendKeys]::SendWait("%({TAB}{TAB})")
+    SendKeys2("%({TAB}{TAB})")
 }
 function CtrlC() {
-    [System.Windows.Forms.SendKeys]::SendWait("^c")
+    SendKeys2("^c")
 }
 function CtrlV() {
-    [System.Windows.Forms.SendKeys]::SendWait("^v")
+    SendKeys2("^v")
 }
+
+New-Alias AltTabText -Name att
+
+function  AltTabText() {
+    $text = $args[0]
+    AltTab
+    sleep 1
+    SendKeys1($text -replace "`r`n", "{Enter}"`
+                    -replace "\(","{(}" `
+                    -replace "\)","{)}" `
+                    -replace "\+","{+}" `
+                    -replace "\^","{^}" `
+                    -replace "\%","{%}" `
+                    -replace "\~","{~}")
+}
+
+function SendKeys1() {
+    $ShellObj.SendKeys($args[0])
+}
+function SendKeys2() {
+    [System.Windows.Forms.SendKeys]::SendWait($args[0])
+}
+
 New-Alias -Name AltTabPaste AltTabPasteArg0
 function AltTabPasteArg0() {
     $text = $args[0]
@@ -291,7 +326,10 @@ function psISEColorInverted() {
     $psISE.Options.ScriptPaneForegroundColor      ='#FFFFFFFF'
     $psISE.Options.ScriptPaneBackgroundColor      ='#FF000000'
 }
-function psISEColorBY() { #TODO finish/fix
+<# not sure the all the background colors are canonically correct,
+   but seems to be working great, so I'm not messing with it #>
+new-alias psISEBlackOnWhite -name bwise 
+function  psISEBlackOnWhite() { 
     $psISE.Options.ErrorForegroundColor           ='#FFFF9494'
     $psISE.Options.ErrorBackgroundColor           ='#00FFFFFF'
     $psISE.Options.WarningForegroundColor         ='#FFFF8C00'
@@ -363,11 +401,34 @@ function atpdemo1() {
                 + "`nasdf")
 }
 
-#inline
+function delaliasdoesnotworkinsidefunctionjustforexamplecode() { 
+    del alias:$args[0] 2>&1 | Out-Null  #not bothering to test, just suppressing error if doesn't exist
+}
+
+function exists() {
+    return Test-Path $args[0]
+}
+
+new-alias filetostring -Name f2s
+function  filetostring() {
+    $key=$args[0]
+    $keyFileN=($myDir+'\strings\'+$key+'.txt')
+    if(exists($keyFileN)) {
+        return get-content $keyFileN -raw
+    } else {
+        $props = convertfrom-stringdata (get-content 'C:\Users\b\eclipse\w1\Scripts\strings.txt' <#-raw#>)
+        return $props.get_item($key)
+    }
+}
+
+new-alias EnableHibernateInstructions -Name hibi
+function  EnableHibernateInstructions() {
+    AltTabText (f2s 'EnableHibernateInstructions')
+}
+
+#inline/startup/init code (end of function declarations)
 foreach ($nextCustScript in (dir .\*custom*functions*ps1) ) {
     . $nextCustScript
 }
-
-#non-function code executed on startup
-#bw
+psISEBlackOnWhite
 

@@ -1,0 +1,10 @@
+Windows now comes with Hibernate disabled by default, but it can be enabled with the following steps:
+1. Try to open PowerShell using "Run as administrator"
+2. If you are simply prompted to click "Ok" or "Yes", then you have the privileges needed to complete this on your own; otherwise, if prompted to enter a username, you will need the assistance of someone with administrative privileges.
+3. In PowerShell, run the following command:   powercfg  /h  on   (no errors after pressing Enter means it worked; afterward, leave the Powershell window open)
+4. Open the classic Power Control Panel (there are various ways to get to this, but with the Start menu visible you can type powercfg.cpl )
+5. Click "Choose what the power buttons do"
+6. Click "Change settings that are currently unavailable"
+7. Check the box to enable Hibernate
+8. Back in the PowerShell window, run the following command: gpupdate  /force  (this will take several minutes to complete)
+9. Verify that Hibernate is now an option from the Start Menu's Power section

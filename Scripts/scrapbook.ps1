@@ -248,3 +248,20 @@ function se_old_deleteme() {
     $encodedSearch=[System.Web.HTTPUtility]::UrlEncode($joined)
     Start-Process ("https://www.google.com/search?q="+$encodedSearch)
 }
+
+<#### Commented out code but might be useful executing in some environments
+      like PowerShell ISE or computers without existing shortcuts
+
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process
+
+#command snippets
+([System.Environment]::GetEnvironmentVariable('USERPROFILE') + '\IT\Add-CoreFunctionsB.ps1')
+                                        ( $Env:USERPROFILE   + '\IT\Add-CoreFunctionsB.ps1')
+
+# execute non-admin, then admin, on user's PC 
+Start-Process ($PSHOME + "\powershell.exe") -ArgumentList ('-ExecutionPolicy Unrestricted `
+   -NoProfile -NoExit -File ' + $psISE.CurrentFile.FullPath)
+Start-Process ($PSHOME + "\powershell.exe") -ArgumentList ('-ExecutionPolicy Unrestricted `
+   -NoProfile -NoExit -File ' + $psISE.CurrentFile.FullPath) -Verb RunAs
+
+####>
