@@ -476,7 +476,13 @@ function  fixWindowsCorruption() {
     AltTab
     wait 500
     $batFileP='DO_NOT_SHARE___fix_Windows_corruption.bat'
-    SendKeys1 ('copy '+$myDir+'\empty_file.txt '+$batFileP+'{Enter}')
+    #SendKeys1 ('copy '+$myDir+'\empty_file.txt '+$batFileP+'{Enter}')
+    
+    wait 200; SendKeys1 ('[System.Environment]::CurrentDirectory = {(}Get-Location{)}.Path{Enter}')
+    #wait 200; SendKeys1 ('$Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False{Enter}')
+    #wait 200; sendKeys1 ('[System.IO.File]::WriteAllLines{(}"'+$batFileP+'", "", $Utf8NoBomEncoding{)}{Enter}')
+    wait 200; sendKeys1 ('[System.IO.File]::WriteAllText{(}"'+$batFileP+'", ""{)}{Enter}')
+
     wait 300
     SendKeys1 ('start-process -Wait notepad -ArgumentList ('+$batFileP+'){Enter}')         
     wait 1500

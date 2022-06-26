@@ -8,3 +8,4 @@ https://docs.servicenow.com/en-US/bundle/sandiego-platform-administration/page/a
 https://docs.servicenow.com/en-US/bundle/sandiego-platform-user-interface/page/use/navigation/reference/dot-walking-examples.html  dotwalking table joins Save9
 https://docs.servicenow.com/bundle/sandiego-platform-user-interface/page/administer/navigation-and-ui/task/t_NavigateDirectlyToATable.html
 https://community.servicenow.com/community?id=community_question&sys_id=f17a87e9db5cdbc01dcaf3231f96196f   data dictionary sys db object list ServiceNow
+https://docs.microsoft.com/en-us/dotnet/api/system.io.file?view=net-6.0    
