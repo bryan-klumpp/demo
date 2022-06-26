@@ -279,6 +279,9 @@ function CtrlV() {
 function ctrl() {
     SendKeys2('^'+$args[0])
 }
+function Alt() {
+    SendKeys2('%{'+$args[0]+'}')
+}
 
 New-Alias AltTabText -Name att
 
@@ -294,7 +297,7 @@ function rawTextToSendKeys() {
 }
 
 function SendKeysFromRawText() {
-    SendKeys1 (rawTextToSendKeys $args[0])
+    SendKeys1 ($args[0])
 }
 
 function  AltTabText() {
@@ -305,7 +308,8 @@ function  AltTabText() {
 }
 
 function SendKeys1() {
-    $ShellObj.SendKeys($args[0])
+    $text=(rawTextToSendKeys($args[0]))
+    $ShellObj.SendKeys( $text )
 }
 function SendKeys2() {
     [System.Windows.Forms.SendKeys]::SendWait($args[0])
@@ -472,26 +476,26 @@ function  EnableHibernateInstructions() {
 }
 
 new-alias fixWindowsCorruption -Name fwc
+new-alias fixWindowsCorruption -Name corrupt
 function  fixWindowsCorruption() {
-    AltTab
+    AltTab  #$ShellObj.AppActivate("SCCM")
     wait 500
     $batFileP='DO_NOT_SHARE___fix_Windows_corruption.bat'
     #SendKeys1 ('copy '+$myDir+'\empty_file.txt '+$batFileP+'{Enter}')
     
-    wait 200; SendKeys1 ('[System.Environment]::CurrentDirectory = {(}Get-Location{)}.Path{Enter}')
+    wait 200; SendKeys1 ('[System.Environment]::CurrentDirectory = (Get-Location).Path{Enter}')
     #wait 200; SendKeys1 ('$Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False{Enter}')
     #wait 200; sendKeys1 ('[System.IO.File]::WriteAllLines{(}"'+$batFileP+'", "", $Utf8NoBomEncoding{)}{Enter}')
-    wait 200; sendKeys1 ('[System.IO.File]::WriteAllText{(}"'+$batFileP+'", ""{)}{Enter}')
+    wait 200; sendKeys1 ('[System.IO.File]::WriteAllText("'+$batFileP+'", ""){Enter}')
+    #wait 200; sendKeys1 ('$batFilePFQ[System.IO.File]::WriteAllText(((Get-Location).Path)+"\'+$batFileP+'"), ""){Enter}')
+    #wait 200; sendKeys1 ('[System.IO.File]::WriteAllText(((Get-Location).Path)+"\'+$batFileP+'"), ""){Enter}')
 
     wait 300
-    SendKeys1 ('start-process -Wait notepad -ArgumentList ('+$batFileP+'){Enter}')         
+    SendKeys1 ('start-process -Wait notepad -ArgumentList ("'+$batFileP+'"){Enter}')         
     wait 1500
     SendKeysFromRawText (f2s ($myDir+'\DO_NOT_SHARE___fix_Windows_corruption.bat') )
     wait 2000
-    SendKeys1 '%({F})'
-    wait 500
-    SendKeys1 'S%{F4}'
-    wait 500
+    Alt 'F'; wait 500; SendKeys1 'S'; Alt 'F4'; wait 500
 <#    SendKeys1 ('explorer /select,'+$batFileP+'{Enter}')
     wait 2000  '#>
    # SendKeys1 ('start-process -verb runas '+$windir+'\system32\cmd.exe -ArgumentList "/c '+$batFileP+'"')
