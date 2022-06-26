@@ -3,3 +3,8 @@ https://www.dell.com/support/home/en-us/product-support/servicetag/asdf/overview
 filter serviceNow report  current user: https://community.servicenow.com/community?id=community_question&sys_id=855683e1db1cdbc01dcaf3231f961912 
 https://docs.microsoft.com/en-us/previous-versions/troubleshoot/winautomation/process-development-tips/ui-automation/how-to-send-keys-and-key-combinations  SEndkeys Save8
 https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/call#batch-parameters  windows batch parameters delete myself etc
+
+https://docs.servicenow.com/en-US/bundle/sandiego-platform-administration/page/administer/exporting-data/task/t_UseAURLQueryToFilterAListResult.html    urlparameter urlquery Save9
+https://docs.servicenow.com/en-US/bundle/sandiego-platform-user-interface/page/use/navigation/reference/dot-walking-examples.html  dotwalking table joins Save9
+https://docs.servicenow.com/bundle/sandiego-platform-user-interface/page/administer/navigation-and-ui/task/t_NavigateDirectlyToATable.html
+https://community.servicenow.com/community?id=community_question&sys_id=f17a87e9db5cdbc01dcaf3231f96196f   data dictionary sys db object list ServiceNow

@@ -5,10 +5,8 @@
 
 
 
-<#  This file is labeled do_not_share because I (Bryan Klumpp) have written it so that it
-is quite useful to me, but not at this point documented or packaged for general consumption,
-because refining complex shared tools is not currently in my job description 
- (as much as I would like it to be...).  #>
+<#  This file is labeled "DO_NOT_SHARE" because I (Bryan Klumpp) have written it so that it
+is quite useful to me, but not at this point documented or packaged for general consumption  #>
 
 
 
@@ -121,7 +119,7 @@ function userProfileDir() {
 }
 
 function wait() {
-    start-sleep -Milliseconds ($args[0] * 1000)
+    start-sleep -Milliseconds ($args[0])
 }
 
 function f() { Param($regex)
@@ -302,7 +300,7 @@ function SendKeysFromRawText() {
 function  AltTabText() {
     $text = $args[0]
     AltTab
-    wait 1   #below, we escape/translate characters that are special to SendKeys
+    wait 1000   #below, we escape/translate characters that are special to SendKeys
     SendKeys1 (rawTextToSendKeys $args[0])
 }
 
@@ -322,7 +320,7 @@ function AltTabPasteArg0() {
     $text = $args[0]
     set-clipboard $text
     AltTab
-    wait 1
+    wait 1000
     CtrlV
 }
 
@@ -445,38 +443,53 @@ function exists() {
 new-alias filetostring -Name f2s
 function  filetostring() {
     if(exists($args[0])) {
-        fileN=$args[0]
         return get-content $args[0] -raw
     } else {
         $key=$args[0]
-        $keyFileN=($myDir+'\strings\'+$key+'.txt')
-        if(exists($keyFileN)) {
-            return get-content $keyFileN -raw
+        $fileN=($myDir+'\strings\'+$key+'.txt')
+        if(exists($fileN)) {
+            return get-content $fileN -raw
         } else {
-            $props = convertfrom-stringdata (get-content 'C:\Users\b\eclipse\w1\Scripts\strings.txt' -raw)
+            $props = convertfrom-stringdata (get-content ($myDir+'\strings.txt') -raw)
             return $props.get_item($key)
         }
     }
 }
 
 
-function newNotepad() {
+function newNotepadFromStartMenu() {
     Ctrl '{Esc}'
     SendKeys1 'notepad'
-    wait 1.5
+    wait 1500
     SendKeys2 '{Enter}'
 }
 
 new-alias EnableHibernateInstructions -Name hibi
 function  EnableHibernateInstructions() {
-    newNotepad
-    wait 1.5
+    AltTab
+    wait 500
     SendKeysFromRawText (f2s 'EnableHibernateInstructions')
 }
 
 new-alias fixWindowsCorruption -Name fwc
 function  fixWindowsCorruption() {
-    AltTabText (f2s ($myDir+'\DO_NOT_SHARE___fix_Windows_corruption.bat') )
+    AltTab
+    wait 500
+    $batFileP='DO_NOT_SHARE___fix_Windows_corruption.bat'
+    SendKeys1 ('copy '+$myDir+'\empty_file.txt '+$batFileP+'{Enter}')
+    wait 300
+    SendKeys1 ('start-process -Wait notepad -ArgumentList ('+$batFileP+'){Enter}')         
+    wait 1500
+    SendKeysFromRawText (f2s ($myDir+'\DO_NOT_SHARE___fix_Windows_corruption.bat') )
+    wait 2000
+    SendKeys1 '%({F})'
+    wait 500
+    SendKeys1 'S%{F4}'
+    wait 500
+<#    SendKeys1 ('explorer /select,'+$batFileP+'{Enter}')
+    wait 2000  '#>
+   # SendKeys1 ('start-process -verb runas '+$windir+'\system32\cmd.exe -ArgumentList "/c '+$batFileP+'"')
+   SendKeys1 ('start-process -verb runas ./'+$batFileP)
 }
 
 #inline/startup/init code (end of function declarations)
