@@ -278,6 +278,12 @@ function CtrlV() {
 function ctrl() {
     SendKeys2('^('+$args[0]+')')
 }
+function ctrlShift() {
+    SendKeys2('^(+('+$args[0]+'))')
+}
+function AltShift() {
+    SendKeys2('%(+('+$args[0]+'))')
+}
 function Alt() {
     SendKeys2('%({'+$args[0]+'})')
 }
@@ -476,14 +482,38 @@ function  EnableHibernateInstructions() {
 
 function Activate-Window() {
     $ShellObj.AppActivate($args[0])
+    wait 200 #seems like nearly all subsequent actions require at least some delay
 }
-new-alias activateteams -name acttms
-function  ActivateTeams() {
+new-alias activate-teams -name acttms
+function  Activate-Teams() {
     Activate-Window 'Chat' #not sure why 'Teams' doesn't always work, window matching used to work on the end of the Window title
 }
-new-alias activateteams -name actout
-function  ActivateOutlook() {
-    Activate-Window 'Inbox' #not sure why 'Outlook' doesn't always work, window matching used to work on the end of the Window title
+new-alias New-Teams-Chat -name newtms
+function  New-Teams-Chat() {
+    Activate-Teams
+    Ctrl 'n'
+}
+new-alias New-Teams-Chat -name tmsfms
+function  New-Teams-Chat() {
+    Activate-Teams
+    AltShift 'c'
+}
+# email address on clipboard, 1=subject, 2=full message
+new-alias Email-EndToEnd-1 -Name ee2e
+function  Email-EndToEnd-1() {
+    $addr=(get-clipboard)
+    $subject=$args[0]
+    new-Outlook-Message
+    wait 300; CtrlV
+    wait 200; Tab; wait 200; Tab
+    SendKeys1 $args[0]
+    wait 200; Tab
+    SendKeys1 $args[1]
+    #send-Outlook-Message
+}
+new-alias Activate-Outlook -name actout
+function  Activate-Outlook() {
+    Activate-Window 'Inbox' #not sure why 'Outlook' doesn't work now, window matching used to work on the end of the Window title
 }
 
 function Activate-Remote-Window() {
@@ -492,6 +522,23 @@ function Activate-Remote-Window() {
     }
 }
 
+function activate-outlook() {
+    activate-window 'Inbox'
+}
+
+function new-Outlook-Message() {
+    activate-Outlook
+    wait 500
+    CtrlShift 'M'
+}
+function send-Outlook-Message() {
+    activate-Outlook
+    wait 500
+    Ctrl '{Enter}'
+}
+function  Tab() {
+    SendKeys2 '{Tab}'
+}
 function  loader() {
     Activate-Remote-Window
     wait 500
