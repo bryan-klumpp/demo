@@ -5,8 +5,10 @@
 
 
 
-<#  This file is labeled "DO_NOT_SHARE" because I (Bryan Klumpp) have written it so that it
-is quite useful to me, but not at this point documented or packaged for general consumption  #>
+<#  This file is labeled "DO_NOT_SHARE" because I've have written it so that it
+is quite useful to encapsulate my daily tasks, but not at this point adapted,
+documented, or packaged for general consumption.
+ -Bryan Klumpp  #>
 
 
 
@@ -261,9 +263,6 @@ Function robobak() {
 }
 
 
-function SendKeys() {
-    SendKeys2($args[0])
-}
 function AltTab() {
     SendKeys2 "%({TAB})"
 }
@@ -277,10 +276,10 @@ function CtrlV() {
     Ctrl("v")
 }
 function ctrl() {
-    SendKeys2('^'+$args[0])
+    SendKeys2('^('+$args[0]+')')
 }
 function Alt() {
-    SendKeys2('%{'+$args[0]+'}')
+    SendKeys2('%({'+$args[0]+'})')
 }
 
 New-Alias AltTabText -Name att
@@ -303,8 +302,8 @@ function SendKeysFromRawText() {
 function  AltTabText() {
     $text = $args[0]
     AltTab
-    wait 1000   #below, we escape/translate characters that are special to SendKeys
-    SendKeys1 (rawTextToSendKeys $args[0])
+    wait 1000
+    SendKeys1 ($args[0])
 }
 
 function SendKeys1() {
@@ -465,7 +464,7 @@ function newNotepadFromStartMenu() {
     Ctrl '{Esc}'
     SendKeys1 'notepad'
     wait 1500
-    SendKeys2 '{Enter}'
+    SendKeys1 '{Enter}'
 }
 
 new-alias EnableHibernateInstructions -Name hibi
@@ -475,10 +474,34 @@ function  EnableHibernateInstructions() {
     SendKeysFromRawText (f2s 'EnableHibernateInstructions')
 }
 
+function Activate-Window() {
+    $ShellObj.AppActivate($args[0])
+}
+new-alias activateteams -name acttms
+function  ActivateTeams() {
+    Activate-Window 'Chat' #not sure why 'Teams' doesn't always work, window matching used to work on the end of the Window title
+}
+new-alias activateteams -name actout
+function  ActivateOutlook() {
+    Activate-Window 'Inbox' #not sure why 'Outlook' doesn't always work, window matching used to work on the end of the Window title
+}
+
+function Activate-Remote-Window() {
+    if (!(Activate-Window 'SCCM')) {
+        AltTab  #fallback, assume running locally one either my PC or user's
+    }
+}
+
+function  loader() {
+    Activate-Remote-Window
+    wait 500
+    SendKeys1 '\\server\share'
+}
+
 new-alias fixWindowsCorruption -Name fwc
 new-alias fixWindowsCorruption -Name corrupt
 function  fixWindowsCorruption() {
-    AltTab  #$ShellObj.AppActivate("SCCM")
+    Activate-Remote-Window
     wait 500
     $batFileP='DO_NOT_SHARE___fix_Windows_corruption.bat'
     #SendKeys1 ('copy '+$myDir+'\empty_file.txt '+$batFileP+'{Enter}')
