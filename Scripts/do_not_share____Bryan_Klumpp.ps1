@@ -189,9 +189,6 @@ function  googleSearch() {
 }
 
 
-function matches() {
-    return $args[0] -Match ('^' + $args[1] + '$')
-}
 
 function autoClipParm() {
     $clipt = (Get-Clipboard).trim()
@@ -509,7 +506,19 @@ function  Email-EndToEnd-1() {
     SendKeys1 $args[0]
     wait 200; Tab
     SendKeys1 $args[1]
-    #send-Outlook-Message
+    wait 4000  #give a chance to abort
+    send-Outlook-Message
+}
+function  Teams-EndToEnd-1() {
+    $addr=(get-clipboard)
+    new-Teams-Message
+    wait 300; CtrlV
+    wait 200; Tab; wait 200; Tab
+    SendKeys1 $args[0]
+    wait 200; Tab
+    SendKeys1 $args[1]
+    wait 4000  #give a chance to abort
+    send-Outlook-Message
 }
 new-alias Activate-Outlook -name actout
 function  Activate-Outlook() {
@@ -526,15 +535,40 @@ function activate-outlook() {
     activate-window 'Inbox'
 }
 
+function Activate-Teams() {
+    #window text activate does not always work, just hitting the exe instead
+    Start-Process 'C:\Users\b\AppData\Local\Microsoft\Teams\current\Teams.exe'
+}
+
 function new-Outlook-Message() {
     activate-Outlook
     wait 500
     CtrlShift 'M'
 }
+function new-Teams-Message() {
+    activate-Teams
+    wait 500
+    Ctrl 'N'
+    wait 500
+    $clip = (Get-Clipboard)
+    if (isEmail($clip) -or matches $clip '[A-Za-z0-9]{1,8}') {
+        CtrlV
+    }#a@b.com
+}
+
+#could refine the criteria even more, doesn't include ALL the email rules yet, but works well enough for now
+function isEmail() {
+    return matches $args[0] '[A-Za-z0-9.]{1,50}@[A-Za-z0-9.]{3,50}'
+}
+
+function matches() {
+    return $args[0] -Match ('^' + $args[1] + '$')
+}
+
 function send-Outlook-Message() {
     activate-Outlook
     wait 500
-    Ctrl '{Enter}'
+    Alt 's'
 }
 function  Tab() {
     SendKeys2 '{Tab}'
