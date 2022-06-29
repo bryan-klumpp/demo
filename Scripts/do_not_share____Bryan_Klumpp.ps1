@@ -107,6 +107,12 @@ function  restartScript() {
     exit
 }
 
+new-alias focusoneditor -Name e
+new-alias focusoneditor -Name foe
+function focusOnEditor() {
+    Ctrl 'i'
+}
+
 function edit() {
     Start-Process ($PSHOME + '\powershell_ise.exe') $mypath
 }
@@ -210,11 +216,21 @@ function searchByURL() {
         }
     }
     $searchFor=($SearchStrings -join ' ')
-    $encodedSearch=[System.Web.HTTPUtility]::UrlEncode($searchFor)
+    $encodedSearch=UrlEncode($searchFor)
     $combinedUrl = $base -replace '_searchFor_',$encodedSearch
     web $combinedUrl
 }
 
+function uriescape() {
+    return [uri]::EscapeDataString($args[0])
+}
+
+function urlencode() {
+    return [System.Web.HTTPUtility]::UrlEncode($args[0] -replace(' ','%20'))
+}
+function urldecode() {
+    return [System.Web.HTTPUtility]::UrlDecode($args[0])
+}
 function web() {
     Start-Process $args[0] #uses default browser
 }
@@ -261,33 +277,33 @@ Function robobak() {
 
 
 function AltTab() {
-    SendKeys2 "%({TAB})"
+    SendKeysSyncNoEscape "%({TAB})"
 }
 function AltTabTab() {
-    SendKeys2("%({TAB}{TAB})")
+    SendKeysSyncNoEscape("%({TAB}{TAB})")
 }
 function CtrlC() {
-    SendKeys2("^c")
+    SendKeysSyncNoEscape("^c")
 }
 function CtrlV() {
     Ctrl("v")
 }
 function ctrl() {
-    SendKeys2('^('+$args[0]+')')
+    SendKeysSyncNoEscape('^('+$args[0]+')')
 }
 function ctrlShift() {
-    SendKeys2('^(+('+$args[0]+'))')
+    SendKeysSyncNoEscape('^(+('+$args[0]+'))')
 }
 function AltShift() {
-    SendKeys2('%(+('+$args[0]+'))')
+    SendKeysSyncNoEscape('%(+('+$args[0]+'))')
 }
 function Alt() {
-    SendKeys2('%({'+$args[0]+'})')
+    SendKeysSyncNoEscape('%({'+$args[0]+'})')
 }
 
 New-Alias AltTabText -Name att
 
-function rawTextToSendKeys() {
+function escapeSendKeys() {
     return $args[0] -replace "`r`n", "{Enter}"`
                     -replace   "`n", "{Enter}"`
                     -replace "\(","{(}" `
@@ -299,21 +315,24 @@ function rawTextToSendKeys() {
 }
 
 function SendKeysFromRawText() {
-    SendKeys1 ($args[0])
+    SendKeysAsyncEscape ($args[0])
 }
 
 function  AltTabText() {
     $text = $args[0]
     AltTab
     wait 1000
-    SendKeys1 ($args[0])
+    SendKeysAsyncEscape ($args[0])
 }
 
-function SendKeys1() {
-    $text=(rawTextToSendKeys($args[0]))
+function SendKeysAsyncEscape() {
+    SendKeysAsyncNoEscape(escapeSendKeys($args[0]))
+}
+function SendKeysAsyncNoEscape() {
+    $text=($args[0])
     $ShellObj.SendKeys( $text )
 }
-function SendKeys2() {
+function SendKeysSyncNoEscape() {
     [System.Windows.Forms.SendKeys]::SendWait($args[0])
 }
 function SendKeys3() {
@@ -465,9 +484,9 @@ function  filetostring() {
 
 function newNotepadFromStartMenu() {
     Ctrl '{Esc}'
-    SendKeys1 'notepad'
+    SendKeysAsyncEscape 'notepad'
     wait 1500
-    SendKeys1 '{Enter}'
+    SendKeysAsyncEscape '{Enter}'
 }
 
 new-alias EnableHibernateInstructions -Name hibi
@@ -490,35 +509,37 @@ function  New-Teams-Chat() {
     Activate-Teams
     Ctrl 'n'
 }
-new-alias New-Teams-Chat -name tmsfms
-function  New-Teams-Chat() {
-    Activate-Teams
-    AltShift 'c'
-}
 # email address on clipboard, 1=subject, 2=full message
+new-alias Email-EndToEnd-1 -Name oe2e
 new-alias Email-EndToEnd-1 -Name ee2e
 function  Email-EndToEnd-1() {
     $addr=(get-clipboard)
     $subject=$args[0]
-    new-Outlook-Message
-    wait 300; CtrlV
-    wait 200; Tab; wait 200; Tab
-    SendKeys1 $args[0]
-    wait 200; Tab
-    SendKeys1 $args[1]
+    $body=$args[1]
+
+    #new-Outlook-Message
+    #wait 300; CtrlV
+    #wait 200; Tab; wait 200; Tab
+    #SendKeysAsyncEscape $subject
+    #wait 200; Tab
+    #SendKeysAsyncEscape $body
+    #testdata copy klumpp6@ggggggggmail.com   
+    Start-Process 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE' -ArgumentList ('/c ipm.note /m '+$addr+'?subject='+(uriescape $subject)+'&body='+(uriescape $body))
     wait 4000  #give a chance to abort
     send-Outlook-Message
 }
+
+#Clipboard: email address, $args[0]=Message text
+new-alias Teams-EndToEnd-1 -Name te2e
 function  Teams-EndToEnd-1() {
     $addr=(get-clipboard)
+    $msg=($args[0] -replace "`r`n", "+{Enter}"`
+                   -replace   "`n", "+{Enter}")
     new-Teams-Message
-    wait 300; CtrlV
-    wait 200; Tab; wait 200; Tab
-    SendKeys1 $args[0]
-    wait 200; Tab
-    SendKeys1 $args[1]
+    wait 200; AltShift 'c'; wait 500
+    SendKeysASyncNoEscape $msg
     wait 4000  #give a chance to abort
-    send-Outlook-Message
+    Ctrl '{Enter}'
 }
 new-alias Activate-Outlook -name actout
 function  Activate-Outlook() {
@@ -532,18 +553,20 @@ function Activate-Remote-Window() {
 }
 
 function activate-outlook() {
-    activate-window 'Inbox'
+    #activate-window 'Inbox'
+    Start-Process 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE' -ArgumentList '/recycle'
 }
 
 function Activate-Teams() {
     #window text activate does not always work, just hitting the exe instead
     Start-Process 'C:\Users\b\AppData\Local\Microsoft\Teams\current\Teams.exe'
 }
-
+#https://support.microsoft.com/en-us/office/command-line-switches-for-microsoft-office-products-079164cd-4ef5-4178-b235-441737deb3a6#Category=Outlook
 function new-Outlook-Message() {
-    activate-Outlook
-    wait 500
-    CtrlShift 'M'
+    #activate-Outlook; wait 500; CtrlShift 'M'
+    Start-Process 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE' `
+      -ArgumentList '/recycle /c ipm.note'
+
 }
 function new-Teams-Message() {
     activate-Teams
@@ -551,9 +574,10 @@ function new-Teams-Message() {
     Ctrl 'N'
     wait 500
     $clip = (Get-Clipboard)
+    $clip
     if (isEmail($clip) -or matches $clip '[A-Za-z0-9]{1,8}') {
         CtrlV
-    }#a@b.com
+    }
 }
 
 #could refine the criteria even more, doesn't include ALL the email rules yet, but works well enough for now
@@ -566,17 +590,18 @@ function matches() {
 }
 
 function send-Outlook-Message() {
-    activate-Outlook
-    wait 500
-    Alt 's'
+    #activate-Outlook
+    #wait 500
+    #Alt 's'
+    Ctrl '{Enter}'
 }
 function  Tab() {
-    SendKeys2 '{Tab}'
+    SendKeysSyncNoEscape '{Tab}'
 }
 function  loader() {
     Activate-Remote-Window
     wait 500
-    SendKeys1 '\\server\share'
+    SendKeysAsyncEscape '\\server\share'
 }
 
 new-alias fixWindowsCorruption -Name fwc
@@ -585,25 +610,25 @@ function  fixWindowsCorruption() {
     Activate-Remote-Window
     wait 500
     $batFileP='DO_NOT_SHARE___fix_Windows_corruption.bat'
-    #SendKeys1 ('copy '+$myDir+'\empty_file.txt '+$batFileP+'{Enter}')
+    #SendKeysAsyncEscape ('copy '+$myDir+'\empty_file.txt '+$batFileP+'{Enter}')
     
-    wait 200; SendKeys1 ('[System.Environment]::CurrentDirectory = (Get-Location).Path{Enter}')
-    #wait 200; SendKeys1 ('$Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False{Enter}')
-    #wait 200; sendKeys1 ('[System.IO.File]::WriteAllLines{(}"'+$batFileP+'", "", $Utf8NoBomEncoding{)}{Enter}')
-    wait 200; sendKeys1 ('[System.IO.File]::WriteAllText("'+$batFileP+'", ""){Enter}')
-    #wait 200; sendKeys1 ('$batFilePFQ[System.IO.File]::WriteAllText(((Get-Location).Path)+"\'+$batFileP+'"), ""){Enter}')
-    #wait 200; sendKeys1 ('[System.IO.File]::WriteAllText(((Get-Location).Path)+"\'+$batFileP+'"), ""){Enter}')
+    wait 200; SendKeysAsyncEscape ('[System.Environment]::CurrentDirectory = (Get-Location).Path{Enter}')
+    #wait 200; SendKeysAsyncEscape ('$Utf8NoBomEncoding = New-Object System.Text.UTF8Encoding $False{Enter}')
+    #wait 200; SendKeysAsyncEscape ('[System.IO.File]::WriteAllLines{(}"'+$batFileP+'", "", $Utf8NoBomEncoding{)}{Enter}')
+    wait 200; SendKeysAsyncEscape ('[System.IO.File]::WriteAllText("'+$batFileP+'", ""){Enter}')
+    #wait 200; SendKeysAsyncEscape ('$batFilePFQ[System.IO.File]::WriteAllText(((Get-Location).Path)+"\'+$batFileP+'"), ""){Enter}')
+    #wait 200; SendKeysAsyncEscape ('[System.IO.File]::WriteAllText(((Get-Location).Path)+"\'+$batFileP+'"), ""){Enter}')
 
     wait 300
-    SendKeys1 ('start-process -Wait notepad -ArgumentList ("'+$batFileP+'"){Enter}')         
+    SendKeysAsyncEscape ('start-process -Wait notepad -ArgumentList ("'+$batFileP+'"){Enter}')         
     wait 1500
     SendKeysFromRawText (f2s ($myDir+'\DO_NOT_SHARE___fix_Windows_corruption.bat') )
     wait 2000
-    Alt 'F'; wait 500; SendKeys1 'S'; Alt 'F4'; wait 500
-<#    SendKeys1 ('explorer /select,'+$batFileP+'{Enter}')
+    Alt 'F'; wait 500; SendKeysAsyncEscape 'S'; Alt 'F4'; wait 500
+<#    SendKeysAsyncEscape ('explorer /select,'+$batFileP+'{Enter}')
     wait 2000  '#>
-   # SendKeys1 ('start-process -verb runas '+$windir+'\system32\cmd.exe -ArgumentList "/c '+$batFileP+'"')
-   SendKeys1 ('start-process -verb runas ./'+$batFileP)
+   # SendKeysAsyncEscape ('start-process -verb runas '+$windir+'\system32\cmd.exe -ArgumentList "/c '+$batFileP+'"')
+   SendKeysAsyncEscape ('start-process -verb runas ./'+$batFileP)
 }
 
 #inline/startup/init code (end of function declarations)
@@ -612,3 +637,10 @@ foreach ($nextCustScript in (dir .\*custom*functions*ps1) ) {
 }
 psISEBlackOnWhite
 
+<#
+
+
+klumpp6@gmail.com
+
+
+#>
