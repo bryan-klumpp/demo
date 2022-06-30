@@ -514,17 +514,7 @@ function  New-Teams-Chat() {
     Ctrl 'n'
 }
 
-#Clipboard: email address, $args[0]=Message text
-new-alias Teams-EndToEnd-1 -Name te2e
-function  Teams-EndToEnd-1() {
-    $addr=(get-clipboard)
-    $msg=(escapeSendKeysShiftEnter $args[0])
-    new-Teams-Message
-    wait 1000; AltShift 'c'; wait 500
-    SendKeysAsyncNoTranslate $msg
-    wait 4000  #give a chance to abort
-    Ctrl '{Enter}'
-}
+
 new-alias Activate-Outlook -name actout
 function  Activate-Outlook() {
     Activate-Window 'Inbox' #not sure why 'Outlook' doesn't work now, window matching used to work on the end of the Window title
@@ -599,9 +589,21 @@ function Activate-Teams() {
     #window text activate does not always work, just hitting the exe instead
     Start-Process $global:teamsexe
 }
-function new-Teams-Message() {
+#Clipboard: email address, $args[0]=Message text
+function  Teams-EndToEnd-1-OLD() {
+    $addr=(get-clipboard)
+    $msg=(escapeSendKeysShiftEnter $args[0])
+    new-Teams-Message
+    wait 1000; AltShift 'c'; wait 500
+    SendKeysAsyncNoTranslate $msg
+    wait 4000  #give a chance to abort
+    Ctrl '{Enter}'
+}
+#maybe best to have Teams not visible before running this?
+new-alias Teams-EndToEnd-Message -Name te2e
+function Teams-EndToEnd-Message() {
     $emailaddress=(Get-Clipboard)
-    $body=$args[0]
+    $bodyKeys=(escapeSendKeysShiftEnter $args[0])
     activate-Teams
     wait 500
     Ctrl 'N'
@@ -610,8 +612,9 @@ function new-Teams-Message() {
         CtrlV; wait 4000
     #}
     AltShift 'c'; wait 400
-    SendKeys1 $body; wait 4000
+    SendKeysAsyncNoTranslate $bodyKeys; wait 4000
     Ctrl '{Enter}'
+    #Alt '{F4}'
 }
 
 
@@ -656,6 +659,8 @@ function  cnr1() {
     SendKeys1 $worknotes; SendKeys2 '{Tab}{Tab}'; SendKeys1 $messagecore
     wait 1000
     ee2e $emailsubject $emailmessage
+    te2e $messagecore
+    #Alt '{F4}'
 }
 function downloadMeCAREFULbackupfirst() {
     Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bryan-klumpp/demo/main/Scripts/do_not_share____Bryan_Klumpp.ps1" -OutFile $myPath
