@@ -334,17 +334,19 @@ function  AltTabText() {
     SendKeysAsyncTranslate ($args[0])
 }
 
-function SendKeysAsyncTranslate() {
+new-alias SendKeysAsyncTranslate -Name SendKeys1
+function  SendKeysAsyncTranslate() {
     SendKeysAsyncNoTranslate(escapeSendKeys($args[0]))
 }
 function SendKeysAsyncNoTranslate() {
     $text=($args[0])
     $ShellObj.SendKeys( $text )
 }
+new-alias SendKeysSyncNoTranslate -Name SendKeys2
 function SendKeysSyncNoTranslate() {
     [System.Windows.Forms.SendKeys]::SendWait($args[0])
 }
-function SendKeys3() {
+function SendKeys3broke() {
     #for this option to actually work we need to SetActiveWindow() somehow as per https://stackoverflow.com/questions/32077050/sending-a-keypress-to-the-active-window-that-doesnt-handle-windows-message-in-c
     [System.Windows.Forms.SendKeys]::Send($args[0])
 }
@@ -518,25 +520,6 @@ function  New-Teams-Chat() {
     Activate-Teams
     Ctrl 'n'
 }
-# email address on clipboard, 1=subject, 2=full message
-new-alias Email-EndToEnd-1 -Name oe2e
-new-alias Email-EndToEnd-1 -Name ee2e
-function  Email-EndToEnd-1() {
-    $addr=(get-clipboard)
-    $subject=$args[0]
-    $body=$args[1]
-
-    #new-Outlook-Message
-    #wait 300; CtrlV
-    #wait 200; Tab; wait 200; Tab
-    #SendKeysAsyncTranslate $subject
-    #wait 200; Tab
-    #SendKeysAsyncTranslate $body
-    #testdata copy klumpp6@ggggggggmail.com   
-    Start-Process 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE' -ArgumentList ('/c ipm.note /m '+$addr+'?subject='+(uriescape $subject)+'&body='+(uriescape $body))
-    wait 4000  #give a chance to abort
-    send-Outlook-Message
-}
 
 #Clipboard: email address, $args[0]=Message text
 new-alias Teams-EndToEnd-1 -Name te2e
@@ -544,7 +527,7 @@ function  Teams-EndToEnd-1() {
     $addr=(get-clipboard)
     $msg=(escapeSendKeysShiftEnter $args[0])
     new-Teams-Message
-    wait 200; AltShift 'c'; wait 500
+    wait 1000; AltShift 'c'; wait 500
     SendKeysAsyncNoTranslate $msg
     wait 4000  #give a chance to abort
     Ctrl '{Enter}'
@@ -597,12 +580,7 @@ function matches() {
     return $args[0] -Match ('^' + $args[1] + '$')
 }
 
-function send-Outlook-Message() {
-    #activate-Outlook
-    #wait 500
-    #Alt 's'
-    Ctrl '{Enter}'
-}
+
 function  Tab() {
     SendKeysSyncNoTranslate '{Tab}'
 }
@@ -638,11 +616,53 @@ function  fixWindowsCorruption() {
    # SendKeysAsyncTranslate ('start-process -verb runas '+$windir+'\system32\cmd.exe -ArgumentList "/c '+$batFileP+'"')
    SendKeysAsyncTranslate ('start-process -verb runas ./'+$batFileP)
 }
+# email address on clipboard, 1=subject, 2=full message
+new-alias Email-EndToEnd-1 -Name oe2e
+new-alias Email-EndToEnd-1 -Name ee2e
+function  Email-EndToEnd-1() {
+    $addr=(get-clipboard)
+    $subject=$args[0]
+    $body=$args[1]
 
+    #new-Outlook-Message
+    #wait 300; CtrlV
+    #wait 200; Tab; wait 200; Tab
+    #SendKeysAsyncTranslate $subject
+    #wait 200; Tab
+    #SendKeysAsyncTranslate $body
+    #testdata copy klumpp6@ggggggggmail.com   
+    Start-Process 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE' -ArgumentList ('/c ipm.note /m '+$addr+'?subject='+(uriescape $subject)+'&body='+(uriescape $body))
+    wait 4000  #give a chance to abort
+    send-Outlook-Message
+}
+function send-Outlook-Message() {
+    #activate-Outlook
+    #wait 500
+    Alt 's'
+    #Ctrl '{Enter}'
+}
+new-alias cnr1 -Name cc
+function  cnr1() {
+    $issue=$args[0]
+    $emailsubject=('Contact me regarding '+$issue)
+    $messagecore=("Hello, this is Bryan from desktop support.  I'm reaching out in regard to the issue you raised, regarding" `
+      + " "+$issue+".  I do apologize for the delay in reaching out."`
+      + "  You can reach out to me by email, chat, or call me directly (I'm usually available for calls outside of 9:00-9:45)" `
+      + " to discuss this issue further." `
+      + "  If applicable, let me know the time(s) of day that you are generally the most available for scheduling appointments.")
+    $worknotes=("I sent an Outlook direct email to the user with the same message as the Additional Comments.  " `
+      + "custom notes")
+    $emailmessage=($messagecore + "`n`nBryan Klumpp`ncontact_info")
+    AltTab; wait 500  #switch back to ServiceNow browser window
+    SendKeys1 $worknotes; SendKeys2 '{Tab}{Tab}'; SendKeys1 $messagecore
+    wait 1000
+    ee2e $emailsubject $emailmessage
+}
 #inline/startup/init code (end of function declarations)
 foreach ($nextCustScript in (dir .\*custom*functions*ps1) ) {
     . $nextCustScript
 }
 psISEBlackOnWhite
-
-'klumpp6@gmail.com' | set-clipboard
+if($true){
+    'klumpp6@gmail.com' | set-clipboard
+}
