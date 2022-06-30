@@ -657,6 +657,10 @@ function  cnr1() {
     wait 1000
     ee2e $emailsubject $emailmessage
 }
+function downloadMeCAREFULbackupfirst() {
+    Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bryan-klumpp/demo/main/Scripts/do_not_share____Bryan_Klumpp.ps1" -OutFile $myPath
+}
+
 #inline/startup/init code (end of function declarations)
 foreach ($nextCustScript in (dir .\*custom*functions*ps1) ) {
     . $nextCustScript
