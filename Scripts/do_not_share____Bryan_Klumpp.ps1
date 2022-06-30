@@ -3,8 +3,6 @@
 
 
 
-
-
 <#  This file is labeled "DO_NOT_SHARE" because I've have written it so that it
 is quite useful to encapsulate my daily tasks, but not at this point adapted,
 documented, or packaged for general consumption.
@@ -13,18 +11,13 @@ documented, or packaged for general consumption.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
+$global:outlookexe = 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE'
+$global:teamsexe = 'C:\Users\b\AppData\Local\Microsoft\Teams\current\Teams.exe'
 $ShellObj = (New-Object -ComObject WScript.Shell)  #more reliable than PowerShell sendkeys etc
+
+
+
+
 
 function finalize() {
     [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$ShellObj)
@@ -545,30 +538,15 @@ function Activate-Remote-Window() {
 
 function activate-outlook() {
     #activate-window 'Inbox'
-    Start-Process 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE' -ArgumentList '/recycle'
+    Start-Process $global:outlookexe -ArgumentList '/recycle'
 }
 
-function Activate-Teams() {
-    #window text activate does not always work, just hitting the exe instead
-    Start-Process 'C:\Users\b\AppData\Local\Microsoft\Teams\current\Teams.exe'
-}
 #https://support.microsoft.com/en-us/office/command-line-switches-for-microsoft-office-products-079164cd-4ef5-4178-b235-441737deb3a6#Category=Outlook
 function new-Outlook-Message() {
     #activate-Outlook; wait 500; CtrlShift 'M'
-    Start-Process 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE' `
+    Start-Process $global:outlookexe `
       -ArgumentList '/recycle /c ipm.note'
 
-}
-function new-Teams-Message() {
-    activate-Teams
-    wait 500
-    Ctrl 'N'
-    wait 500
-    $clip = (Get-Clipboard)
-    $clip
-    if (isEmail($clip) -or matches $clip '[A-Za-z0-9]{1,8}') {
-        CtrlV
-    }
 }
 
 #could refine the criteria even more, doesn't include ALL the email rules yet, but works well enough for now
@@ -616,6 +594,27 @@ function  fixWindowsCorruption() {
    # SendKeysAsyncTranslate ('start-process -verb runas '+$windir+'\system32\cmd.exe -ArgumentList "/c '+$batFileP+'"')
    SendKeysAsyncTranslate ('start-process -verb runas ./'+$batFileP)
 }
+
+function Activate-Teams() {
+    #window text activate does not always work, just hitting the exe instead
+    Start-Process $global:teamsexe
+}
+function new-Teams-Message() {
+    $emailaddress=(Get-Clipboard)
+    $body=$args[0]
+    activate-Teams
+    wait 500
+    Ctrl 'N'
+    wait 500
+    #if (isEmail($clip) -or matches $clip '[A-Za-z0-9]{1,8}') {
+        CtrlV; wait 4000
+    #}
+    AltShift 'c'; wait 400
+    SendKeys1 $body; wait 4000
+    Ctrl '{Enter}'
+}
+
+
 # email address on clipboard, 1=subject, 2=full message
 new-alias Email-EndToEnd-1 -Name oe2e
 new-alias Email-EndToEnd-1 -Name ee2e
@@ -631,7 +630,7 @@ function  Email-EndToEnd-1() {
     #wait 200; Tab
     #SendKeysAsyncTranslate $body
     #testdata copy klumpp6@ggggggggmail.com   
-    Start-Process 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE' -ArgumentList ('/c ipm.note /m '+$addr+'?subject='+(uriescape $subject)+'&body='+(uriescape $body))
+    Start-Process $global:outlookexe -ArgumentList ('/c ipm.note /m '+$addr+'?subject='+(uriescape $subject)+'&body='+(uriescape $body))
     wait 4000  #give a chance to abort
     send-Outlook-Message
 }
@@ -650,8 +649,8 @@ function  cnr1() {
       + "  You can reach out to me by email, chat, or call me directly (I'm usually available for calls outside of 9:00-9:45)" `
       + " to discuss this issue further." `
       + "  If applicable, let me know the time(s) of day that you are generally the most available for scheduling appointments.")
-    $worknotes=("I sent an Outlook direct email to the user with the same message as the Additional Comments.  " `
-      + "custom notes")
+    $worknotes=("I sent an Outlook direct email to the user with the same message as the Additional Comments." `
+      + " .__ " ) #custom notes
     $emailmessage=($messagecore + "`n`nBryan Klumpp`ncontact_info")
     AltTab; wait 500  #switch back to ServiceNow browser window
     SendKeys1 $worknotes; SendKeys2 '{Tab}{Tab}'; SendKeys1 $messagecore
