@@ -9,3 +9,7 @@ https://docs.servicenow.com/en-US/bundle/sandiego-platform-user-interface/page/u
 https://docs.servicenow.com/bundle/sandiego-platform-user-interface/page/administer/navigation-and-ui/task/t_NavigateDirectlyToATable.html
 https://community.servicenow.com/community?id=community_question&sys_id=f17a87e9db5cdbc01dcaf3231f96196f   data dictionary sys db object list ServiceNow
 https://docs.microsoft.com/en-us/dotnet/api/system.io.file?view=net-6.0    
+
+https://www.lifewire.com/fix-a-computer-that-shows-no-sign-of-power-2624442  #Save9
+
+barcode turn off check digit https://apps.microsoft.com/store/detail/barcode-software/9WZDNCRDDC87?hl=en-us&gl=US   You can turn off check digit by "=Encode_Code39(A2,0)" - giving 2nd parameter 0.
