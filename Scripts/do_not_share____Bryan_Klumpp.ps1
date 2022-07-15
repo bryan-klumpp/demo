@@ -485,6 +485,15 @@ function  filetostring() {
     }
 }
 
+new-alias readFileAsArrayOfStrings -Name readarray 
+function  readFileAsArrayOfStrings() {
+    return get-content $args[0]
+}
+new-alias readFileAsSingleString -Name readraw
+function  readFileAsSingleString() {
+    return get-content -raw $args[0]
+}
+
 
 function newNotepadFromStartMenu() {
     Ctrl '{Esc}'
