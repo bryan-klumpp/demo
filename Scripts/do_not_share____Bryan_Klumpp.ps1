@@ -666,6 +666,37 @@ function downloadMeCAREFULbackupfirst() {
     Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bryan-klumpp/demo/main/Scripts/do_not_share____Bryan_Klumpp.ps1" -OutFile $myPath
 }
 
+
+function testnotin() {
+    $in0 = @('asdf','xbsdf')
+    $in1 = @('asdf')
+    notin $in0 $in1
+}
+
+function notin() {
+    $in0 = @($args[0])
+    $in1 = @($args[1])
+    $notin = [System.Collections.ArrayList]::new()
+
+    foreach ($next0 in $in0) {
+        $foundMatch=$false
+        foreach ($next1 in $in1) {
+           if($next0.trim() -eq $next1.trim()) {
+                $foundMatch = $true
+                break
+           }
+        }
+        if(-not $foundMatch) {
+            $notin.Add( $next0 ) > $null
+        }
+    }
+    return $notin.ToArray()
+}
+
+function equalsTrim() {
+    return $args[0].trim() -eq $args[1].trim()
+}
+
 #inline/startup/init code (end of function declarations)
 foreach ($nextCustScript in (dir .\*custom*functions*ps1) ) {
     . $nextCustScript
