@@ -123,8 +123,10 @@ function wait() {
     start-sleep -Milliseconds ($args[0])
 }
 
-function f() { Param($regex)
-    get-childitem -Recurse -Path . | select-Object FullName | select-String "$regex" | Select-Object "Line"
+new-alias findRegex -Name f
+function findRegex() { Param($regex)
+    #get-childitem -Recurse -Path . | select-Object FullName | select-String "$regex" | Select-Object "Line"
+    get-childitem -Recurse -Path . | select-Object FullName | select-String "$regex"    #| Select-Object "Line" | Format-Table -Wrap
 }
 
 #Set-Alias -Name a -Value activate
@@ -159,7 +161,11 @@ function whatisitRecurse() {
         }
         $s += ')'
     } else {
-        $s = ($s + ($x.GetType().FullName) )
+        if($x -eq $null) {
+            $s = ($s + 'null')
+        } else {
+            $s = ($s + ($x.GetType().FullName) )
+        }
     }
     return $s
 }
@@ -228,15 +234,13 @@ function web() {
     Start-Process $args[0] #uses default browser
 }
 
-function ww() {
-  Write-Output $args
-}
+new-alias Write-Output -name ww
 
 function myServiceTag() {
     return (wmic bios get serialnumber | select -index 2)
 }
 
-New-Alias dellSupport -Name d
+New-Alias dellSupport -Name atccds
 function  dellSupport() {
     AltTab; CtrlC; Start-Process "https://www.dell.com/support/home/en-us"
 }
@@ -353,7 +357,7 @@ function AltTabPasteArg0() {
     CtrlV
 }
 
-function nitt() {
+function nitttest() {
     AltTabPasteArg0 "Now is the time`nfor all good men to come to the aid of their country."
 }
 function psISEColorDefault() {
@@ -702,6 +706,21 @@ function notin() {
     return $notin.ToArray()
 }
 
+function copyIPAddresses() {
+    ipconfig /all | findstr 'IPv4' | set-clipboard
+    <#
+    powershell -Command 'ipconfig /all | findstr IPv4; pause'
+    #>
+}
+
+function base64encode() {
+    [Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($Args[0]))
+}
+
+function base64decode() {
+    [System.Text.Encoding]::Unicode.GetString([System.Convert]::FromBase64String($Args[0]))
+}
+
 function equalsTrim() {
     return $args[0].trim() -eq $args[1].trim()
 }
@@ -711,6 +730,7 @@ foreach ($nextCustScript in (dir .\*custom*functions*ps1) ) {
     . $nextCustScript
 }
 psISEBlackOnWhite
-if($true){
+if($false){
     'klumpp6@gmail.com' | set-clipboard
 }
+
