@@ -279,8 +279,11 @@ function AltTab() {
 function AltTabTab() {
     SendKeysSyncNoTranslate("%({TAB}{TAB})")
 }
+function CtrlX() {
+    Ctrl("x")
+}
 function CtrlC() {
-    SendKeysSyncNoTranslate("^c")
+    Ctrl("c")
 }
 function CtrlV() {
     Ctrl("v")
@@ -333,7 +336,9 @@ function  AltTabText() {
 
 new-alias SendKeysAsyncTranslate -Name SendKeys1
 function  SendKeysAsyncTranslate() {
-    SendKeysAsyncNoTranslate(escapeSendKeys($args[0]))
+    foreach ($arg in $args) {
+        SendKeysAsyncNoTranslate(escapeSendKeys($arg))    
+    }    
 }
 function SendKeysAsyncNoTranslate() {
     $text=($args[0])
@@ -769,7 +774,7 @@ namespace KeyLogger {
     private delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
     private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam) {
-      if (nCode >= 0 && wParam == (IntPtr)WM_KEYUP) {
+      if (nCode >= 0 && wParam == (IntPtr)WM_KEYDOWN) {
         keyCode = Marshal.ReadInt32(lParam);
         Application.Exit();
       }
@@ -779,7 +784,10 @@ namespace KeyLogger {
 }
 ' -ReferencedAssemblies System.Windows.Forms
 
-function keyboardHook() {
+
+new-alias keyboardHook -Name bhk
+new-alias keyboardHook -Name bbb
+function  keyboardHook() {
     while ($true) {
         $prevKey1 = $key
         $key = [System.Windows.Forms.Keys][KeyLogger.Program]::WaitForKey()
@@ -789,6 +797,22 @@ function keyboardHook() {
         }
         if ($key -eq "F2") {
             AltTab
+        }
+        if ($key -eq "F11") {
+            Ctrl 'x'
+            SendKeys1 "whatup.["
+            CtrlV
+            SendKeys1 "], whatthere.["
+            Ctrlv
+            SendKeys1 "]"
+        }
+        if ($key -eq "F12") {
+            Ctrl 'x'
+            SendKeys1 "{Backspace} or whatthere.["
+            CtrlV
+            SendKeys1 "] != whatup.["
+            Ctrlv
+            SendKeys1 "]"
         }
     }
 }
