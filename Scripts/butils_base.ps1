@@ -13,12 +13,7 @@ documented, or packaged for general consumption.
 
 $global:outlookexe = 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE'
 $global:teamsexe = 'C:\Users\b\AppData\Local\Microsoft\Teams\current\Teams.exe'
-$ShellObj = (New-Object -ComObject WScript.Shell)  #more reliable than PowerShell sendkeys etc
-
-
-
-
-
+$ShellObj = (New-Object -ComObject WScript.Shell)  #please clean up in finalize(); this is more reliable than PowerShell sendkeys etc.
 function finalize() {
     [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$ShellObj)
     [System.GC]::Collect()
@@ -106,6 +101,11 @@ function focusOnEditor() {
     Ctrl 'i'
 }
 
+#Not sure if this will work in PsExec, but here is an example of path for a WindowsShortcut to load a script and launch a function in RegularPowerShell: %SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -command "Invoke-Expression ((Get-Content C:\Users\b\eclipse\w1\Scripts\butils_base.ps1) | Out-String); bbb"
+function myBat() {
+    ($PSHOME + '\powershell_ise.exe "'+$mypath+'"')|clip
+    ww "Copied to clipboard batch file command(s) that will open PowerShell ISE with this file"
+}
 function edit() {
     Start-Process ($PSHOME + '\powershell_ise.exe') $mypath
 }
