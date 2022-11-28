@@ -24,7 +24,11 @@ Add-Type -AssemblyName System.Web
 Add-Type -AssemblyName System.Windows.Forms
 
 #$myPath = Get-Item $MyInvocation.MyCommand.Path #non-ISE
-$myPath=$psISE.CurrentFile.FullPath
+$isISE = ($psISE.CurrentFile.FullPath -ne $null)
+$myPath = switch($isISE) { $true {$psISE.CurrentFile.FullPath} $false { 
+    #TODO find a way to get path in normal PowerShell window    
+} }
+
 $myDir=[String](([System.IO.DirectoryInfo]$myPath).Parent.FullName)
 
 new-alias getEnvironmentVariable -Name env   #bshort
@@ -41,6 +45,11 @@ function  skimFileForSecurity() {
 #--------- Set Color Scheme Black on White - begin -------------
 $ANSIColorSequenceBW="$([char]0x1b)[38;2;0;0;0;48;2;255;255;255;m"
 Function bw() {
+    if($isISE) {
+        psISEBlackOnWhite
+        return
+    }
+
     $host.ui.rawui.ForegroundColor = 'Black'
     $host.ui.rawui.BackgroundColor = 'White'
     Set-PSReadLineOption -Colors @{
@@ -75,15 +84,118 @@ Function bw() {
     #Note that the overriden Prompt method fixes the remaining color piece
 }
 
-<#Override default prompt to set color scheme; commented out for now 
-  because I'm using PowerShell ISE exclusively for now, and this is 
-  for a normal Powershell window; TODO2 make this context-sensitive#>
-#function Prompt   
-#{
-#    $ANSIColorSequenceBW+"PS $($executionContext.SessionState.Path.CurrentLocation)$('>' `
-#    * ($nestedPromptLevel + 1)) "
-#}
+<#Override default prompt to set color scheme; This may have unexpected behavior if created in a ISE window?
+function Prompt   
+{
+    $ANSIColorSequenceBW+"PSbw $($executionContext.SessionState.Path.CurrentLocation)$('>' `
+    * ($nestedPromptLevel + 1)) "
+}
 #---------------- Set Color Scheme - end -------------------
+
+<# not sure the all the background colors are canonically correct,
+   but seems to be working great, so I'm not messing with it #>
+new-alias psISEBlackOnWhite -name bwise 
+function  psISEBlackOnWhite() { 
+    $psISE.Options.ErrorForegroundColor           ='#FFFF9494'
+    $psISE.Options.ErrorBackgroundColor           ='#00FFFFFF'
+    $psISE.Options.WarningForegroundColor         ='#FFFF8C00'
+    $psISE.Options.WarningBackgroundColor         ='#00FFFFFF'
+    $psISE.Options.VerboseForegroundColor         ='#FF00FFFF'
+    $psISE.Options.VerboseBackgroundColor         ='#00FFFFFF'
+    $psISE.Options.DebugForegroundColor           ='#FF00FFFF'
+    $psISE.Options.DebugBackgroundColor           ='#00FFFFFF'
+    $psISE.Options.ConsolePaneBackgroundColor     ='#FFFFFFFF'
+    $psISE.Options.ConsolePaneTextBackgroundColor ='#FFFFFFFF'
+    $psISE.Options.ConsolePaneForegroundColor     ='#FF000000'
+    $psISE.Options.ScriptPaneBackgroundColor      ='#FFFFFFFF'
+    $psISE.Options.ScriptPaneForegroundColor      ='#FF000000'
+    
+    #https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/object-model/the-iseoptions-object?view=powershell-7.2
+$psISE.Options.ConsoleTokenColors["Attribute"]='black'
+$psISE.Options.ConsoleTokenColors["Command"]='black'
+$psISE.Options.ConsoleTokenColors["CommandArgument"]='black'
+$psISE.Options.ConsoleTokenColors["CommandParameter"]='black'
+$psISE.Options.ConsoleTokenColors["Comment"]='black'
+$psISE.Options.ConsoleTokenColors["GroupEnd"]='black'
+$psISE.Options.ConsoleTokenColors["GroupStart"]='black'
+$psISE.Options.ConsoleTokenColors["Keyword"]='black'
+$psISE.Options.ConsoleTokenColors["LineContinuation"]='black'
+$psISE.Options.ConsoleTokenColors["LoopLabel"]='black'
+$psISE.Options.ConsoleTokenColors["Member"]='black'
+$psISE.Options.ConsoleTokenColors["NewLine"]='black'
+$psISE.Options.ConsoleTokenColors["Number"]='black'
+$psISE.Options.ConsoleTokenColors["Operator"]='black'
+$psISE.Options.ConsoleTokenColors["Position"]='black'
+$psISE.Options.ConsoleTokenColors["StatementSeparator"]='black'
+$psISE.Options.ConsoleTokenColors["String"]='black'
+$psISE.Options.ConsoleTokenColors["Type"]='black'
+$psISE.Options.ConsoleTokenColors["Unknown"]='black'
+$psISE.Options.ConsoleTokenColors["Variable"]='black' 
+
+
+#Honestly I don't recall if there is anything useful in the rest of the commented code below in this function, but I'll leave it just in case
+
+   #$psISE.Options.RestoreDefaultConsoleTokenColors()  
+
+    <# default ConsoleTokenColors
+    PS C:\Users\b> $psISE.Options.ConsoleTokenColors
+
+               Key Value    
+               --- -----    
+         Attribute #FFB0C4DE
+           Command #FF000000
+   CommandArgument #FFEE82EE
+  CommandParameter #FFFFE4B5
+           Comment #FF98FB98
+          GroupEnd #FFF5F5F5
+        GroupStart #FFF5F5F5
+           Keyword #FFE0FFFF
+  LineContinuation #FFF5F5F5
+         LoopLabel #FFE0FFFF
+            Member #FFF5F5F5
+           NewLine #FFF5F5F5
+            Number #FFFFE4C4
+          Operator #FFD3D3D3
+          Position #FFF5F5F5
+StatementSeparator #FFF5F5F5
+            String #FFDB7093
+              Type #FF8FBC8F
+           Unknown #FFF5F5F5
+          Variable #FFFF4500
+    #>
+}
+
+
+function psISEColorDefault() {
+    $psISE.Options.ErrorForegroundColor           ='#FFFF9494'
+    $psISE.Options.ErrorBackgroundColor           ='#00FFFFFF'
+    $psISE.Options.WarningForegroundColor         ='#FFFF8C00'
+    $psISE.Options.WarningBackgroundColor         ='#00FFFFFF'
+    $psISE.Options.VerboseForegroundColor         ='#FF00FFFF'
+    $psISE.Options.VerboseBackgroundColor         ='#00FFFFFF'
+    $psISE.Options.DebugForegroundColor           ='#FF00FFFF'
+    $psISE.Options.DebugBackgroundColor           ='#00FFFFFF'
+    $psISE.Options.ConsolePaneBackgroundColor     ='#FF000080'
+    $psISE.Options.ConsolePaneTextBackgroundColor ='#FF012456'
+    $psISE.Options.ConsolePaneForegroundColor     ='#FFF5F5F5'
+    $psISE.Options.ScriptPaneBackgroundColor      ='#FFFFFFFF'
+    $psISE.Options.ScriptPaneForegroundColor      ='#FF000000'
+}
+function psISEColorInverted() {
+    $psISE.Options.ErrorBackgroundColor           ='#FFFF9494'
+    $psISE.Options.ErrorForegroundColor           ='#00FFFFFF'
+    $psISE.Options.WarningBackgroundColor         ='#FFFF8C00'
+    $psISE.Options.WarningForegroundColor         ='#00FFFFFF'
+    $psISE.Options.VerboseBackgroundColor         ='#FF00FFFF'
+    $psISE.Options.VerboseForegroundColor         ='#00FFFFFF'
+    $psISE.Options.DebugBackgroundColor           ='#FF00FFFF'
+    $psISE.Options.DebugForegroundColor           ='#00FFFFFF'
+    $psISE.Options.ConsolePaneForegroundColor     ='#FF000080'
+    $psISE.Options.ConsolePaneTextForegroundColor ='#FF012456'
+    $psISE.Options.ConsolePaneBackgroundColor     ='#FFF5F5F5'
+    $psISE.Options.ScriptPaneForegroundColor      ='#FFFFFFFF'
+    $psISE.Options.ScriptPaneBackgroundColor      ='#FF000000'
+}
 
 New-Alias restartScript -Name rr  #bprs
 New-Alias restartScript -Name boot  #bprs
@@ -101,7 +213,7 @@ function focusOnEditor() {
     Ctrl 'i'
 }
 
-#Not sure if this will work in PsExec, but here is an example of path for a WindowsShortcut to load a script and launch a function in RegularPowerShell: %SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -command "Invoke-Expression ((Get-Content C:\Users\b\eclipse\w1\Scripts\butils_base.ps1) | Out-String); bbb"
+#Not sure if this will work in PsExec, but here is an example of path for a WindowsShortcut to load a script and launch a function in RegularPowerShell: %SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -command "Invoke-Expression ((Get-Content C:\Users\......\Scripts\butils_base.ps1) | Out-String); bbb"   OR   %SystemRoot%\system32\WindowsPowerShell\v1.0\powershell.exe -NoExit -command "Get-Content 'C:\Users\......\Scripts\butils_base.ps1' | Out-String | Invoke-Expression; bw"
 function myBat() {
     ($PSHOME + '\powershell_ise.exe "'+$mypath+'"')|clip
     ww "Copied to clipboard batch file command(s) that will open PowerShell ISE with this file"
@@ -245,7 +357,7 @@ function  dellSupport() {
     AltTab; CtrlC; Start-Process "https://www.dell.com/support/home/en-us"
 }
 
-new-alias dells -Name st
+new-alias dells -Name dellst
 function  dells() {
     searchByURL https://www.dell.com/support/home/en-us/product-support/servicetag/_searchFor_ `
      (autoclipparm '[A-Za-z0-9]{7}')
@@ -365,105 +477,6 @@ function AltTabPasteArg0() {
 function nitttest() {
     AltTabPasteArg0 "Now is the time`nfor all good men to come to the aid of their country."
 }
-function psISEColorDefault() {
-    $psISE.Options.ErrorForegroundColor           ='#FFFF9494'
-    $psISE.Options.ErrorBackgroundColor           ='#00FFFFFF'
-    $psISE.Options.WarningForegroundColor         ='#FFFF8C00'
-    $psISE.Options.WarningBackgroundColor         ='#00FFFFFF'
-    $psISE.Options.VerboseForegroundColor         ='#FF00FFFF'
-    $psISE.Options.VerboseBackgroundColor         ='#00FFFFFF'
-    $psISE.Options.DebugForegroundColor           ='#FF00FFFF'
-    $psISE.Options.DebugBackgroundColor           ='#00FFFFFF'
-    $psISE.Options.ConsolePaneBackgroundColor     ='#FF000080'
-    $psISE.Options.ConsolePaneTextBackgroundColor ='#FF012456'
-    $psISE.Options.ConsolePaneForegroundColor     ='#FFF5F5F5'
-    $psISE.Options.ScriptPaneBackgroundColor      ='#FFFFFFFF'
-    $psISE.Options.ScriptPaneForegroundColor      ='#FF000000'
-}
-function psISEColorInverted() {
-    $psISE.Options.ErrorBackgroundColor           ='#FFFF9494'
-    $psISE.Options.ErrorForegroundColor           ='#00FFFFFF'
-    $psISE.Options.WarningBackgroundColor         ='#FFFF8C00'
-    $psISE.Options.WarningForegroundColor         ='#00FFFFFF'
-    $psISE.Options.VerboseBackgroundColor         ='#FF00FFFF'
-    $psISE.Options.VerboseForegroundColor         ='#00FFFFFF'
-    $psISE.Options.DebugBackgroundColor           ='#FF00FFFF'
-    $psISE.Options.DebugForegroundColor           ='#00FFFFFF'
-    $psISE.Options.ConsolePaneForegroundColor     ='#FF000080'
-    $psISE.Options.ConsolePaneTextForegroundColor ='#FF012456'
-    $psISE.Options.ConsolePaneBackgroundColor     ='#FFF5F5F5'
-    $psISE.Options.ScriptPaneForegroundColor      ='#FFFFFFFF'
-    $psISE.Options.ScriptPaneBackgroundColor      ='#FF000000'
-}
-<# not sure the all the background colors are canonically correct,
-   but seems to be working great, so I'm not messing with it #>
-new-alias psISEBlackOnWhite -name bwise 
-function  psISEBlackOnWhite() { 
-    $psISE.Options.ErrorForegroundColor           ='#FFFF9494'
-    $psISE.Options.ErrorBackgroundColor           ='#00FFFFFF'
-    $psISE.Options.WarningForegroundColor         ='#FFFF8C00'
-    $psISE.Options.WarningBackgroundColor         ='#00FFFFFF'
-    $psISE.Options.VerboseForegroundColor         ='#FF00FFFF'
-    $psISE.Options.VerboseBackgroundColor         ='#00FFFFFF'
-    $psISE.Options.DebugForegroundColor           ='#FF00FFFF'
-    $psISE.Options.DebugBackgroundColor           ='#00FFFFFF'
-    $psISE.Options.ConsolePaneBackgroundColor     ='#FFFFFFFF'
-    $psISE.Options.ConsolePaneTextBackgroundColor ='#FFFFFFFF'
-    $psISE.Options.ConsolePaneForegroundColor     ='#FF000000'
-    $psISE.Options.ScriptPaneBackgroundColor      ='#FFFFFFFF'
-    $psISE.Options.ScriptPaneForegroundColor      ='#FF000000'
-    
-    #https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/object-model/the-iseoptions-object?view=powershell-7.2
-$psISE.Options.ConsoleTokenColors["Attribute"]='black'
-$psISE.Options.ConsoleTokenColors["Command"]='black'
-$psISE.Options.ConsoleTokenColors["CommandArgument"]='black'
-$psISE.Options.ConsoleTokenColors["CommandParameter"]='black'
-$psISE.Options.ConsoleTokenColors["Comment"]='black'
-$psISE.Options.ConsoleTokenColors["GroupEnd"]='black'
-$psISE.Options.ConsoleTokenColors["GroupStart"]='black'
-$psISE.Options.ConsoleTokenColors["Keyword"]='black'
-$psISE.Options.ConsoleTokenColors["LineContinuation"]='black'
-$psISE.Options.ConsoleTokenColors["LoopLabel"]='black'
-$psISE.Options.ConsoleTokenColors["Member"]='black'
-$psISE.Options.ConsoleTokenColors["NewLine"]='black'
-$psISE.Options.ConsoleTokenColors["Number"]='black'
-$psISE.Options.ConsoleTokenColors["Operator"]='black'
-$psISE.Options.ConsoleTokenColors["Position"]='black'
-$psISE.Options.ConsoleTokenColors["StatementSeparator"]='black'
-$psISE.Options.ConsoleTokenColors["String"]='black'
-$psISE.Options.ConsoleTokenColors["Type"]='black'
-$psISE.Options.ConsoleTokenColors["Unknown"]='black'
-$psISE.Options.ConsoleTokenColors["Variable"]='black' 
-
-   #$psISE.Options.RestoreDefaultConsoleTokenColors()  
-
-    <# default ConsoleTokenColors
-    PS C:\Users\b> $psISE.Options.ConsoleTokenColors
-
-               Key Value    
-               --- -----    
-         Attribute #FFB0C4DE
-           Command #FF000000
-   CommandArgument #FFEE82EE
-  CommandParameter #FFFFE4B5
-           Comment #FF98FB98
-          GroupEnd #FFF5F5F5
-        GroupStart #FFF5F5F5
-           Keyword #FFE0FFFF
-  LineContinuation #FFF5F5F5
-         LoopLabel #FFE0FFFF
-            Member #FFF5F5F5
-           NewLine #FFF5F5F5
-            Number #FFFFE4C4
-          Operator #FFD3D3D3
-          Position #FFF5F5F5
-StatementSeparator #FFF5F5F5
-            String #FFDB7093
-              Type #FF8FBC8F
-           Unknown #FFF5F5F5
-          Variable #FFFF4500
-    #>
-}
 
 function atpdemo1() {
     alttabpaste ("asdf" `
@@ -518,6 +531,7 @@ function  EnableHibernateInstructions() {
     SendKeysFromRawText (f2s 'EnableHibernateInstructions')
 }
 
+new-alias Activate-Window -Name actwin
 function Activate-Window() {
     $ShellObj.AppActivate($args[0])
     wait 200 #seems like nearly all subsequent actions require at least some delay
@@ -792,25 +806,20 @@ function  keyboardHook() {
         $prevKey1 = $key
         $key = [System.Windows.Forms.Keys][KeyLogger.Program]::WaitForKey()
         #Write-Host $key
-        if ($key -eq "F12" -and $prevKey1 -eq "LControlKey") {
-            SendKeys1 "x"
+        if ($key -eq "F12") {
+            if ($prevKey1 -ne "LControlKey") {
+                Activate-Window "interactive"        
+            }
         }
         if ($key -eq "F2") {
             AltTab
         }
+        # sample of manipulating text repeatedly, could be useful for database data comparison
         if ($key -eq "F11") {
             Ctrl 'x'
-            SendKeys1 "whatup.["
+            SendKeys1 "table."
             CtrlV
-            SendKeys1 "], whatthere.["
-            Ctrlv
-            SendKeys1 "]"
-        }
-        if ($key -eq "F12") {
-            Ctrl 'x'
-            SendKeys1 "{Backspace} or whatthere.["
-            CtrlV
-            SendKeys1 "] != whatup.["
+            SendKeys1 "], table2.["
             Ctrlv
             SendKeys1 "]"
         }
@@ -822,5 +831,4 @@ function  keyboardHook() {
 foreach ($nextCustScript in (dir .\*custom*functions*ps1) ) {
     . $nextCustScript
 }
-psISEBlackOnWhite
 
