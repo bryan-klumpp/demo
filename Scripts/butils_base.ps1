@@ -13,6 +13,7 @@ documented, or packaged for general consumption.
 
 $global:outlookexe = 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE'
 $global:teamsexe = 'C:\Users\b\AppData\Local\Microsoft\Teams\current\Teams.exe'
+$global:templatesDir = 'C:\Users\b\eclipse\w1\Scripts\templates'
 $ShellObj = (New-Object -ComObject WScript.Shell)  #please clean up in finalize(); this is more reliable than PowerShell sendkeys etc.
 function finalize() {
     [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$ShellObj)
@@ -240,9 +241,13 @@ function findRegex() { Param($regex)
     #get-childitem -Recurse -Path . | select-Object FullName | select-String "$regex" | Select-Object "Line"
     get-childitem -Recurse -Path . | select-Object FullName | select-String "$regex"    #| Select-Object "Line" | Format-Table -Wrap
 }
-
-#Set-Alias -Name a -Value activate
-function act() { Param($titleFrag)
+new-alias Activate-Window -Name acta
+function Activate-Window() {
+    $ShellObj.AppActivate($args[0]) | Out-Null
+    wait 200 #seems like nearly all subsequent actions require at least some delay
+}
+New-Alias Activate-Window-Wildcard -Name act
+function  Activate-Window-Wildcard() { Param($titleFrag)
     #Set-ForegroundWindow (Get-Process "Edge").MainWindowHandle
     #(Get-Process | Where-Object { $_.MainWindowTitle -like '*Edge' })
     $shellObj.AppActivate((Get-Process `
@@ -531,11 +536,6 @@ function  EnableHibernateInstructions() {
     SendKeysFromRawText (f2s 'EnableHibernateInstructions')
 }
 
-new-alias Activate-Window -Name actwin
-function Activate-Window() {
-    $ShellObj.AppActivate($args[0])
-    wait 200 #seems like nearly all subsequent actions require at least some delay
-}
 new-alias activate-teams -name acttms
 function  Activate-Teams() {
     Activate-Window 'Chat' #not sure why 'Teams' doesn't always work, window matching used to work on the end of the Window title
@@ -698,6 +698,9 @@ function downloadMeCAREFULbackupfirst() {
     Invoke-WebRequest -Uri "https://raw.githubusercontent.com/bryan-klumpp/demo/main/Scripts/do_not_share____Bryan_Klumpp.ps1" -OutFile $myPath
 }
 
+function Hello-World() {
+    ww "Hello World"
+}
 
 function testnotin() {
     $in0 = @('asdf','xbsdf')
@@ -744,7 +747,7 @@ function equalsTrim() {
     return $args[0].trim() -eq $args[1].trim()
 }
 
-
+#Thanks to whoever came up with this C# keyboard hook, I found it at a post by user "marsze" at https://stackoverflow.com/questions/54236696/how-to-capture-global-keystrokes-with-powershell but it looks to be older, https://hinchley.net/articles/creating-a-key-logger-via-a-global-system-hook-using-powershell (Pete Hinchley) and https://null-byte.wonderhowto.com/how-to/create-simple-hidden-console-keylogger-c-sharp-0132757/ (Mr. Falkreath) are posts from 2013 and 2012, respectively.
 Add-Type -TypeDefinition '
 using System;
 using System.IO;
@@ -799,32 +802,57 @@ namespace KeyLogger {
 ' -ReferencedAssemblies System.Windows.Forms
 
 
+
+$key = $prevKey1 = $null
+[System.Windows.Forms.Keys[]]$ModKeys = @("LControlKey","LShiftKey", "Alt")
+function isModKey() {
+    return $ModKeys -contains $args[0]
+}
+
+# Some functions can be reflectively invoked, using functions with names like "kh_F12", "kh_LControlKey_F12", etc., while first testing to see if the function actually exists for a given key combination.
+# However - I found that using Invoke-Expression caused issues with functions that activated windows, so some of this has to be done by normal invocation
 new-alias keyboardHook -Name bhk
 new-alias keyboardHook -Name bbb
 function  keyboardHook() {
     while ($true) {
         $prevKey1 = $key
         $key = [System.Windows.Forms.Keys][KeyLogger.Program]::WaitForKey()
-        #Write-Host $key
-        if ($key -eq "F12") {
-            if ($prevKey1 -ne "LControlKey") {
-                Activate-Window "interactive"        
-            }
+
+        if(isModKey $prevKey1) {
+            $functName = ("khx_"+$prevKey1+"_"+$key)
+        } else {
+            $functName = ("khx_"              +$key)
         }
-        if ($key -eq "F2") {
-            AltTab
+        if (Get-Command -ErrorAction SilentlyContinue $functName) {
+            Invoke-Expression $functName
+            continue
         }
-        # sample of manipulating text repeatedly, could be useful for database data comparison
-        if ($key -eq "F11") {
-            Ctrl 'x'
-            SendKeys1 "table."
-            CtrlV
-            SendKeys1 "], table2.["
-            Ctrlv
-            SendKeys1 "]"
-        }
+
+        #This section is for commands such as window activators that require direct invocation rather than Invoke-Expression.  As this could grow to some size, I'm compressing the lines more than usual
+        if ($key -eq "F12") {if (-not (isModKey( $prevKey1 ))) { kh_F12 } continue } 
+
     }
 }
+
+function khx_F2() {
+    AltTab
+}
+function khx_F11() {
+    Get-Content ($templatesDir + '\' + "HelloWorld.txt") | Set-Clipboard
+    CtrlV
+}
+
+function khx_F10() {
+    SendKeys1 'Hello World'
+}
+function khx_LControlKey_F10() {
+    SendKeys1 'HELLO WORLD'
+}
+
+function kh_F12() {
+    Activate-Window "interactive"
+}
+
 
 
 #inline/startup/init code (end of function declarations)
