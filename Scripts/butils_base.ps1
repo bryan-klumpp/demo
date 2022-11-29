@@ -46,7 +46,8 @@ function  skimFileForSecurity() {
 
 #--------- Set Color Scheme Black on White - begin -------------
 $ANSIColorSequenceBW="$([char]0x1b)[38;2;0;0;0;48;2;255;255;255;m"
-Function bw() {
+new-alias blackOnWhite -Name bw
+Function  blackOnWhite() {
     if($isISE) {
         psISEBlackOnWhite
         return
@@ -83,10 +84,12 @@ Function bw() {
     $Host.PrivateData.ProgressForegroundColor = "Black"
     $Host.PrivateData.ProgressBackgroundColor = "White"
  
-    #Note that the overriden Prompt method fixes the remaining color piece
+    #Note that the overriden Prompt method may be needed also?
+
+    Clear-Host
 }
 
-<#Override default prompt to set color scheme; This may have unexpected behavior if created in a ISE window?
+<#Override default prompt to set color scheme; This may have unexpected behavior if created in a ISE window?  Not even sure if it's needed in a normal PowerShell window
 function Prompt   
 {
     $ANSIColorSequenceBW+"PSbw $($executionContext.SessionState.Path.CurrentLocation)$('>' `
@@ -743,9 +746,8 @@ new-alias keyboardHook -Name bhk
 new-alias keyboardHook -Name bbb
 function  keyboardHook() {
     while ($true) {
-        ww $key
         $prevKey1 = $key
-        $key = [System.Windows.Forms.Keys][KeyboardHook.Program]::WaitForKey()
+        $key = [System.Windows.Forms.Keys][KeyboardHook.Program]::WaitForKey(@([System.Windows.Forms.Keys]"F11",[System.Windows.Forms.Keys]"F12"))  #[System.Windows.Forms.Keys]"F11"
 
         if(isModKey $prevKey1) {
             $functName = ("khx_"+$prevKey1+"_"+$key)
@@ -766,17 +768,20 @@ function  keyboardHook() {
 function khx_F2() {
     AltTab
 }
-function khx_F11() {
-    Get-Content ($templatesDir + '\' + "HelloWorld.txt") | Set-Clipboard
-    CtrlV
+function khx_F4() {
+    SendKeysAsyncNoTranslate '%({F4})'
 }
-
 function khx_F10() {
     SendKeys1 'Hello World'
 }
 function khx_LControlKey_F10() {
     SendKeys1 'HELLO WORLD'
 }
+function khx_F11() {
+    Get-Content ($templatesDir + '\' + "HelloWorld.txt") | Set-Clipboard
+    CtrlV
+}
+
 
 function kh_F12() {
     Activate-Window "interactive"
