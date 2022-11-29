@@ -810,14 +810,15 @@ namespace KeyboardHook {
 
 
 # So far, all functions can be reflectively invoked, using functions with names like "kh_F12", "kh_LControlKey_F12", etc., while first testing to see if the function actually exists for a given key combination.
+# To add sending mouse clicks and other advanced functionality, we may be able to use the techniques at https://www.delftstack.com/howto/powershell/sending-a-mouse-click-event-in-powershell/
 new-alias keyboardHook -Name bkh
 new-alias keyboardHook -Name bbb
 function  keyboardHook() {
     while ($true) {
         $prevKey1 = $key
-        [System.Windows.Forms.Keys[]] $keysToBlockUniversally = @("F10","F11","F12","RControlKey")
+        [System.Windows.Forms.Keys[]] $keysToBlockUniversally = @("Oemtilde","F1","F10","F11","F12")
         $key = [System.Windows.Forms.Keys][KeyboardHook.Program]::WaitForKey($keysToBlockUniversally)  
-
+        ww "key pressed: "$key
         if(isModKey $prevKey1) {
             $functName = ("khx_"+$prevKey1+"_"+$key)
         } else {
@@ -830,6 +831,12 @@ function  keyboardHook() {
     }
 }
 
+function khx_Oemtilde() {
+    CtrlC
+}
+function khx_F1() {
+    CtrlV
+}
 function khx_F2() {
     AltTab
 }
