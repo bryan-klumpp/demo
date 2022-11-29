@@ -10,8 +10,9 @@ namespace KeyboardHook {
   public static class Program {
     private const int WH_KEYBOARD_LL = 13;
     private const int WM_KEYDOWN = 0x0100;
-    private const int WM_SYSKEYDOWN = 0x0104;
     private const int WM_KEYUP = 0x0101;
+    private const int WM_SYSKEYDOWN = 0x0104;
+    private const int WM_SYSKEYUP = 0x0105;
 
     private static HookProc hookProc = HookCallback;
     private static IntPtr hookId = IntPtr.Zero;
@@ -54,7 +55,7 @@ namespace KeyboardHook {
     private delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
 
     private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam) {
-      if (nCode >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)) { //credit https://www.codeproject.com/Articles/14485/Low-level-Windows-API-hooks-from-C-to-stop-unwante for the tip to include a check for syskeydown as well, Alt-Tab (and probably all Alt-key combinations) wasnt working right without it
+      if (nCode >= 0 && (wParam == (IntPtr)WM_KEYDOWN || wParam == (IntPtr)WM_SYSKEYDOWN)) { //credit https://www.codeproject.com/Articles/14485/Low-level-Windows-API-hooks-from-C-to-stop-unwante for the tip to include a check for syskeydown as well, Alt-Tab (and probably all Alt-key combinations) wasnt working right without it.  Im not so sure about using keyup vs. keydown though...
         keyCode = Marshal.ReadInt32(lParam);
         Application.Exit();
       }

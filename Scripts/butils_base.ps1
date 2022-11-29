@@ -246,6 +246,7 @@ function findRegex() { Param($regex)
 }
 new-alias Activate-Window -Name acta
 function Activate-Window() {
+    wait 200 #seems like nearly all subsequent actions require at least some delay
     $ShellObj.AppActivate($args[0]) | Out-Null
     wait 200 #seems like nearly all subsequent actions require at least some delay
 }
@@ -747,7 +748,8 @@ new-alias keyboardHook -Name bbb
 function  keyboardHook() {
     while ($true) {
         $prevKey1 = $key
-        $key = [System.Windows.Forms.Keys][KeyboardHook.Program]::WaitForKey(@([System.Windows.Forms.Keys]"F11",[System.Windows.Forms.Keys]"F12"))  #[System.Windows.Forms.Keys]"F11"
+        [System.Windows.Forms.Keys[]] $keysToBlockUniversally = @("F10","F11","F12","RControlKey")
+        $key = [System.Windows.Forms.Keys][KeyboardHook.Program]::WaitForKey($keysToBlockUniversally)  
 
         if(isModKey $prevKey1) {
             $functName = ("khx_"+$prevKey1+"_"+$key)
@@ -760,7 +762,7 @@ function  keyboardHook() {
         }
 
         #This section is for commands such as window activators that require direct invocation rather than Invoke-Expression.  As this could grow to some size, I'm compressing the lines more than usual
-        if ($key -eq "F12") {if (-not (isModKey( $prevKey1 ))) { kh_F12 } continue } 
+        #if ($key -eq "F12") {if (-not (isModKey( $prevKey1 ))) { kh_F12 } continue } 
 
     }
 }
@@ -772,18 +774,28 @@ function khx_F4() {
     SendKeysAsyncNoTranslate '%({F4})'
 }
 function khx_F10() {
-    SendKeys1 'Hello World'
+    Send-Clip 'Hello World'
 }
 function khx_LControlKey_F10() {
-    SendKeys1 'HELLO WORLD'
+    Send-Clip 'HELLO WORLD'
+}
+function khx_RControlKey() {
+    Activate-Window "interactive"
 }
 function khx_F11() {
-    Get-Content ($templatesDir + '\' + "HelloWorld.txt") | Set-Clipboard
+    Send-Clip-File "HelloWorld.txt"
+}
+
+function Send-Clip-File() {
+    Send-Clip (Get-Content ($templatesDir + '\' + $args[0]))
+}
+function Send-Clip() {
+    $args[0] | Set-Clipboard
     CtrlV
 }
 
 
-function kh_F12() {
+function khx_F12() {
     Activate-Window "interactive"
 }
 function khx_NumPad0() {
