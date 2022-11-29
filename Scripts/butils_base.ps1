@@ -8,9 +8,6 @@ is quite useful to encapsulate my daily tasks, but not at this point adapted,
 documented, or packaged for general consumption.
  -Bryan Klumpp  #>
 
-
-
-
 $global:outlookexe = 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE'
 $global:teamsexe = 'C:\Users\b\AppData\Local\Microsoft\Teams\current\Teams.exe'
 $global:templatesDir = 'C:\Users\b\eclipse\w1\Scripts\templates'
@@ -376,7 +373,7 @@ Function AdminShell() {
 }
 
 Function robobak() {
-    $bakDir='c:\backup'
+    $bakDir='c:\bak'
     $userProfile=$env:USERPROFILE
     #make the filename shorter than c:\users to attempt to avoid total path length issues, although still possible
     # not using /Z, possible better performance, TODO measure it; also re-evaluate /B, may need admin elevation
@@ -582,7 +579,6 @@ function isEmail() {
 function matches() {
     return $args[0] -Match ('^' + $args[1] + '$')
 }
-
 
 function  Tab() {
     SendKeysSyncNoTranslate '{Tab}'
