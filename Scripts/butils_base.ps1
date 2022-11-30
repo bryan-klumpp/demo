@@ -816,7 +816,7 @@ new-alias keyboardHook -Name bbb
 function  keyboardHook() {
     while ($true) {
         $prevKey1 = $key
-        [System.Windows.Forms.Keys[]] $keysToBlockUniversally = @("Oemtilde","F1","F10","F11","F12")
+        [System.Windows.Forms.Keys[]] $keysToBlockUniversally = @("Oemtilde","F1","F4","F10","F11","F12")
         $key = [System.Windows.Forms.Keys][KeyboardHook.Program]::WaitForKey($keysToBlockUniversally)  
         ww "key pressed: "$key
         if(isModKey $prevKey1) {
