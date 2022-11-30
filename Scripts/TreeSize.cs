@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 
 namespace FileUtils
 {
     public class FileTreeSize
     {
+        static List<String> logLines = new List<String>();
+        static long threshold = (2 * (1024L * 1024L * 1024L));
         public static void Main()
         {
             treeSize("c:\\");
@@ -12,6 +15,9 @@ namespace FileUtils
         {
             System.IO.DirectoryInfo rootDir = new System.IO.DirectoryInfo(rootDirString);
             WalkDirectoryTree(rootDir, 0);
+            for (int i = logLines.Count - 1; i >= 0; i--) {
+                Console.WriteLine(logLines[i]);
+            }
             Console.WriteLine("Press any key");
             Console.ReadKey();
         }
@@ -50,9 +56,9 @@ namespace FileUtils
             catch (System.IO.DirectoryNotFoundException e) { e.ToString(); }
 
 
-            if (totalSize > (10 * (1024L * 1024L * 1024L))) {
-                for (int i = 0; i < level; i++) { Console.Write("   "); }
-                Console.WriteLine(root.FullName + ": "+totalSize);
+            if (totalSize > threshold) {
+                //for (int i = 0; i < level; i++) { Console.Write(">   "); }
+                logLines.Add(root.FullName + "  "+totalSize);
             }
             return totalSize;
         }
