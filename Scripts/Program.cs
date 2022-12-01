@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FileUtils
@@ -6,7 +6,7 @@ namespace FileUtils
     public class FileTreeSize
     {
         static List<String> logLines = new List<String>();
-        static long threshold = (2 * (1024L * 1024L * 1024L));
+        static long threshold = (2 * (1024 * 1024 * 1024L));
         public static void Main()
         {
             treeSize("c:\\");
@@ -43,16 +43,14 @@ namespace FileUtils
 
                 foreach (System.IO.DirectoryInfo dirInfo in subDirs)
                 {
-                    if (! hasAttribute(dirInfo, System.IO.FileAttributes.ReparsePoint)) {
+                    if (! hasAttribute(dirInfo, System.IO.FileAttributes.ReparsePoint)) { //Steer clear of directory junctions, etc. which skew results at best and could result in a loop
                         // Resursive call for each subdirectory.
                         totalSize += WalkDirectoryTree(dirInfo, level + 1);
                     }
 
                 }
             }
-            // This is thrown if even one of the files requires permissions greater
-            // than the application provides.
-            catch (UnauthorizedAccessException e) { e.ToString(); }
+           catch (UnauthorizedAccessException e) { e.ToString(); }
             catch (System.IO.DirectoryNotFoundException e) { e.ToString(); }
 
 

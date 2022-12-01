@@ -10,7 +10,7 @@ documented, or packaged for general consumption.
 
 $global:outlookexe = 'C:\Program Files\Microsoft Office\root\Office16\OUTLOOK.EXE'
 $global:teamsexe = 'C:\Users\b\AppData\Local\Microsoft\Teams\current\Teams.exe'
-$global:templatesDir = 'C:\Users\b\eclipse\w1\Scripts\templates'
+$global:sendClipFileDir = 'C:\Users\b\eclipse\w1\Scripts\templates'
 $ShellObj = (New-Object -ComObject WScript.Shell)  #please clean up in finalize(); this is more reliable than PowerShell sendkeys etc.
 function finalize() {
     [System.Runtime.InteropServices.Marshal]::ReleaseComObject([System.__ComObject]$ShellObj)
@@ -816,13 +816,13 @@ new-alias keyboardHook -Name bbb
 function  keyboardHook() {
     while ($true) {
         $prevKey1 = $key
-        [System.Windows.Forms.Keys[]] $keysToBlockUniversally = @("Oemtilde","F1","F4","F10","F11","F12")
+        [System.Windows.Forms.Keys[]] $keysToBlockUniversally = @("Oemtilde","F1","F2","F4","F10","F11","F12","NumPad0","NumPad1","NumPad2","NumPad3","NumPad4","NumPad5","NumPad6","NumPad7","NumPad8","NumPad9")
         $key = [System.Windows.Forms.Keys][KeyboardHook.Program]::WaitForKey($keysToBlockUniversally)  
         ww "key pressed: "$key
         if(isModKey $prevKey1) {
-            $functName = ("khx_"+$prevKey1+"_"+$key)
+            $functName = ("kh_"+$prevKey1+"_"+$key)
         } else {
-            $functName = ("khx_"              +$key)
+            $functName = ("kh_"              +$key)
         }
         if (Get-Command -ErrorAction SilentlyContinue $functName) {
             Invoke-Expression $functName
@@ -831,33 +831,30 @@ function  keyboardHook() {
     }
 }
 
-function khx_Oemtilde() {
+function kh_Oemtilde() {
     CtrlC
 }
-function khx_F1() {
+function kh_F1() {
     CtrlV
 }
-function khx_F2() {
+function kh_F2() {
     AltTab
 }
-function khx_F4() {
+function kh_F4() {
     SendKeysAsyncNoTranslate '%({F4})'
 }
-function khx_F10() {
+function kh_F10() {
     Send-Clip 'Hello World'
 }
-function khx_LControlKey_F10() {
+function kh_LControlKey_F10() {
     Send-Clip 'HELLO WORLD'
 }
-function khx_RControlKey() {
-    Activate-Window "interactive"
-}
-function khx_F11() {
+function kh_F11() {
     Send-Clip-File "HelloWorld.txt"
 }
 
 function Send-Clip-File() {
-    Send-Clip (Get-Content ($templatesDir + '\' + $args[0]))
+    Send-Clip (Get-Content ($sendClipFileDir + '\' + $args[0]))
 }
 function Send-Clip() {
     $args[0] | Set-Clipboard
@@ -865,10 +862,10 @@ function Send-Clip() {
 }
 
 
-function khx_F12() {
+function kh_F12() {
     Activate-Window "interactive"
 }
-function khx_NumPad0() {
+function kh_NumPad0() {
     Activate-Window "interactive"
 }
 
