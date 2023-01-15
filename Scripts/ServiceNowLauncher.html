@@ -6,37 +6,50 @@ const serviceNowPrefix='myco';
 const assetTagFormatRegex = 'XYZ[0-9]{5}';
 
 </script>
-<style></style>
+<style>
+  button { margin-top: 10px; margin-left: 10px; margin-right: 10px            }
+</style>
 </head><body>
 <table>
-<tr><textarea id="myListTA1" rows=20 columns=20>XYZ82238  	
+<tr> 
+<div style="float:left; ">
+<textarea id="myListTA1" rows=35 columns=20>XYZ82238  	
 asdf, ,
 XYZ55555;
 f
 
-</textarea></tr>
+</textarea>
+<td width=1>
+<div style="vertical-align: text-top; "; >
+<button onclick="lookupList()">Lookup&nbsp;List</button>
+</div>
+</div>
+</td>
+</tr>
 </table>
-
-<button onclick="lookupList()">Lookup List</button>
-<button onclick="testFancySplit()">Self Test</button>
 
 <script>  //core logic....
 
 class ServiceNowType {
-		constructor(p_regex, p_actionName) {
-			this.regex = new RegExp(p_regex); this.actionName = p_actionName;
+		constructor(p_regex, p_actionName, p_criteriaColumn) {
+			this.regex = new RegExp(p_regex); this.actionName = p_actionName; this.criteriaColumn = p_criteriaColumn;
 		}
 }
-const ServiceNowTypes = new Array(new ServiceNowType(assetTagFormatRegex,'alm_hardware'), new ServiceNowType(assetTagFormatRegex,'sc_task'));
+const ServiceNowTypes = new Array(
+	new ServiceNowType(assetTagFormatRegex,'alm_hardware',             'number'), 
+	new ServiceNowType('SCTASK[0-9]{7}'   ,'sc_task'     ,             'number'),
+	new ServiceNowType(   'INC[0-9]{7}'   ,'incident'    ,             'number'),
+	new ServiceNowType(  'RITM[0-9]{7}'   ,'sc_task'     ,'request_item.number'),
+	);
 
 function lookupList() {
-	taValues = myListTA1.value.split('\n');
+	taValues = fancySplit(myListTA1.value);
 	snType = getApplicableServiceNowType(taValues[0])
 	var valuesURLEscaped = ''
 	for(var i = 0; i < taValues.length; i++) {
 		valuesURLEscaped += ('%2C'+taValues[i])
 	}
-	window.open('https://'+serviceNowPrefix+'.service-now.com/'+snType.actionName+'_list.do?sysparm_query=numberIN'+valuesURLEscaped, '_blank')
+	window.open('https://'+serviceNowPrefix+'.service-now.com/'+snType.actionName+'_list.do?sysparm_query='+snType.criteriaColumn+'IN'+valuesURLEscaped, '_blank')
 }
 
 function getApplicableServiceNowType(representativeValue) {
@@ -48,16 +61,7 @@ function getApplicableServiceNowType(representativeValue) {
 	}
 	return matches[0]; //TODO more elegantly handle cases where there are 0 or >1 matches rather than blindly taking the first match and assuming there is at least one match...
 }
-
-function testFancySplit() {
-	const inString = "XYZ82238  	,;\r\nABC55555 %20 theend ";
-	result = fancySplit(inString);
-	const expectedResult = "XYZ82238,ABC55555,theend";
-	alert(fancySplit(inString));
-}
-
 function fancySplit(inString) {
-	const aReallyGreatRegexDONTCHANGETHIS = /( |;|\r|\n|	|,|%20){1,}/g
 	const myRegex = /( |;|\r|\n|	|,|%20){1,}/g
 	return inString.replaceAll(myRegex,' ').trim().split( ' ' );
 }
@@ -71,8 +75,6 @@ function delimit(inArray, delimiter) {
 	}
 	return result;
 }
-
-lookupList();
 </script>
 
 </body>
