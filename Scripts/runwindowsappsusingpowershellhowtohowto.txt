@@ -1,0 +1,4 @@
+(get-appxpackage | ?{$_.PackageFamilyName -like '*DellUpdate*'}).PackageFamilyName
+Start-Process shell:$("AppsFolder\" + (get-appxpackage | ?{$_.PackageFamilyName -like '*DellUpdate*'}).PackageFamilyName + "!App" )
+InstallLocation   : C:\Program Files\WindowsApps\DellInc.DellUpdate_4.3.12.0_x86__htrsf667h5kn2
+https://www.reddit.com/r/PowerShell/comments/jj55so/run_windows_apps_using_powershell_the_easy_way/

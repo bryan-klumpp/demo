@@ -470,6 +470,12 @@ function SendKeys3broke() {
     [System.Windows.Forms.SendKeys]::Send($args[0])
 }
 
+new-alias findPath -Name f
+function  findPath() {
+    #((cmd /c "dir /s /b") | out-string) -match ('.*'+$args[0]+'.*')  #slow
+    (cmd /c ("dir /s /b | findstr /r /i " + $args[0]))
+}
+
 New-Alias -Name AltTabPaste AltTabPasteArg0
 function AltTabPasteArg0() {
     $text = $args[0]

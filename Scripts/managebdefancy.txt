@@ -1,0 +1,6 @@
+$mbe = (start-process -nonewwindow -passthru -wait manage-bde -argumentlist '-protectors -get c:') 
+$mbe
+
+if (manage-bde -protectors -get c: | findstr TPM) {
+	'yes'
+}

@@ -1,0 +1,6 @@
+https://techcommunity.microsoft.com/t5/ask-the-performance-team/wmi-repository-corruption-or-not/ba-p/375484
+
+powershell -command "(get-itemproperty -path 'HKLM:\SOFTWARE\Microsoft\Wbem\CIMOM\' -Name 'Autorecover MOFS').'Autorecover MOFS' | select-string ClusWmiUninstall.mof"
+
+If the above does not match anything, then you can just do winmgmt /resetrepository  (if needed,    net stop winmgmt /y    first )
+

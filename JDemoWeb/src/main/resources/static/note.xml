@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+
+<note xmlns="https://www.w3schools.com"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://www.w3schools.com note.xsd">
+	<to>Tove</to>
+	<note>
+		<to>asdf</to>
+		<heading />
+		<body />
+		this line enabled by mixed="true"
+	</note>
+	<heading>Reminder</heading>
+	<body>Don't forget me this weekend!</body>
+</note>
