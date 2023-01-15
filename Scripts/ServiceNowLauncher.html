@@ -7,7 +7,7 @@ const assetTagFormatRegex = 'XYZ[0-9]{5}';
 
 </script>
 <style>
-  button { margin-top: 10px; margin-left: 10px; margin-right: 10px            }
+  button { margin-top: 20px; margin-left: 20px; margin-right: 20px; height: 100px; width: 250px;  }
 </style>
 </head><body>
 <table>
@@ -21,7 +21,8 @@ f
 </textarea>
 <td width=1>
 <div style="vertical-align: text-top; "; >
-<button onclick="lookupList()">Lookup&nbsp;List</button>
+<button onclick="openTabs()">Open&nbsp;Individual&nbsp;Tab(s)</button>
+<button onclick="openList()">Open&nbsp;Bookmarkable&nbsp;List</button>
 </div>
 </div>
 </td>
@@ -36,13 +37,14 @@ class ServiceNowType {
 		}
 }
 const ServiceNowTypes = new Array(
-	new ServiceNowType(assetTagFormatRegex,'alm_hardware',             'number'), 
-	new ServiceNowType('SCTASK[0-9]{7}'   ,'sc_task'     ,             'number'),
-	new ServiceNowType(   'INC[0-9]{7}'   ,'incident'    ,             'number'),
-	new ServiceNowType(  'RITM[0-9]{7}'   ,'sc_task'     ,'request_item.number'),
+	new ServiceNowType(assetTagFormatRegex,'alm_hardware',                     'asset_tag'), 
+	new ServiceNowType('SCTASK[0-9]{7}'   ,'sc_task'     ,                     'number'   ),
+	new ServiceNowType(   'INC[0-9]{7}'   ,'incident'    ,                     'number'   ),
+	new ServiceNowType(  'RITM[0-9]{7}'   ,'sc_task'     ,        'request_item.number'   ),
+	new ServiceNowType(   'REQ[0-9]{7}'   ,'sc_task'     ,'request_item.request.number'   ),
 	);
 
-function lookupList() {
+function openList() {
 	taValues = fancySplit(myListTA1.value);
 	snType = getApplicableServiceNowType(taValues[0])
 	var valuesURLEscaped = ''
@@ -50,6 +52,14 @@ function lookupList() {
 		valuesURLEscaped += ('%2C'+taValues[i])
 	}
 	window.open('https://'+serviceNowPrefix+'.service-now.com/'+snType.actionName+'_list.do?sysparm_query='+snType.criteriaColumn+'IN'+valuesURLEscaped, '_blank')
+}
+function openTabs() {
+	taValues = fancySplit(myListTA1.value);
+	snType = getApplicableServiceNowType(taValues[0])
+	for(var i = 0; i < taValues.length; i++) {
+		window.open('https://'+serviceNowPrefix+'.service-now.com/'+snType.actionName+'.do?sysparm_query='+snType.criteriaColumn+'%3D'+taValues[i], '_blank')
+	}
+	
 }
 
 function getApplicableServiceNowType(representativeValue) {
