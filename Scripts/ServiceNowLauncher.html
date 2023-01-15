@@ -7,30 +7,22 @@ const assetTagFormatRegex = 'XYZ[0-9]{5}';
 
 </script>
 <style>
-  button { margin-top: 20px; margin-left: 20px; margin-right: 20px; height: 100px; width: 250px;  }
+  button { margin-top: 20px; margin-left: 20px; margin-right: 20px; height: 100px; width: 250px; vertical-align: text-top;  }
 </style>
 </head><body>
 <table>
-<tr> 
-<div style="float:left; ">
-<textarea id="myListTA1" rows=35 columns=20>XYZ82238  	
-asdf, ,
-XYZ55555;
-f
-
-</textarea>
-<td width=1>
-<div style="vertical-align: text-top; "; >
-<button onclick="openTabs()">Open&nbsp;Individual&nbsp;Tab(s)</button>
-<button onclick="openList()">Open&nbsp;Bookmarkable&nbsp;List</button>
-</div>
-</div>
-</td>
-</tr>
+	<tr> 
+	<div style="float:left; ">
+	<textarea id="myListTA1" rows=35 columns=20></textarea>
+		<td width=1>
+		<button onclick="openTabs()">Open&nbsp;Individual&nbsp;Tab(s)</button>
+		<button onclick="openList()">Open&nbsp;Bookmarkable&nbsp;List</button>
+		</td>
+	</div>
+	</tr>
 </table>
 
 <script>  //core logic....
-
 class ServiceNowType {
 		constructor(p_regex, p_actionName, p_criteriaColumn) {
 			this.regex = new RegExp(p_regex); this.actionName = p_actionName; this.criteriaColumn = p_criteriaColumn;
@@ -43,9 +35,8 @@ const ServiceNowTypes = new Array(
 	new ServiceNowType(  'RITM[0-9]{7}'   ,'sc_task'     ,        'request_item.number'   ),
 	new ServiceNowType(   'REQ[0-9]{7}'   ,'sc_task'     ,'request_item.request.number'   ),
 	);
-
 function openList() {
-	taValues = fancySplit(myListTA1.value);
+	taValues = fancySplit(myListTA1.value.toUpperCase());
 	snType = getApplicableServiceNowType(taValues[0])
 	var valuesURLEscaped = ''
 	for(var i = 0; i < taValues.length; i++) {
@@ -54,14 +45,12 @@ function openList() {
 	window.open('https://'+serviceNowPrefix+'.service-now.com/'+snType.actionName+'_list.do?sysparm_query='+snType.criteriaColumn+'IN'+valuesURLEscaped, '_blank')
 }
 function openTabs() {
-	taValues = fancySplit(myListTA1.value);
+	taValues = fancySplit(myListTA1.value.toUpperCase());
 	snType = getApplicableServiceNowType(taValues[0])
 	for(var i = 0; i < taValues.length; i++) {
 		window.open('https://'+serviceNowPrefix+'.service-now.com/'+snType.actionName+'.do?sysparm_query='+snType.criteriaColumn+'%3D'+taValues[i], '_blank')
 	}
-	
 }
-
 function getApplicableServiceNowType(representativeValue) {
 	const matches = [];
 	for(var i=0; i<ServiceNowTypes.length;i++) {
@@ -71,23 +60,9 @@ function getApplicableServiceNowType(representativeValue) {
 	}
 	return matches[0]; //TODO more elegantly handle cases where there are 0 or >1 matches rather than blindly taking the first match and assuming there is at least one match...
 }
-function fancySplit(inString) {
-	const myRegex = /( |;|\r|\n|	|,|%20){1,}/g
-	return inString.replaceAll(myRegex,' ').trim().split( ' ' );
-}
+function fancySplit(inString) {	return inString.replaceAll(/( |;|\r|\n|	|,|%20){1,}/g,' ').trim().split( ' ' ); }
 function delimit(inArray, delimiter) {
-	var result = '';
-	for(var i = 0; i < inArray.length; i++) {
-		if(i > 0) {
-			result += delimiter;
-		}
-		result += inArray[i];
-	}
-	return result;
+	var result = ''; for(var i = 0; i < inArray.length; i++) { if(i > 0) { result += delimiter; } result += inArray[i];	}
+	return result; // this function is pretty basic stuff so I put on one line to save space; if you want to see individual lines just auto-format it.
 }
-</script>
-
-</body>
-
-
-</html>
+</script></body></html>
