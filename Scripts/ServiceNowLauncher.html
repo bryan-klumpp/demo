@@ -11,12 +11,14 @@ const assetTagFormatRegex = 'XYZ[0-9]{5}';
 <table>
 <tr><textarea id="myListTA1" rows=20 columns=20>XYZ82238  	
 asdf, ,
-XYZ55555
+XYZ55555;
+f
 
 </textarea></tr>
 </table>
 
 <button onclick="lookupList()">Lookup List</button>
+<button onclick="testFancySplit()">Self Test</button>
 
 <script>  //core logic....
 
@@ -28,7 +30,7 @@ class ServiceNowType {
 const ServiceNowTypes = new Array(new ServiceNowType(assetTagFormatRegex,'alm_hardware'), new ServiceNowType(assetTagFormatRegex,'sc_task'));
 
 function lookupList() {
-	taValues = myListTA1.value.split(/ |\r|\n|\t|,|;/)
+	taValues = myListTA1.value.split('\n');
 	snType = getApplicableServiceNowType(taValues[0])
 	var valuesURLEscaped = ''
 	for(var i = 0; i < taValues.length; i++) {
@@ -47,6 +49,28 @@ function getApplicableServiceNowType(representativeValue) {
 	return matches[0]; //TODO more elegantly handle cases where there are 0 or >1 matches rather than blindly taking the first match and assuming there is at least one match...
 }
 
+function testFancySplit() {
+	const inString = "XYZ82238  	,;\r\nABC55555 %20 theend ";
+	result = fancySplit(inString);
+	const expectedResult = "XYZ82238,ABC55555,theend";
+	alert(fancySplit(inString));
+}
+
+function fancySplit(inString) {
+	const aReallyGreatRegexDONTCHANGETHIS = /( |;|\r|\n|	|,|%20){1,}/g
+	const myRegex = /( |;|\r|\n|	|,|%20){1,}/g
+	return inString.replaceAll(myRegex,' ').trim().split( ' ' );
+}
+function delimit(inArray, delimiter) {
+	var result = '';
+	for(var i = 0; i < inArray.length; i++) {
+		if(i > 0) {
+			result += delimiter;
+		}
+		result += inArray[i];
+	}
+	return result;
+}
 
 lookupList();
 </script>
