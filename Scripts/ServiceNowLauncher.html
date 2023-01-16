@@ -15,13 +15,13 @@ button { height: 100px; width: 250px; vertical-align: text-top;  }
 <table>
 	<tr>
 	<table style="float:left;">
-		<tr><td>One asset tag only</td></tr>
-		<tr><td><input    id="singleAssetTagInputBox"  columns=15 tabindex=2 onkeypress="inputKeyPressed(event)"></input></td></tr>
-		<tr><td>Mutiple, various formats</td></tr>
+		<tr><td>Single asset tag;<br>Press Enter or Spacebar<br>to execute.</td></tr>
+		<tr><td><input    id="singleAssetTagInputBox"  columns=15 tabindex=2 onkeypress="assetTagInputBoxKeyPressed(event)"></input></td></tr>
+		<tr><td>Mutiple items list,<br>various formats;<br>Use buttons to execute.</td></tr>
 		<tr><td><textarea id="myListTA1" rows=35 tabindex=1 columns=15>XYZ1749001	C001888854</textarea></td></tr>
 	</table>
 	<td width=1>
-	<button onclick="openTabs()" tabIndex=3>Open&nbsp;Individual&nbsp;Tab(s)</button>
+	<button onclick="openMultipleTabs()" tabIndex=3>Open&nbsp;Individual&nbsp;Tab(s)</button>
 	</td><td>
 	<button onclick="openList()">Open&nbsp;Bookmarkable&nbsp;List</button>
 	</td>
@@ -45,6 +45,7 @@ class ServiceNowType {
 const alm_hardwareTypeByAssetTag = 
     new ServiceNowType(assetTagFormatRegex,'alm_hardware',                     'asset_tag'); 
 const ServiceNowTypes = new Array(
+	new ServiceNowType('[A-Za-z0-9]{7}'   ,'alm_hardware',              'serial_number'   ),
 	new ServiceNowType('SCTASK[0-9]{7}'   ,'sc_task'     ,                     'number'   ),
 	new ServiceNowType(   'INC[0-9]{7}'   ,'incident'    ,                     'number'   ),
 	new ServiceNowType(  'RITM[0-9]{7}'   ,'sc_task'     ,        'request_item.number'   ),
@@ -60,12 +61,12 @@ function openList() {
 	}
 	window.open('https://'+serviceNowPrefix+'.service-now.com/'+snType.actionName+'_list.do?sysparm_query='+snType.criteriaColumn+'IN'+valuesURLEscaped, '_blank')
 }
-function inputKeyPressed(event) {
+function assetTagInputBoxKeyPressed(event) {
 	if(event.key === "Enter" || event.key === " ") {
 		openTab(alm_hardwareTypeByAssetTag, singleAssetTagInputBox.value);
 	}
 }
-function openTabs() {
+function openMultipleTabs() {
 	taValues = fancySplit(myListTA1.value.toUpperCase());
 	snType = getApplicableServiceNowType(taValues[0])
 	console.log('taValues: ' + taValues);
@@ -86,7 +87,12 @@ function getApplicableServiceNowType(representativeValue) {
 	}
 	return matches[0]; //TODO more elegantly handle cases where there are 0 or >1 matches rather than blindly taking the first match and assuming there is at least one match...
 }
-function fancySplit(inString) {	return inString.replaceAll(/( |;|\r|\n|	|,|%20){1,}/g,' ').trim().split( ' ' ); }
+function fancySplit(inString) {	
+	/* this cleans up and divides the multiple input values by using a regular expression
+	   to convert all non-signficant characters down to a single comma 
+	   between the significant characters, then splitting them by that comma.*/ 
+	return inString.replaceAll(/( |;|\r|\n|	|,|%20){1,}/g,',').trim().split( ',' ); 
+}
 function delimit(inArray, delimiter) {
 	var result = ''; for(var i = 0; i < inArray.length; i++) { if(i > 0) { result += delimiter; } result += inArray[i];	}
 	return result; // this function is pretty basic stuff so I put on one line to save space; if you want to see individual lines just auto-format it.
