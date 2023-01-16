@@ -3,7 +3,7 @@
 
 //customization variables; you can edit these to fit the business requirements
 const serviceNowPrefix='myco';
-const assetTagFormatRegex = 'XYZ[0-9]{5}';
+const assetTagFormatRegex = 'XYZ[0-9]{7}';
 
 </script>
 <style>
@@ -18,7 +18,7 @@ button { height: 100px; width: 250px; vertical-align: text-top;  }
 		<tr><td>Single asset tag;<br>Press Enter or Spacebar<br>to execute.</td></tr>
 		<tr><td><input    id="singleAssetTagInputBox"  columns=15 tabindex=2 onkeypress="assetTagInputBoxKeyPressed(event)"></input></td></tr>
 		<tr><td>Mutiple items list,<br>various formats;<br>Use buttons to execute.</td></tr>
-		<tr><td><textarea id="myListTA1" rows=35 tabindex=1 columns=15>XYZ1749001	C001888854</textarea></td></tr>
+		<tr><td><textarea id="myListTA1" rows=35 tabindex=1 columns=15>XYZ1888854</textarea></td></tr>
 	</table>
 	<td width=1>
 	<button onclick="openMultipleTabs()" tabIndex=3>Open&nbsp;Individual&nbsp;Tab(s)</button>
@@ -39,18 +39,18 @@ const urlParams = new URLSearchParams(window.location.search);
 var operationMode=urlParams.get('mode');
 class ServiceNowType {
 		constructor(p_regex, p_actionName, p_criteriaColumn) {
-			this.regex = new RegExp(p_regex); this.actionName = p_actionName; this.criteriaColumn = p_criteriaColumn;
+			this.regex = new RegExp('^'+p_regex+'$'); this.actionName = p_actionName; this.criteriaColumn = p_criteriaColumn;
 		}
 }
 const alm_hardwareTypeByAssetTag = 
     new ServiceNowType(assetTagFormatRegex,'alm_hardware',                     'asset_tag'); 
 const ServiceNowTypes = new Array(
-	new ServiceNowType('[A-Za-z0-9]{7}'   ,'alm_hardware',              'serial_number'   ),
 	new ServiceNowType('SCTASK[0-9]{7}'   ,'sc_task'     ,                     'number'   ),
 	new ServiceNowType(   'INC[0-9]{7}'   ,'incident'    ,                     'number'   ),
 	new ServiceNowType(  'RITM[0-9]{7}'   ,'sc_task'     ,        'request_item.number'   ),
 	new ServiceNowType(   'REQ[0-9]{7}'   ,'sc_task'     ,'request_item.request.number'   ),
-	alm_hardwareTypeByAssetTag
+	alm_hardwareTypeByAssetTag,
+	new ServiceNowType('[A-Za-z0-9]{7}' ,'alm_hardware',              'serial_number'   )
 	);
 function openList() {
 	taValues = fancySplit(myListTA1.value.toUpperCase());
