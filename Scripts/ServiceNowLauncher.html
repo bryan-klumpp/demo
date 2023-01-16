@@ -15,8 +15,10 @@ button { height: 100px; width: 250px; vertical-align: text-top;  }
 <table>
 	<tr>
 	<table style="float:left;">
-		<tr><td><input    id="myInput1"  rows=35 tabindex=2 onkeypress="inputKeyPressed(event)"></input></td></tr>
-		<tr><td><textarea id="myListTA1" rows=35 tabindex=1 columns=20>XYZ1749001	C001888854</textarea></td></tr>
+		<tr><td>One asset tag only</td></tr>
+		<tr><td><input    id="singleAssetTagInputBox"  columns=15 tabindex=2 onkeypress="inputKeyPressed(event)"></input></td></tr>
+		<tr><td>Mutiple, various formats</td></tr>
+		<tr><td><textarea id="myListTA1" rows=35 tabindex=1 columns=15>XYZ1749001	C001888854</textarea></td></tr>
 	</table>
 	<td width=1>
 	<button onclick="openTabs()" tabIndex=3>Open&nbsp;Individual&nbsp;Tab(s)</button>
@@ -26,11 +28,11 @@ button { height: 100px; width: 250px; vertical-align: text-top;  }
 	</tr>
 </table>
 <p>
-To use this file, it needs to be downloaded to your hard drive with the javascript code intact.  Create a shortcut to it (bookmark or use instructions below for a taskbar shortcut).  For multiple items, in the larger text area, paste, type, or scan in multiple asset tags, Dell service tags/serial numbers, SCTASK, REQ, RITM, or INC numbers and use one of the buttons.  The entries can be separated by newlines, spaces, tabs, or commas, doesn't matter.
+To use this file, it needs to be downloaded to your hard drive with the javascript code intact.  Create a shortcut to it (bookmark or use instructions below for taskbar shortcuts).  For multiple items, in the larger text area, paste, type, or scan in multiple asset tags, Dell service tags/serial numbers, SCTASK, REQ, RITM, or INC numbers and use one of the buttons.  The entries can be separated by newlines, spaces, tabs, or commas.
 </p><p>
-You can create a taskbar shortcut to this file by doing something like this; download/unzip this html file and then create a Windows shortcut with a path like this to the unzipped/downloaded location on your hard drive: <br>
-<pre>"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" "file:///C:/Users/b/eclipse/w1/Scripts/ServiceNowLauncher.html"</pre>
-You can then give the shortcut a different icon if you like (I use the tree icon from c:\windows\system32\shell32.dll), and then right-click on the shortcut and "Pin to Taskbar".
+You can create a taskbar shortcut to this file by doing something like this; download/unzip this html file and then create a new Windows shortcut with a path like the one below, noting the unzipped/downloaded location of the html file on your hard drive: <br>
+<pre>"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" "file:///C:/Users/b/eclipse/w1/Scripts/ServiceNowLauncher.html?mode=single"</pre>
+You can then give the shortcut a different icon if you like (I use the star icon from c:\windows\system32\shell32.dll), and then right-click on the shortcut and "Pin to Taskbar".  Also you can create a separate shortcut and change the URL parameter to mode=multiple (which will highlight the larger text area by default) and create a separate taskbar icon (I like the tree icon from the aforementioned dll).
 </p>
 <script>  //core logic....
 const urlParams = new URLSearchParams(window.location.search);
@@ -40,14 +42,14 @@ class ServiceNowType {
 			this.regex = new RegExp(p_regex); this.actionName = p_actionName; this.criteriaColumn = p_criteriaColumn;
 		}
 }
-const alm_hardwareType = 
+const alm_hardwareTypeByAssetTag = 
     new ServiceNowType(assetTagFormatRegex,'alm_hardware',                     'asset_tag'); 
 const ServiceNowTypes = new Array(
-	new ServiceNowType(assetTagFormatRegex,'alm_hardware',                     'asset_tag'),
 	new ServiceNowType('SCTASK[0-9]{7}'   ,'sc_task'     ,                     'number'   ),
 	new ServiceNowType(   'INC[0-9]{7}'   ,'incident'    ,                     'number'   ),
 	new ServiceNowType(  'RITM[0-9]{7}'   ,'sc_task'     ,        'request_item.number'   ),
 	new ServiceNowType(   'REQ[0-9]{7}'   ,'sc_task'     ,'request_item.request.number'   ),
+	alm_hardwareTypeByAssetTag
 	);
 function openList() {
 	taValues = fancySplit(myListTA1.value.toUpperCase());
@@ -60,7 +62,7 @@ function openList() {
 }
 function inputKeyPressed(event) {
 	if(event.key === "Enter" || event.key === " ") {
-		openTab(alm_hardwareType, myInput1.value);
+		openTab(alm_hardwareTypeByAssetTag, singleAssetTagInputBox.value);
 	}
 }
 function openTabs() {
@@ -93,7 +95,7 @@ function delimit(inArray, delimiter) {
 if (operationMode == 'multiple') {
 	document.getElementById("myListTA1").focus()
 } else {
-	document.getElementById("myInput1").focus()
+	document.getElementById("singleAssetTagInputBox").focus()
 }
 
 </script></body></html>
