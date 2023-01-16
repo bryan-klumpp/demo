@@ -16,9 +16,9 @@ button { height: 100px; width: 250px; vertical-align: text-top;  }
 	<tr>
 	<table style="float:left;">
 		<tr><td>Single asset tag;<br>Press Enter or Spacebar<br>to execute.</td></tr>
-		<tr><td><input    id="singleAssetTagInputBox"  columns=15 tabindex=2 onkeypress="assetTagInputBoxKeyPressed(event)"></input></td></tr>
+		<tr><td><input    id="singleAssetTagInputBox"  columns=15 tabindex=2 onkeypress="assetTagInputBoxKeyPressed(event)" value=XYZ1888854></input></td></tr>
 		<tr><td>Mutiple items list,<br>various formats;<br>Use buttons to execute.</td></tr>
-		<tr><td><textarea id="myListTA1" rows=35 tabindex=1 columns=15>XYZ1888854</textarea></td></tr>
+		<tr><td><textarea id="myListTA1" rows=35 tabindex=1 columns=15>x</textarea></td></tr>
 	</table>
 	<td width=1>
 	<button onclick="openMultipleTabs()" tabIndex=3>Open&nbsp;Individual&nbsp;Tab(s)</button>
@@ -36,7 +36,8 @@ You can then give the shortcut a different icon if you like (I use the star icon
 </p>
 <script>  //core logic....
 const urlParams = new URLSearchParams(window.location.search);
-var operationMode=urlParams.get('mode');
+var operationMode = urlParams.get('mode');
+//const singleAssetTagInputBox = document.getElementById("singleAssetTagInputBox") //not sure if this is needed
 class ServiceNowType {
 		constructor(p_regex, p_actionName, p_criteriaColumn) {
 			this.regex = new RegExp('^'+p_regex+'$'); this.actionName = p_actionName; this.criteriaColumn = p_criteriaColumn;
@@ -66,7 +67,12 @@ function assetTagInputBoxKeyPressed(event) {
 		openTab(alm_hardwareTypeByAssetTag, singleAssetTagInputBox.value);
 	}
 }
-function openMultipleTabs() {
+async function openMultipleTabs() {
+	if (myListTA1.value == "") { //most likely the user incorrectly used the single input box, we'll try helping them out and move the value to the multiple-entry text box to show the user which box should go with the multi-tab button
+		myListTA1.value = singleAssetTagInputBox.value
+		singleAssetTagInputBox.value = ""
+		await new Promise(r => setTimeout(r, 1000)); //wait a bit to let the user see the value moved to the correct box
+	}
 	taValues = fancySplit(myListTA1.value.toUpperCase());
 	snType = getApplicableServiceNowType(taValues[0])
 	console.log('taValues: ' + taValues);
@@ -85,7 +91,12 @@ function getApplicableServiceNowType(representativeValue) {
 			matches.push(ServiceNowTypes[i])
 		}
 	}
-	return matches[0]; //TODO more elegantly handle cases where there are 0 or >1 matches rather than blindly taking the first match and assuming there is at least one match...
+	if(matches.length == 0) {
+		alert('Unable to determine a proper handler for the representative input data: <<<'+representativeValue+
+		   '>>>\n\nValid formats (regular expression syntax) are:\n'+
+		   ServiceNowTypes.map(snType => snType.regex).toString().replaceAll(/[?^/$,]+/g,'\n'))
+	}
+	return matches[0]; //For now we're just taking the first match; if there are multiple matching formats the rest will be ignored, which places a bit of importance on the ordering of the formats in the ServiceNowTypes array.  I could have just used a non-array variable here, but having an array may help with debugging.
 }
 function fancySplit(inString) {	
 	/* this cleans up and divides the multiple input values by using a regular expression
@@ -101,7 +112,7 @@ function delimit(inArray, delimiter) {
 if (operationMode == 'multiple') {
 	document.getElementById("myListTA1").focus()
 } else {
-	document.getElementById("singleAssetTagInputBox").focus()
+	singleAssetTagInputBox.focus()
 }
 
 </script></body></html>
