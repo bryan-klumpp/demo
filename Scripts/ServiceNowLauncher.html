@@ -7,21 +7,31 @@ const assetTagFormatRegex = 'XYZ[0-9]{5}';
 
 </script>
 <style>
-  button { margin-top: 20px; margin-left: 20px; margin-right: 20px; height: 100px; width: 250px; vertical-align: text-top;  }
+body { padding-top: 20px; padding-left: 10px; } 
+textarea, button, input { margin-right: 15px; margin-bottom: 15px; } 
+button { height: 100px; width: 250px; vertical-align: text-top;  }
 </style>
 </head><body>
 <table>
 	<tr> 
 	<div style="float:left; ">
+	
 	<textarea id="myListTA1" rows=35 columns=20></textarea>
 		<td width=1>
 		<button onclick="openTabs()">Open&nbsp;Individual&nbsp;Tab(s)</button>
+		</td><td>
 		<button onclick="openList()">Open&nbsp;Bookmarkable&nbsp;List</button>
 		</td>
 	</div>
 	</tr>
 </table>
-
+<p>
+To use this file, it needs to be downloaded to your hard drive with the javascript code intact.  Create a shortcut to it (bookmark or use instructions below for a taskbar shortcut).  In the text area, paste, type, or scan in one or multiple asset tags, Dell service tags/serial numbers, SCTASK, REQ, RITM, or INC numbers and use one of the buttons.  The entries can be separated by newlines, spaces, tabs, or commas, doesn't matter)
+</p><p>
+You can create a taskbar shortcut to this file by doing something like this; download/unzip this html file and then create a Windows shortcut with a path like this to the unzipped/downloaded location on your hard drive: <br>
+<pre>"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" "file:///C:/Users/b/eclipse/w1/Scripts/ServiceNowLauncher.html"</pre>
+You can then give the shortcut a different icon if you like (I use the star icon from c:\windows\system32\shell32.dll), and then right-click on the shortcut and "Pin to Taskbar".
+</p>
 <script>  //core logic....
 class ServiceNowType {
 		constructor(p_regex, p_actionName, p_criteriaColumn) {
@@ -30,6 +40,7 @@ class ServiceNowType {
 }
 const ServiceNowTypes = new Array(
 	new ServiceNowType(assetTagFormatRegex,'alm_hardware',                     'asset_tag'), 
+	new ServiceNowType('[A-Z0-9]{7}'      ,'alm_hardware'    ,                 'number'   ),
 	new ServiceNowType('SCTASK[0-9]{7}'   ,'sc_task'     ,                     'number'   ),
 	new ServiceNowType(   'INC[0-9]{7}'   ,'incident'    ,                     'number'   ),
 	new ServiceNowType(  'RITM[0-9]{7}'   ,'sc_task'     ,        'request_item.number'   ),
@@ -65,4 +76,7 @@ function delimit(inArray, delimiter) {
 	var result = ''; for(var i = 0; i < inArray.length; i++) { if(i > 0) { result += delimiter; } result += inArray[i];	}
 	return result; // this function is pretty basic stuff so I put on one line to save space; if you want to see individual lines just auto-format it.
 }
+
+myListTA1.focus();
+
 </script></body></html>
