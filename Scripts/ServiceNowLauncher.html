@@ -134,8 +134,8 @@ TicketingTools = new Array(
 	new AssetTagTool('alm_hardware table','https://'+serviceNowPrefix+'.service-now.com/alm_hardware.do?sysparm_query=asset_tag%3D_asset_tag_')
 );
 //add standard ServiceNow deep dive options in addition to custom ones already defined in the previous "customization" script block
+DeepDiveAllAssetTagTools.push(new AssetTagTool('cmdb_ci','https://'+serviceNowPrefix+'.service-now.com/cmdb_ci_computer.do?sysparm_query=asset_tag%3D_asset_tag_&sysparm_first_row=1&sysparm_view='))
 TicketingTools.forEach(item => DeepDiveAllAssetTagTools.push(item) )
-DeepDiveAllAssetTagTools.push(new AssetTagTool('cmdb_ci',''))
 
 function singleAssetAssetRecordAndTickets() {
 	multiToolTabsForOnePC(TicketingTools)
