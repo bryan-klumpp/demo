@@ -23,12 +23,12 @@ button { height: 100px; width: 250px; vertical-align: text-top;  }
 	<tr>
 	<table style="float:left;">
 		<tr><td>Single asset tag;<br>Press Enter or Spacebar<br>to quickly view<br>the hardware record.</td></tr>
-		<tr><td><input    id="singleAssetTagInputBox"  columns=15 tabindex=2 onkeypress="assetTagInputBoxKeyPressed(event)" value=></input></td></tr>
+		<tr><td><input id="singleAssetTagInputBox"  columns=15 tabindex=2" onkeypress="assetTagInputBoxKeyPressed(event)"></input></td></tr>
 		<tr><td>Mutiple items list,<br>a variety of ServiceNow<br>record types are supported.<br>Use buttons to execute.</td></tr>
 		<tr><td><textarea id="myListTA1" rows=35 tabindex=1 columns=15></textarea></td></tr>
 	</table>
 	<td width=1>
-	<button onclick="openMultipleTabsSameSNType()" tabIndex=3>MULTIPLE&nbsp;TAB(s)&nbsp;-&nbsp;Multiple&nbsp;PCs<br>(Uses multiple-entry text area values)</button>
+	<button onclick="openMultipleTabsVariousTypes()" tabIndex=3>MULTIPLE&nbsp;TAB(s)&nbsp;-&nbsp;Multiple&nbsp;PCs<br>(Uses multiple-entry text area values)</button>
 	</td><td>
 	<button onclick="openList()">LIST&nbsp;(Bookmarkable)&nbsp;-&nbsp;Multiple&nbsp;PCs<br>(Uses multiple-entry text area values)</button>
 	</td><td>
@@ -77,22 +77,38 @@ function openList() {
 	}
 	window.open('https://'+serviceNowPrefix+'.service-now.com/'+snType.actionName+'_list.do?sysparm_query='+snType.criteriaColumn+'IN'+valuesURLEscaped, '_blank')
 }
-function assetTagInputBoxKeyPressed(event) {
-	if(event.key === "Enter" || event.key === " ") {
-		//since this is supposed to be a quick just-view-the-asset-record 
+function assetTagInputBoxKeyPressed(e) {
+	if (e.key == 'Tab' || e.key == 'Enter' || e.key == 'Space' || e.key == ' ' || e.key == 'F12') {
+		e.preventDefault();
 		openTab(alm_hardwareTypeByAssetTag, singleAssetTagInputBox.value, '_self');
 	}
 }
-async function openMultipleTabsSameSNType() {
+function myListTA1KeyPressed(e) {
+	if (e.key == 'Tab') {
+		e.preventDefault();
+		var start = this.selectionStart;
+		var end = this.selectionEnd;
+
+		// set textarea value to: text before caret + tab + text after caret
+		this.value = this.value.substring(0, start) +
+			"\t" + this.value.substring(end);
+
+		// put caret at right position again
+		this.selectionStart =
+			this.selectionEnd = start + 1;
+	}
+	if(e.key == 'F6' ) { openList() }
+	if(e.key == 'F12') { openMultipleTabsVariousTypes() }
+}
+async function openMultipleTabsVariousTypes() {
 	if (myListTA1.value == "") { //most likely the user incorrectly used the single input box, we'll try helping them out and move the value to the multiple-entry text box to show the user which box should go with the multi-tab button
 		myListTA1.value = singleAssetTagInputBox.value
 		singleAssetTagInputBox.value = ""
 		await new Promise(r => setTimeout(r, 1000)); //wait a bit to let the user see the value moved to the correct box
 	}
 	taValues = fancySplit(myListTA1.value.toUpperCase());
-	snType = getApplicableServiceNowType(taValues[0])
-	console.log('taValues: ' + taValues);
 	for(var i = 0; i < taValues.length; i++) {
+		snType = getApplicableServiceNowType(taValues[i])
 		openTab(snType, taValues[i]);
 	}
 }
@@ -119,9 +135,9 @@ function getApplicableServiceNowType(representativeValue) {
 }
 function fancySplit(inString) {	
 	/* this cleans up and divides the multiple input values by using a regular expression
-	   to convert all non-signficant characters down to a single comma 
-	   between the significant characters, then splitting them by that comma.*/ 
-	return inString.replaceAll(/( |;|\r|\n|	|,|%20){1,}/g,',').trim().split( ',' ); 
+	   to convert all non-signficant characters down to a single space 
+	   between the significant characters, then splitting them by that space.*/ 
+	return inString.trim().replaceAll(/( |;|\r|\n|\t|	|,|%20){1,}/g,' ').trim().split( ' ' ); 
 }
 function delimit(inArray, delimiter) {
 	var result = ''; for(var i = 0; i < inArray.length; i++) { if(i > 0) { result += delimiter; } result += inArray[i];	}
@@ -151,7 +167,26 @@ function multiToolTabsForOnePC(tools) {
 	});
 }
 
-//Javascript page initialization
+//Javascript page initialization-----------------------------------------------------------
+
+//pretty basic code but still credit goes to https://stackoverflow.com/questions/6637341/use-tab-to-indent-in-textarea and also https://html.com/attributes/textarea-onkeypress/ for showing that specifying onkeypress on the html declaration won't trap Tab etc.
+document.getElementById('myListTA1').addEventListener('keydown', function(e) {
+	if (e.key == 'Tab') {
+		e.preventDefault();
+		var start = this.selectionStart;
+		var end = this.selectionEnd;
+
+		// set textarea value to: text before caret + tab + text after caret
+		this.value = this.value.substring(0, start) +
+			"\t" + this.value.substring(end);
+
+		// put caret at right position again
+		this.selectionStart =
+			this.selectionEnd = start + 1;
+	}
+	if(e.key == 'F6' ) { openList() }
+	if(e.key == 'F12') { openMultipleTabsVariousTypes() }
+});
 if (operationMode == 'multiple') {
 	document.getElementById("myListTA1").focus()
 } else {
