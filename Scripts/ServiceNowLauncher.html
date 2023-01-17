@@ -9,7 +9,7 @@ class AssetTagTool {
 			this.toolName = p_toolName; this.urlTemplate = p_urlTemplate;
 		}
 }
-const AssetTagTools = new Array(); //add custom asset tag tools here, standard ones will be added below
+const DeepDiveAllAssetTagTools = new Array(); //add custom asset tag tools here, standard ones will be added below
 //end of customization section
 
 </script>
@@ -28,7 +28,7 @@ button { height: 100px; width: 250px; vertical-align: text-top;  }
 		<tr><td><textarea id="myListTA1" rows=35 tabindex=1 columns=15></textarea></td></tr>
 	</table>
 	<td width=1>
-	<button onclick="openMultipleTabs()" tabIndex=3>MULTIPLE&nbsp;TAB(s)&nbsp;-&nbsp;Multiple&nbsp;PCs<br>(Uses multiple-entry text area values)</button>
+	<button onclick="openMultipleTabsSameSNType()" tabIndex=3>MULTIPLE&nbsp;TAB(s)&nbsp;-&nbsp;Multiple&nbsp;PCs<br>(Uses multiple-entry text area values)</button>
 	</td><td>
 	<button onclick="openList()">LIST&nbsp;(Bookmarkable)&nbsp;-&nbsp;Multiple&nbsp;PCs<br>(Uses multiple-entry text area values)</button>
 	</td><td>
@@ -52,11 +52,6 @@ You can then give the shortcut a different icon if you like (I use the star icon
 <script>  //core logic....
 const urlParams = new URLSearchParams(window.location.search);
 var operationMode = urlParams.get('mode');
-
-//add standard ServiceNow deep dive options in addition to custom ones already defined in the previous "customization" script block
-AssetTagTools.push(new AssetTagTool('keyword_ticket_search','https://'+serviceNowPrefix+'.service-now.com/task_list.do?sysparm_query=GOTO123TEXTQUERY321%3D_asset_tag_%5Esys_class_name!%3Dsn_vul_vulnerability&sysparm_first_row=1&sysparm_view='));
-AssetTagTools.push(new AssetTagTool('asset_tag_ticket_search','https://'+serviceNowPrefix+'.service-now.com/task_list.do?sysparm_query=cmdb_ci.asset_tag%3D_asset_tag_%5Esys_class_name!%3Dsn_vul_vulnerability&sysparm_first_row=1&sysparm_view='));
-AssetTagTools.push(new AssetTagTool('alm_hardware table','https://'+serviceNowPrefix+'.service-now.com/alm_hardware.do?sysparm_query=asset_tag%3D_asset_tag_'));
 
 class ServiceNowType {
 		constructor(p_regex, p_actionName, p_criteriaColumn) {
@@ -88,7 +83,7 @@ function assetTagInputBoxKeyPressed(event) {
 		openTab(alm_hardwareTypeByAssetTag, singleAssetTagInputBox.value, '_self');
 	}
 }
-async function openMultipleTabs() {
+async function openMultipleTabsSameSNType() {
 	if (myListTA1.value == "") { //most likely the user incorrectly used the single input box, we'll try helping them out and move the value to the multiple-entry text box to show the user which box should go with the multi-tab button
 		myListTA1.value = singleAssetTagInputBox.value
 		singleAssetTagInputBox.value = ""
@@ -132,16 +127,31 @@ function delimit(inArray, delimiter) {
 	var result = ''; for(var i = 0; i < inArray.length; i++) { if(i > 0) { result += delimiter; } result += inArray[i];	}
 	return result; // this function is pretty basic stuff so I put on one line to save space; if you want to see individual lines just auto-format it.
 }
+
+TicketingTools = new Array(
+	new AssetTagTool('keyword_ticket_search','https://'+serviceNowPrefix+'.service-now.com/task_list.do?sysparm_query=GOTO123TEXTQUERY321%3D_asset_tag_%5Esys_class_name!%3Dsn_vul_vulnerability&sysparm_first_row=1&sysparm_view='),
+	new AssetTagTool('asset_tag_ticket_search','https://'+serviceNowPrefix+'.service-now.com/task_list.do?sysparm_query=cmdb_ci.asset_tag%3D_asset_tag_%5Esys_class_name!%3Dsn_vul_vulnerability&sysparm_first_row=1&sysparm_view='),
+	new AssetTagTool('alm_hardware table','https://'+serviceNowPrefix+'.service-now.com/alm_hardware.do?sysparm_query=asset_tag%3D_asset_tag_')
+);
+//add standard ServiceNow deep dive options in addition to custom ones already defined in the previous "customization" script block
+TicketingTools.forEach(item => DeepDiveAllAssetTagTools.push(item) )
+DeepDiveAllAssetTagTools.push(new AssetTagTool('cmdb_ci',''))
+
+function singleAssetAssetRecordAndTickets() {
+	multiToolTabsForOnePC(TicketingTools)
+}
 function singleAssetDeepDive() {
-	for(var i = 0; i < AssetTagTools.length; i++) {
-		const target = '_blank'
-		var url=AssetTagTools[i].urlTemplate.replaceAll('_asset_tag_',singleAssetTagInputBox.value)
-		console.log(url)
+	multiToolTabsForOnePC(DeepDiveAllAssetTagTools)
+}
+function multiToolTabsForOnePC(tools) {
+	const target = '_blank'
+	tools.forEach(tool => {
+		var url=tool.urlTemplate.replaceAll('_asset_tag_',singleAssetTagInputBox.value)
 		window.open(url, target);
-	}
+	});
 }
 
-
+//Javascript page initialization
 if (operationMode == 'multiple') {
 	document.getElementById("myListTA1").focus()
 } else {
