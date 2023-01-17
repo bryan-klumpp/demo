@@ -1,9 +1,18 @@
 <!doctype html><html><head>
 <script>
 
-//customization variables; you can edit these to fit the business requirements
+//customization section; you can edit these to fit the business requirements of a particular company; the rest of the script is fairly generic ServiceNow stuff
 const serviceNowPrefix='myco';
 const assetTagFormatRegex = 'XYZ[0-9]{7}';
+class AssetTagTool {
+		constructor(p_toolName, p_urlTemplate) {
+			this.toolName = p_toolName; this.urlTemplate = p_urlTemplate;
+		}
+}
+const AssetTagTools = new Array(
+	new AssetTagTool('alm_hardware table'   ,'https://'+serviceNowPrefix+'.service-now.com/alm_hardware.do?sysparm_query=asset_tag%3<asset_tag>'   )
+	);
+//end of customization section
 
 </script>
 <style>
@@ -15,24 +24,28 @@ button { height: 100px; width: 250px; vertical-align: text-top;  }
 <table>
 	<tr>
 	<table style="float:left;">
-		<tr><td>Single asset tag;<br>Press Enter or Spacebar<br>to execute.</td></tr>
-		<tr><td><input    id="singleAssetTagInputBox"  columns=15 tabindex=2 onkeypress="assetTagInputBoxKeyPressed(event)" value=XYZ1888854></input></td></tr>
-		<tr><td>Mutiple items list,<br>various formats;<br>Use buttons to execute.</td></tr>
+		<tr><td>Single asset tag;<br>Press Enter or Spacebar<br>to quickly view<br>the hardware record.</td></tr>
+		<tr><td><input    id="singleAssetTagInputBox"  columns=15 tabindex=2 onkeypress="assetTagInputBoxKeyPressed(event)" value=></input></td></tr>
+		<tr><td>Mutiple items list,<br>a variety of ServiceNow<br>record types are supported.<br>Use buttons to execute.</td></tr>
 		<tr><td><textarea id="myListTA1" rows=35 tabindex=1 columns=15>x</textarea></td></tr>
 	</table>
 	<td width=1>
-	<button onclick="openMultipleTabs()" tabIndex=3>Open&nbsp;Individual&nbsp;Tab(s)</button>
+	<button onclick="openMultipleTabs()" tabIndex=3>Open&nbsp;Individual&nbsp;Tab(s)<br>(Uses multiple-entry text area values)</button>
 	</td><td>
-	<button onclick="openList()">Open&nbsp;Bookmarkable&nbsp;List</button>
+	<button onclick="openList()">Open&nbsp;Bookmarkable&nbsp;List<br>(Uses multiple-entry text area values)</button>
+	</td><td>
+	<button onclick="singleAssetDeepDive()">Single&nbsp;Asset&nbsp;Deep&nbsp;Dive<br>(multiple tabs based on asset tag in single&#8209;asset&nbsp;text&nbsp;box)</button>
 	</td>
 	</tr>
 </table>
 <p>
-To use this file, it needs to be downloaded to your hard drive with the javascript code intact.  Create a shortcut to it (bookmark or use instructions below for taskbar shortcuts).  For multiple items, in the larger text area, paste, type, or scan in multiple asset tags, Dell service tags/serial numbers, SCTASK, REQ, RITM, or INC numbers and use one of the buttons.  The entries can be separated by newlines, spaces, tabs, or commas.
+This page enables viewing lists and individual records for most of the ServiceNow records you work with on a daily basis, including multiple asset tags, Dell service tags/serial numbers, SCTASK, REQ, RITM, or INC numbers.
 </p><p>
-You can create a taskbar shortcut to this file by doing something like this; download/unzip this html file and then create a new Windows shortcut with a path like the one below, noting the unzipped/downloaded location of the html file on your hard drive: <br>
+For the multi-line text box, all of the above-mentioned ServiceNow record types are supported and can be separated by newlines, spaces, tabs, or commas.  For the single-line input box, only asset tag records are supported, but that give you the ability to do a "deep dive" on that asset and open records for a number of tools showing various information about that one asset.
+</p><p>
+To use this file, it needs to be downloaded/unzipped to your hard drive with the javascript code intact.  You can then create a browser Favorite, but you can also create an even quicker Windows taskbar button to this file.  To to that, create a new Windows shortcut in your Documents folder with a path like the one below, noting the unzipped/downloaded location of the html file on your hard drive: <br>
 <pre>"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" "file:///C:/Users/b/eclipse/w1/Scripts/ServiceNowLauncher.html?mode=single"</pre>
-You can then give the shortcut a different icon if you like (I use the star icon from c:\windows\system32\shell32.dll), and then right-click on the shortcut and "Pin to Taskbar".  Also you can create a separate shortcut and change the URL parameter to mode=multiple (which will highlight the larger text area by default) and create a separate taskbar icon (I like the tree icon from the aforementioned dll).
+You can then give the shortcut a different icon if you like (I use the star icon from c:\windows\system32\shell32.dll), and then right-click on the shortcut and "Pin to Taskbar".  Also you can create a second shortcut (to the same html file) and change the URL parameter to mode=multiple (which will highlight the larger text area by default) and create a separate taskbar icon (I like the tree icon from the aforementioned dll).
 </p>
 <script>  //core logic....
 const urlParams = new URLSearchParams(window.location.search);
@@ -64,7 +77,7 @@ function openList() {
 }
 function assetTagInputBoxKeyPressed(event) {
 	if(event.key === "Enter" || event.key === " ") {
-		openTab(alm_hardwareTypeByAssetTag, singleAssetTagInputBox.value);
+		openTab(alm_hardwareTypeByAssetTag, singleAssetTagInputBox.value, '_self');
 	}
 }
 async function openMultipleTabs() {
@@ -81,8 +94,11 @@ async function openMultipleTabs() {
 	}
 }
 function openTab(snType, value) {
+	openTag(snType, value, '_blank')
+}
+function openTab(snType, value, target) {
 	var url='https://'+serviceNowPrefix+'.service-now.com/'+snType.actionName+'.do?sysparm_query='+snType.criteriaColumn+'%3D'+value
-	window.open(url, '_blank')
+	window.open(url, target)
 }
 function getApplicableServiceNowType(representativeValue) {
 	const matches = [];
@@ -108,6 +124,13 @@ function delimit(inArray, delimiter) {
 	var result = ''; for(var i = 0; i < inArray.length; i++) { if(i > 0) { result += delimiter; } result += inArray[i];	}
 	return result; // this function is pretty basic stuff so I put on one line to save space; if you want to see individual lines just auto-format it.
 }
+function singleAssetDeepDive() {
+	for(var i = 0; i < AssetTagTools.length; i++) {
+		const target = '_blank'
+		window.open(AssetTagTools[i].urlTemplate.replaceAll('<asset_tag>',singleAssetTagInputBox.value), target);
+	}
+}
+
 
 if (operationMode == 'multiple') {
 	document.getElementById("myListTA1").focus()
