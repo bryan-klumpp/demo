@@ -1,0 +1,1 @@
+ls | bxargs 'underscore1 {}'

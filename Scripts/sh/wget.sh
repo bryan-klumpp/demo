@@ -1,0 +1,1 @@
+/usr/bin/wget -c -t 0 --timeout=3 "$@"

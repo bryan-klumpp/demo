@@ -1,0 +1,1 @@
+fox 'about:addons'

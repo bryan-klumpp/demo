@@ -1,0 +1,1 @@
+fox 'https://www.cpubenchmark.net/cpu_list.php?t1=i5-7Y54&b1=Find+CPU passmark'

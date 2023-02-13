@@ -1,0 +1,1 @@
+paste | base64 | clip

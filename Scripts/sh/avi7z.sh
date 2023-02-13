@@ -1,0 +1,2 @@
+#this is trying to delete EVERYTHING please do not invoke multithreaded etc play nice maybe just need java invocation.   
+find|grep '\.avi$'|bxargs 'set -x; if test -e {}.7z; then bex; if test -f {}; then { 7z a {}.7z {} && rm {}; } fi'

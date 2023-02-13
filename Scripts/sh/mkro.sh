@@ -1,0 +1,1 @@
+nocolor | files | bxargs 'chmod 444 {}'

@@ -1,0 +1,1 @@
+g "$@" --color=auto

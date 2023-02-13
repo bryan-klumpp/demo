@@ -1,0 +1,1 @@
+java -cp /b/classes b.B echoe this_is_an_error

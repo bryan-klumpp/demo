@@ -1,0 +1,2 @@
+#umount /media/cdrom
+mount -o ro *update*-$1.iso /media/cdrom

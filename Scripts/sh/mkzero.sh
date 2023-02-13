@@ -1,0 +1,1 @@
+sed --null-data 's/\r\|\n/\x00/g'  #howto tricky fancy finally got it working with sed and even compatible regex without using -r for extended regex  #ASCII hexadecimal octal \d000=decimal \x00=hex 

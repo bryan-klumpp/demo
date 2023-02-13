@@ -1,0 +1,3 @@
+searchstring="$1" && shift 1
+grep -H -E --color=auto --group-separator=------------------------------------------------------------------------------\
+                   -e "$searchstring" "$@"

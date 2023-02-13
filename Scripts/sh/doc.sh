@@ -1,0 +1,1 @@
+c /usr/share/doc

@@ -1,0 +1,1 @@
+Moth0 | grep -vE 'Greed[1-9]|nocopy|onecopy'

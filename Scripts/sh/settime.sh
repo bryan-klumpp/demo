@@ -1,0 +1,1 @@
+date -s "$1 CDT" +'%Y%m%d%H%M%S %Z'

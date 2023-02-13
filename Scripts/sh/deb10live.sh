@@ -1,0 +1,1 @@
+fox https://cdimage.debian.org/debian-cd/current-live/amd64/iso-hybrid/

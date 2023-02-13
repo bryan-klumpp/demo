@@ -1,0 +1,2 @@
+mkdir /b/zerozip
+dd bs=1M count=131072 if=/dev/zero | pv | 7z a -si /b/zerozip/128_GiB.zero.7z 

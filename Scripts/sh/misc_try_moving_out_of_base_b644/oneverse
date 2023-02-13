@@ -1,0 +1,2 @@
+verseref="$1" ; shift 1
+echo -n $verseref'>>> ' && diatheke -b KJV "$@" -k "$verseref" | sed --null-data 's/\n:.*/\n/'
