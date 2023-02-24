@@ -19,7 +19,7 @@ mkdir $myworkspace
 git clone https://github.com/bryan-klumpp/demo "{$myworkspace}/bbase"
 shlnk=/sh
 shdir="${myworkspace}/bbase/Scripts/sh"
-     chmod -R 755       $shdir
+     chmod -R 750       $shdir
 sudo chown -R root:${mylanid} $shdir
 sudo ln -s $shdir $shlnk
 
