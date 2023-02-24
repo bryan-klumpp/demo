@@ -7,7 +7,7 @@ mylanid=klumpb
 wget 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -O ~/Downloads/vscode.deb
 sudo apt install ~/Downloads/vscode.deb
 #ext install eamodio.gitlens
-sudo apt install git curl chromium-browser 
+sudo apt install git curl chromium-browser xclip
 git config --global user.name $mygitusername
 git config --global user.email $mygitemail
 sudo mkdir ${myhome}
