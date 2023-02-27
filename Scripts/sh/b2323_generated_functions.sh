@@ -11,6 +11,7 @@ function 5tb() { . "/sh/5tb.sh" "$@"; }
 function 64d() { . "/sh/64d.sh" "$@"; }
 function 64e() { . "/sh/64e.sh" "$@"; }
 function 7zdoc() { . "/sh/7zdoc.sh" "$@"; }
+function aaa() { . "/sh/aaa.sh" "$@"; }
 function aa() { . "/sh/aa.sh" "$@"; }
 function abr() { . "/sh/abr.sh" "$@"; }
 function ab() { . "/sh/ab.sh" "$@"; }
@@ -527,6 +528,7 @@ function mnt9() { . "/sh/mnt9.sh" "$@"; }
 function mntbec() { . "/sh/mntbec.sh" "$@"; }
 function mntb() { . "/sh/mntb.sh" "$@"; }
 function mntenc() { . "/sh/mntenc.sh" "$@"; }
+function mntFuse() { . "/sh/mntFuse.sh" "$@"; }
 function mntkan() { . "/sh/mntkan.sh" "$@"; }
 function mntkt() { . "/sh/mntkt.sh" "$@"; }
 function mntvol1() { . "/sh/mntvol1.sh" "$@"; }
@@ -555,6 +557,7 @@ function newbb() { . "/sh/newbb.sh" "$@"; }
 function newbp() { . "/sh/newbp.sh" "$@"; }
 function newb() { . "/sh/newb.sh" "$@"; }
 function newpi() { . "/sh/newpi.sh" "$@"; }
+function newRemoteRepository() { . "/sh/newRemoteRepository.sh" "$@"; }
 function new() { . "/sh/new.sh" "$@"; }
 function nextb() { . "/sh/nextb.sh" "$@"; }
 function nfsssh() { . "/sh/nfsssh.sh" "$@"; }
@@ -601,8 +604,8 @@ function parent() { . "/sh/parent.sh" "$@"; }
 function pass() { . "/sh/pass.sh" "$@"; }
 function paster() { . "/sh/paster.sh" "$@"; }
 function paste() { . "/sh/paste.sh" "$@"; }
-function pdftxt_() { . "/sh/pdftxt_.sh" "$@"; }
 function pdftxt() { . "/sh/pdftxt.sh" "$@"; }
+function pdftxt_() { . "/sh/pdftxt_.sh" "$@"; }
 function pearlapply() { . "/sh/pearlapply.sh" "$@"; }
 function pearlold() { . "/sh/pearlold.sh" "$@"; }
 function pearl() { . "/sh/pearl.sh" "$@"; }
@@ -723,6 +726,7 @@ function setup() { . "/sh/setup.sh" "$@"; }
 function setupu16() { . "/sh/setupu16.sh" "$@"; }
 function setupu2() { . "/sh/setupu2.sh" "$@"; }
 function setupu3() { . "/sh/setupu3.sh" "$@"; }
+function setupUbuntuDevEnv() { . "/sh/setupUbuntuDevEnv.sh" "$@"; }
 function setupug() { . "/sh/setupug.sh" "$@"; }
 function setupurisky() { . "/sh/setupurisky.sh" "$@"; }
 function setupu() { . "/sh/setupu.sh" "$@"; }
