@@ -7,6 +7,6 @@ num=$(echo "$val" | sed --regexp-extended 's@.*/b([0-9]*)_[^/]*/?$@\1@g');
 abs=$(readlink -e "$val")
 test -e "$abs" || { echo 'does not exist after readlink: '$val; exit 92; }           
   test -L /l/$num && rm /l/$num
-! test -L /l/$num && ln -s "$abs" /l/$num || echo "dumb idiot $num "{};
+! test -L /l/$num && ln -s "$abs" /l/$num || echo "something bad happened: $num "{};
 
 
