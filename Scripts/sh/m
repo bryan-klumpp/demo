@@ -1,0 +1,2 @@
+umount /media/cdrom
+mount -o ro debian-8.1*-$1.iso /media/cdrom

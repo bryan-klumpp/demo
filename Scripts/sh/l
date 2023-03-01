@@ -1,0 +1,3 @@
+searchpat='.'
+/b/sh/isval $1 && { searchpat="$1"; shift 1; } 
+ls -tal --group-directories-first "$@" | grep -vE ' \.?\.$' | grep -E "$searchpat" | tac | grep -E --color=auto '^[^d]|^d.*$' ;

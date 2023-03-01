@@ -1,0 +1,4 @@
+function pray() { #  [maximum type pause in whole minutes] [subcategory]
+isint $1 && { intvl=$1; shift 1; } || intvl=.7
+isval $1 || { subcat=''; shift 1; } && subcat=":$1"  #example of inverted or-and
+praytime 1; sleep 2; timetrack pray$subcat j alarm $intvl ; praytime 1; 
