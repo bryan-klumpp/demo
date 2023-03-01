@@ -8,6 +8,8 @@ shlnk=/sh
 mycodedir=${mynewhome}/b8_/code
 shdir="${mycodedir}/github_demo/Scripts/sh"
 
+set -x
+
 test -e ~/Downloads/vscode.deb || { wget 'https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64' -O ~/Downloads/vscode.deb &&
      sudo apt install ~/Downloads/vscode.deb &&
      echo 'NOTE if desired you will need to install gitlens manually from inside vscode: ext install eamodio.gitlens'
@@ -15,11 +17,11 @@ test -e ~/Downloads/vscode.deb || { wget 'https://code.visualstudio.com/sha/down
 sudo apt install git curl chromium-browser xclip &&
 git config --global user.name $mygitusername &&
 git config --global user.email $mygitemail &&
-test -e ${mynewhome} || { sudo mkdirs /b; sudo chown ${myusername}:${myusername} ${mynewhome}; } &&
+test -e ${mynewhome} || { sudo mkdir /b; sudo chown ${myusername}:${myusername} ${mynewhome}; } &&
 sudo chown ${myusername}:${myusername} ${mynewhome} &&
 chmod 755 ${mynewhome} &&
-mkdirs ${mycodedir} &&
-test -e "{$mycodedir}/github_demo" || { git clone https://github.com/bryan-klumpp/demo {$mycodedir} github_demo; } &&
+mkdir ${mycodedir} &&
+test -e "${mycodedir}/github_demo" || { git clone https://github.com/bryan-klumpp/demo ${mycodedir} github_demo; } &&
      chmod -R 755             $shdir &&
 sudo chown -R ${myusername}:${myusername} $shdir &&
 sudo ln -s $shdir $shlnk &&
@@ -36,5 +38,5 @@ sudo apt-get install sublime-text || {
 } &&
 
 test -e /mnt || { sudo mkdir /mnt; } &&
-test -e /mnt/hgfs || { sudo mkdir /mnt/hgfs; } &&
+test -e /mnt/hgfs || { sudo mkdir /mnt/hgfs; } 
 
