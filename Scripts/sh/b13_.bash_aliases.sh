@@ -15,7 +15,7 @@ fourtd=/dev/disk/by-uuid/e1af1621-c92e-4013-8c8b-67a8e6b69297
 }
 #  grep -E --silent '\S' <(ls /4) || { echo '/4 not mounted properly'; return 4; }
 
-test 
+test -e /sh/b2323_* || . /sh/mkf.sh
 . /sh/b2323_* # generated functions - maybe should come before aliases due to possible issue with dependencies
 . /sh/b21_*   # manual aliases
 xrandr -q | grep 'current 320 x 200' && { son; exit; } #special case just turn screen on and close prompt
@@ -121,3 +121,4 @@ return ###################################    RETURN  ##########################
 function last() { t last "$@"; }
 function end() { last end; }
 function end() { isval $1 && t end "$@" || switch; }
+
