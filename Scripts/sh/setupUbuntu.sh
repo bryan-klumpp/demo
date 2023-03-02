@@ -14,7 +14,7 @@ test -e ~/Downloads/vscode.deb || { wget 'https://code.visualstudio.com/sha/down
      sudo apt install ~/Downloads/vscode.deb &&
      echo 'NOTE if desired you will need to install gitlens manually from inside vscode: ext install eamodio.gitlens'
 } &&
-sudo apt install git curl chromium-browser xclip &&
+sudo apt install git curl chromium-browser xclip openjdk-8-jre-headless konsole kate &&
 git config --global user.name $mygitusername &&
 git config --global user.email $mygitemail &&
 test -e ${mynewhome} || { sudo mkdir /b; sudo chown ${myusername}:${myusername} ${mynewhome}; } &&
@@ -25,7 +25,9 @@ test -e "${mycodedir}/github_demo" || { git clone https://github.com/bryan-klump
      chmod -R 755             $shdir &&
 sudo chown -R ${myusername}:${myusername} $shdir &&
 sudo ln -s $shdir $shlnk &&
-test -e ~/.bash_aliases || { echo ". ${shlnk}/b13_.bash_aliases.sh" > ~/.bash_aliases; } &&
+test -e ~/.bash_aliases || { echo ". ${shlnk}/b13_.bash_aliases.sh" > ~/.bash_aliases;
+                             echo "c /b"                           >> ~/.bash_aliases;
+} &&
 test -e ${myDefaultArchiveDir} || { sudo mkdir ${myDefaultArchiveDir}; sudo chown ${myusername}:${myusername} ${myDefaultArchiveDir}; } &&
 
 #Sublime installation as per https://www.sublimetext.com/docs/linux_repositories.html

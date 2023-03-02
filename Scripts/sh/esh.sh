@@ -10,7 +10,7 @@ sfile=/sh/$1.sh
 rchive 'before editing script '"$1.sh" "$sfile"
 ! test -f $sfile && newscript=yes || newscript=no
 #nano --syntax=none $sfile   #--mouse disables selection so not always desirable
-a kate $sfile
+a gedit $sfile
 test -f $sfile || return 84  #must not have saved new file, skip extra steps
 #echo 'trying to copy' && cp -a $sfile /sh  
 # co $newscript 'yes' && mkf  #does not seem to work unless you do manually
