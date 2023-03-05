@@ -4,7 +4,7 @@ bdebug 'before setting searchString $1='$1
 searchstring=$(echo -n "$1"|esc); shift 1
 bdebug 'after setting searchString $1='$1
 #-print0
-find -H "$bdir" | grep -E '/2021' | sort | trzero | grep -viE --null-data -f $(b 5) \
+find -H "$bdir" | grep -E '/2023' | sort | trzero | grep -viE --null-data -f $(b 5) \
       | esc \
       | xargs -i -r -0 sh -c ' {
 	   filename={}  

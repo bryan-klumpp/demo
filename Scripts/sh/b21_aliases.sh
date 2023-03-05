@@ -1,3 +1,4 @@
+alias vsc=/usr/bin/code
 alias l='less -R'
 alias tw='jnl timewaste'
 alias .java='cd /b/src/java/mine/b'
@@ -349,6 +350,7 @@ alias hh='scanh'
 alias dd=''
 alias dd='/bin/dd'
 alias nb='nextb'
+alias ty20='c /l/50/ty20'
 alias ty21='c /l/50/ty21'
 alias ty22='c /l/50/ty22'
 alias ty23='c /l/50/ty23'

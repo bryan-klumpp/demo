@@ -14,7 +14,8 @@ test -e ~/Downloads/vscode.deb || { wget 'https://code.visualstudio.com/sha/down
      sudo apt install ~/Downloads/vscode.deb &&
      echo 'NOTE if desired you will need to install gitlens manually from inside vscode: ext install eamodio.gitlens'
 } &&
-sudo apt install git curl chromium-browser xclip openjdk-8-jre-headless konsole kate &&
+sudo apt install git curl chromium-browser xclip openjdk-8-jre-headless konsole kate p7zip-full &&
+#TODO, ~/.local/share/kxmlgui5/konsole/sessionui.rc is where to edit konsole keyboard shortcuts etc.
 git config --global user.name $mygitusername &&
 git config --global user.email $mygitemail &&
 test -e ${mynewhome} || { sudo mkdir /b; sudo chown ${myusername}:${myusername} ${mynewhome}; } &&
@@ -42,3 +43,4 @@ sudo apt-get install sublime-text || {
 test -e /mnt || { sudo mkdir /mnt; } &&
 test -e /mnt/hgfs || { sudo mkdir /mnt/hgfs; } 
 
+#TODO https://www.golinuxcloud.com/set-up-visual-studio-code-remote-ssh-github/
