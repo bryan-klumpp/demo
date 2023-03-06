@@ -23,8 +23,9 @@ sudo chown ${myusername}:${myusername} ${mynewhome} &&
 chmod 755 ${mynewhome} &&
 mkdir ${mycodedir} &&
 test -e "${mycodedir}/github_demo" || { git clone https://github.com/bryan-klumpp/demo ${mycodedir} github_demo; } &&
-     chmod -R 755             $shdir &&
-sudo chown -R ${myusername}:${myusername} $shdir &&
+
+sudo ln -s $(pwd) ${shlnk} &&
+sudo chown ${myusername}:${myusername} ${shlnk} &&
 sudo ln -s $shdir $shlnk &&
 test -e ~/.bash_aliases || { echo ". ${shlnk}/b13_.bash_aliases.sh" > ~/.bash_aliases;
                              echo "c /b"                           >> ~/.bash_aliases;
@@ -41,6 +42,7 @@ sudo apt-get install sublime-text || {
 } &&
 
 test -e /mnt || { sudo mkdir /mnt; } &&
-test -e /mnt/hgfs || { sudo mkdir /mnt/hgfs; } 
+test -e /mnt/hgfs || { sudo mkdir /mnt/hgfs; } &&
+. ${shlnk}/b13_*
 
-#TODO https://www.golinuxcloud.com/set-up-visual-studio-code-remote-ssh-github/
+#TODO https://www.golinuxcloud.com/set-up-visual-studio-code-remote-ssh-github/  although maybe ssh keys should be done manually
