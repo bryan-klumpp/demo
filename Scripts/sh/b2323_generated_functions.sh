@@ -256,6 +256,7 @@ function deep1() { . "/sh/deep1.sh" "$@"; }
 function deep2() { . "/sh/deep2.sh" "$@"; }
 function deep3() { . "/sh/deep3.sh" "$@"; }
 function deep() { . "/sh/deep.sh" "$@"; }
+function delete_lines() { . "/sh/delete_lines.sh" "$@"; }
 function deleteme333() { . "/sh/deleteme333.sh" "$@"; }
 function deleteme5() { . "/sh/deleteme5.sh" "$@"; }
 function deletemissing1reallystupid() { . "/sh/deletemissing1reallystupid.sh" "$@"; }
@@ -552,11 +553,11 @@ function m() { . "/sh/m.sh" "$@"; }
 function mvb() { . "/sh/mvb.sh" "$@"; }
 function mvchnocl() { . "/sh/mvchnocl.sh" "$@"; }
 function mvdown() { . "/sh/mvdown.sh" "$@"; }
+function mvfancy() { . "/sh/mvfancy.sh" "$@"; }
 function mvhp() { . "/sh/mvhp.sh" "$@"; }
 function mvh() { . "/sh/mvh.sh" "$@"; }
 function mvm() { . "/sh/mvm.sh" "$@"; }
 function mvp() { . "/sh/mvp.sh" "$@"; }
-function mv() { . "/sh/mv.sh" "$@"; }
 function mv_TODO_mv_on_master_4_path() { . "/sh/mv_TODO_mv_on_master_4_path.sh" "$@"; }
 function mwd() { . "/sh/mwd.sh" "$@"; }
 function nameonly() { . "/sh/nameonly.sh" "$@"; }

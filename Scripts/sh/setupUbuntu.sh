@@ -45,4 +45,9 @@ test -e /mnt || { sudo mkdir /mnt; } &&
 test -e /mnt/hgfs || { sudo mkdir /mnt/hgfs; } &&
 . ${shlnk}/b13_*
 
+gsettings set org.gnome.desktop.wm.preferences auto-raise true #default value was false
+gsettings set org.gnome.desktop.wm.preferences focus-new-windows 'strict' #default value was 'smart' - also see https://askubuntu.com/questions/1205036/gnome-focus-new-windows-strict-not-working-in-one-situation
+
+
+
 #TODO https://www.golinuxcloud.com/set-up-visual-studio-code-remote-ssh-github/  although maybe ssh keys should be done manually
