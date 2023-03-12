@@ -934,6 +934,7 @@ function win7warn() { . "/sh/win7warn.sh" "$@"; }
 function wl() { . "/sh/wl.sh" "$@"; }
 function word() { . "/sh/word.sh" "$@"; }
 function work() { . "/sh/work.sh" "$@"; }
+function worktree() { . "/sh/worktree.sh" "$@"; }
 function wo() { . "/sh/wo.sh" "$@"; }
 function wrand() { . "/sh/wrand.sh" "$@"; }
 function writeasroot() { . "/sh/writeasroot.sh" "$@"; }
