@@ -259,6 +259,7 @@ function deep() { . "/sh/deep.sh" "$@"; }
 function delete_lines() { . "/sh/delete_lines.sh" "$@"; }
 function deleteme333() { . "/sh/deleteme333.sh" "$@"; }
 function deleteme5() { . "/sh/deleteme5.sh" "$@"; }
+function deleteme_trybarecommitmainagain() { . "/sh/deleteme_trybarecommitmainagain.sh" "$@"; }
 function deletemissing1reallystupid() { . "/sh/deletemissing1reallystupid.sh" "$@"; }
 function deletemissing1() { . "/sh/deletemissing1.sh" "$@"; }
 function deletemissing() { . "/sh/deletemissing.sh" "$@"; }
@@ -371,6 +372,7 @@ function gh() { . "/sh/gh.sh" "$@"; }
 function gics() { . "/sh/gics.sh" "$@"; }
 function gi() { . "/sh/gi.sh" "$@"; }
 function gitremotes() { . "/sh/gitremotes.sh" "$@"; }
+function gitworktreebare() { . "/sh/gitworktreebare.sh" "$@"; }
 function gl() { . "/sh/gl.sh" "$@"; }
 function Gl() { . "/sh/Gl.sh" "$@"; }
 function gmp9() { . "/sh/gmp9.sh" "$@"; }
@@ -465,6 +467,7 @@ function leaf() { . "/sh/leaf.sh" "$@"; }
 function led() { . "/sh/led.sh" "$@"; }
 function lifaud() { . "/sh/lifaud.sh" "$@"; }
 function lines() { . "/sh/lines.sh" "$@"; }
+function linkme() { . "/sh/linkme.sh" "$@"; }
 function lin() { . "/sh/lin.sh" "$@"; }
 function live() { . "/sh/live.sh" "$@"; }
 function llp() { . "/sh/llp.sh" "$@"; }
@@ -486,7 +489,6 @@ function lsln() { . "/sh/lsln.sh" "$@"; }
 function l_template() { . "/sh/l_template.sh" "$@"; }
 function lt() { . "/sh/lt.sh" "$@"; }
 function luks() { . "/sh/luks.sh" "$@"; }
-function make_link_dirs() { . "/sh/make_link_dirs.sh" "$@"; }
 function mall() { . "/sh/mall.sh" "$@"; }
 function map() { . "/sh/map.sh" "$@"; }
 function masteronly() { . "/sh/masteronly.sh" "$@"; }
@@ -730,6 +732,7 @@ function setscan() { . "/sh/setscan.sh" "$@"; }
 function setsrc() { . "/sh/setsrc.sh" "$@"; }
 function settar() { . "/sh/settar.sh" "$@"; }
 function settime() { . "/sh/settime.sh" "$@"; }
+function settitle() { . "/sh/settitle.sh" "$@"; }
 function setup100_obsolete() { . "/sh/setup100_obsolete.sh" "$@"; }
 function setup101_date_miffed_archive() { . "/sh/setup101_date_miffed_archive.sh" "$@"; }
 function setup101() { . "/sh/setup101.sh" "$@"; }
