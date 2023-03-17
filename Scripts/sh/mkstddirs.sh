@@ -1,4 +1,3 @@
-#baked
 set -e
 
 function makeUserOwnedRootLinkIfNotExists() {
@@ -11,8 +10,13 @@ function makeLinkIfNotExists() {
     test -e "$2" || { ln -s "$1" "$2" && 
                   chown $USER:$USER                   "$2" && chmod 700 "$2"; }
     ls -ld "$2"; }
+function makeDirIfNotExists() {
+    test -e "$1" || { mkdir "$1"; }
 
 makeLinkIfNotExists $(readlink -e $(dirname "$0")) ~/sh
+makeDirIfNotExists "~/b"
+makeDirIfNotExists "~/b/code"
+makeDirIfNotExists "~/b/code/util"
 
 # Yes I'm going for extreme conciseness here;
 # running shell scripts is a very frequent activity...

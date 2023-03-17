@@ -214,6 +214,7 @@ function clipp() { . "/sh/clipp.sh" "$@"; }
 function clip() { . "/sh/clip.sh" "$@"; }
 function clipsha256() { . "/sh/clipsha256.sh" "$@"; }
 function cliptmp() { . "/sh/cliptmp.sh" "$@"; }
+function cloneutil() { . "/sh/cloneutil.sh" "$@"; }
 function cluks() { . "/sh/cluks.sh" "$@"; }
 function cmt() { . "/sh/cmt.sh" "$@"; }
 function cmtt() { . "/sh/cmtt.sh" "$@"; }
@@ -259,6 +260,7 @@ function deep() { . "/sh/deep.sh" "$@"; }
 function delete_lines() { . "/sh/delete_lines.sh" "$@"; }
 function deleteme333() { . "/sh/deleteme333.sh" "$@"; }
 function deleteme5() { . "/sh/deleteme5.sh" "$@"; }
+function deleteme_trybarecommitmainagain() { . "/sh/deleteme_trybarecommitmainagain.sh" "$@"; }
 function deletemissing1reallystupid() { . "/sh/deletemissing1reallystupid.sh" "$@"; }
 function deletemissing1() { . "/sh/deletemissing1.sh" "$@"; }
 function deletemissing() { . "/sh/deletemissing.sh" "$@"; }
@@ -371,6 +373,7 @@ function gh() { . "/sh/gh.sh" "$@"; }
 function gics() { . "/sh/gics.sh" "$@"; }
 function gi() { . "/sh/gi.sh" "$@"; }
 function gitremotes() { . "/sh/gitremotes.sh" "$@"; }
+function gitworktreebare() { . "/sh/gitworktreebare.sh" "$@"; }
 function gl() { . "/sh/gl.sh" "$@"; }
 function Gl() { . "/sh/Gl.sh" "$@"; }
 function gmp9() { . "/sh/gmp9.sh" "$@"; }
@@ -486,7 +489,6 @@ function lsln() { . "/sh/lsln.sh" "$@"; }
 function l_template() { . "/sh/l_template.sh" "$@"; }
 function lt() { . "/sh/lt.sh" "$@"; }
 function luks() { . "/sh/luks.sh" "$@"; }
-function make_link_dirs() { . "/sh/make_link_dirs.sh" "$@"; }
 function mall() { . "/sh/mall.sh" "$@"; }
 function map() { . "/sh/map.sh" "$@"; }
 function masteronly() { . "/sh/masteronly.sh" "$@"; }
@@ -528,6 +530,7 @@ function mkmp3x2() { . "/sh/mkmp3x2.sh" "$@"; }
 function mknl() { . "/sh/mknl.sh" "$@"; }
 function mkrof() { . "/sh/mkrof.sh" "$@"; }
 function mkro() { . "/sh/mkro.sh" "$@"; }
+function mkstddirs() { . "/sh/mkstddirs.sh" "$@"; }
 function mkubu() { . "/sh/mkubu.sh" "$@"; }
 function mkzero() { . "/sh/mkzero.sh" "$@"; }
 function mmv() { . "/sh/mmv.sh" "$@"; }
