@@ -1,0 +1,1 @@
+alias complexalias='echo asdf; echo bsdf; cat notexist;'; function xx() { { eval $@; } > logme 2>&1; }; xx complexalias; echo 'output:'; cat logme

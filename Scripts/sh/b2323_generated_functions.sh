@@ -107,6 +107,7 @@ function bex() { . "/sh/bex.sh" "$@"; }
 function bfind1() { . "/sh/bfind1.sh" "$@"; }
 function bfind() { . "/sh/bfind.sh" "$@"; }
 function bf() { . "/sh/bf.sh" "$@"; }
+function bgl() { . "/sh/bgl.sh" "$@"; }
 function bible() { . "/sh/bible.sh" "$@"; }
 function bigext() { . "/sh/bigext.sh" "$@"; }
 function bigrandom() { . "/sh/bigrandom.sh" "$@"; }
@@ -599,6 +600,7 @@ function not() { . "/sh/not.sh" "$@"; }
 function noupdt() { . "/sh/noupdt.sh" "$@"; }
 function nox() { . "/sh/nox.sh" "$@"; }
 function n() { . "/sh/n.sh" "$@"; }
+function nunitsetup() { . "/sh/nunitsetup.sh" "$@"; }
 function nwddelay() { . "/sh/nwddelay.sh" "$@"; }
 function nwd() { . "/sh/nwd.sh" "$@"; }
 function nwrx() { . "/sh/nwrx.sh" "$@"; }
@@ -951,6 +953,7 @@ function x_maybe_executable() { . "/sh/x_maybe_executable.sh" "$@"; }
 function x() { . "/sh/x.sh" "$@"; }
 function xt() { . "/sh/xt.sh" "$@"; }
 function xx() { . "/sh/xx.sh" "$@"; }
+function zerofs() { . "/sh/zerofs.sh" "$@"; }
 function zeronewline() { . "/sh/zeronewline.sh" "$@"; }
 function zero_see_filler() { . "/sh/zero_see_filler.sh" "$@"; }
 function zero() { . "/sh/zero.sh" "$@"; }
