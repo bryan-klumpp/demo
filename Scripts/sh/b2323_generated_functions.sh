@@ -468,6 +468,7 @@ function leaf() { . "/sh/leaf.sh" "$@"; }
 function led() { . "/sh/led.sh" "$@"; }
 function lifaud() { . "/sh/lifaud.sh" "$@"; }
 function lines() { . "/sh/lines.sh" "$@"; }
+function linkme() { . "/sh/linkme.sh" "$@"; }
 function lin() { . "/sh/lin.sh" "$@"; }
 function live() { . "/sh/live.sh" "$@"; }
 function llp() { . "/sh/llp.sh" "$@"; }
@@ -733,6 +734,7 @@ function setscan() { . "/sh/setscan.sh" "$@"; }
 function setsrc() { . "/sh/setsrc.sh" "$@"; }
 function settar() { . "/sh/settar.sh" "$@"; }
 function settime() { . "/sh/settime.sh" "$@"; }
+function settitle() { . "/sh/settitle.sh" "$@"; }
 function setup100_obsolete() { . "/sh/setup100_obsolete.sh" "$@"; }
 function setup101_date_miffed_archive() { . "/sh/setup101_date_miffed_archive.sh" "$@"; }
 function setup101() { . "/sh/setup101.sh" "$@"; }
