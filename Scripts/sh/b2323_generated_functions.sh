@@ -516,6 +516,7 @@ function mkdvd_bugs() { . "/sh/mkdvd_bugs.sh" "$@"; }
 function mkdvdimg_ext4() { . "/sh/mkdvdimg_ext4.sh" "$@"; }
 function mkf2() { . "/sh/mkf2.sh" "$@"; }
 function mkf_already_trying_to_fix() { . "/sh/mkf_already_trying_to_fix.sh" "$@"; }
+function mkfa() { . "/sh/mkfa.sh" "$@"; }
 function mkfat() { . "/sh/mkfat.sh" "$@"; }
 function mkf_complicated() { . "/sh/mkf_complicated.sh" "$@"; }
 function mkf() { . "/sh/mkf.sh" "$@"; }
@@ -760,6 +761,7 @@ function sfree() { . "/sh/sfree.sh" "$@"; }
 function shcp() { . "/sh/shcp.sh" "$@"; }
 function shop() { . "/sh/shop.sh" "$@"; }
 function shorttimes() { . "/sh/shorttimes.sh" "$@"; }
+function showgitpass() { . "/sh/showgitpass.sh" "$@"; }
 function shreddisk() { . "/sh/shreddisk.sh" "$@"; }
 function shutdown() { . "/sh/shutdown.sh" "$@"; }
 function shutd() { . "/sh/shutd.sh" "$@"; }
@@ -938,6 +940,7 @@ function whocares2() { . "/sh/whocares2.sh" "$@"; }
 function whocares() { . "/sh/whocares.sh" "$@"; }
 function wifi() { . "/sh/wifi.sh" "$@"; }
 function win7warn() { . "/sh/win7warn.sh" "$@"; }
+function wini() { . "/sh/wini.sh" "$@"; }
 function wl() { . "/sh/wl.sh" "$@"; }
 function word() { . "/sh/word.sh" "$@"; }
 function work() { . "/sh/work.sh" "$@"; }
