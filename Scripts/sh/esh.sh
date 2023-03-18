@@ -1,12 +1,14 @@
 [ $# -eq 0 ] && { c $(b 644)/sh; return; }
 
 
-
+echo asdf
 #it worked!!
 eshalias=$(grep -E '\W'$1'=' /sh/b21_* )
 isval $eshalias && { echo "$eshalias" ; return; }
 
 sfile=/sh/$1.sh
+touch $sfile
+mkfa
 rchive 'before editing script '"$1.sh" "$sfile"
 ! test -f $sfile && newscript=yes || newscript=no
 #nano --syntax=none $sfile   #--mouse disables selection so not always desirable

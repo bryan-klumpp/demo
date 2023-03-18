@@ -1,3 +1,8 @@
+mkfa; return
+
+
+#BELOW IS OBSOLETE
+
 #good example of nested escaped xargs nested bash etc #nested #escaping nested #complicated
 shopt -s globstar
 
