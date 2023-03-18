@@ -9,6 +9,8 @@ XmlSchemaInference schema = new XmlSchemaInference();
 // make 
 schema.Occurrence = XmlSchemaInference.InferenceOption.Restricted;
 schema.TypeInference = XmlSchemaInference.InferenceOption.Restricted;
+//schema.Occurrence = XmlSchemaInference.InferenceOption.Relaxed;
+//schema.TypeInference = XmlSchemaInference.InferenceOption.Relaxed;
 schemaSet = schema.InferSchema(reader);
 
 foreach (XmlSchema s in schemaSet.Schemas())
