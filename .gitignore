@@ -44,5 +44,6 @@ JDemoWeb/mvnw
 JDemoWeb/mvnw.cmd
 *desktop.ini
 #Scripts/sh/b2323_generated_functions.sh
-Scripts/sh/b14_wd.txt
-Scripts/sh/b14_wd.txt
+**/b14_wd.txt
+b14_wd.txt
+Scripts/b14_wd.txt

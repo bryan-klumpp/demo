@@ -1,1 +1,1 @@
-/home/klumpb/code/github_demo
+/tmp

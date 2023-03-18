@@ -952,6 +952,7 @@ function x11e() { . "/sh/x11e.sh" "$@"; }
 function x_maybe_executable() { . "/sh/x_maybe_executable.sh" "$@"; }
 function x() { . "/sh/x.sh" "$@"; }
 function xt() { . "/sh/xt.sh" "$@"; }
+function xtype() { . "/sh/xtype.sh" "$@"; }
 function xx() { . "/sh/xx.sh" "$@"; }
 function zerofs() { . "/sh/zerofs.sh" "$@"; }
 function zeronewline() { . "/sh/zeronewline.sh" "$@"; }
