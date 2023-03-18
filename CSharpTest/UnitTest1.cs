@@ -12,6 +12,7 @@ public class Tests
     [Test]
     public void Test1()
     {
+        System.Console.WriteLine("Hello from a test");
         Assert.IsFalse(false);
     }
 }
