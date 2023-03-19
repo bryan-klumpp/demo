@@ -13,7 +13,7 @@ elementFormDefault="unqualified"
                         <xs:sequence>
                             <xs:element name="acctname" type="xs:string">
                                 <xs:annotation>
-                                    <xs:documentation xml:lang="en"> The descriptive name for an
+                                    <xs:documentation> The descriptive name for an
                                         account, i.e., "main Vanguard account" </xs:documentation>
                                 </xs:annotation>
                             </xs:element>
