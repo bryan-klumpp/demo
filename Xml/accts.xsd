@@ -18,8 +18,14 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="passwords" minOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="password" minOccurs="1"></xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
-
     </xs:complexType>
   </xs:element>
 

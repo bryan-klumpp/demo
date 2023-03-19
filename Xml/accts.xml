@@ -3,9 +3,10 @@
 <accts xmlns="https://organize-your-accounts.com"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="https://organize-your-accounts.com accts.xsd"
->
-    
+  >
+  
     <acct>
         <accountName>Vanguard 1</accountName>
     </acct>
+    <passwords><password></password></passwords>
  </accts> 
