@@ -9,10 +9,6 @@
                 <xs:element ref="Password" minOccurs="0" maxOccurs="unbounded"/>
             </xs:sequence>          
         </xs:complexType>
-        <xs:key name="PKAccounts"> <!--https://stackoverflow.com/questions/4491983/xml-schema-key-keyref-how-to-use-them-->
-            <xs:selector xpath="Account/AccountID"/>
-            <xs:field xpath="."/>
-        </xs:key>
         <xs:key name="PKPasswords">
             <xs:selector xpath="Password/PasswordID"/>
             <xs:field xpath="."/>
@@ -22,6 +18,9 @@
             <xs:field xpath="."/>
         </xs:keyref>
     </xs:element>
+    <xs:complexType name="definitions">
+        
+    </xs:complexType>
     <xs:element name="Account">
         <xs:complexType>
             <xs:sequence>
