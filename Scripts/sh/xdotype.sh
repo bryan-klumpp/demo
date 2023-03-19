@@ -1,2 +1,3 @@
-isint $1 && { sleep $1; shift 1; }
-xdotool type "$*"
+xdoxdef
+delay=$1; shift 1
+xdox $delay type "$@"

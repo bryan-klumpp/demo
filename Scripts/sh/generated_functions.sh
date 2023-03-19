@@ -232,6 +232,7 @@ function ribo() { . /sh/ribo.sh "$@"; }
 function Greed0() { . /sh/Greed0.sh "$@"; }
 function randpwd() { . /sh/randpwd.sh "$@"; }
 function isvalbash() { . /sh/isvalbash.sh "$@"; }
+function xdoxdef() { . /sh/xdoxdef.sh "$@"; }
 function nwrx() { . /sh/nwrx.sh "$@"; }
 function susx() { . /sh/susx.sh "$@"; }
 function rm() { . /sh/rm.sh "$@"; }
@@ -534,6 +535,7 @@ function mntbec() { . /sh/mntbec.sh "$@"; }
 function caraudio() { . /sh/caraudio.sh "$@"; }
 function renameunderscore1() { . /sh/renameunderscore1.sh "$@"; }
 function mkluks() { . /sh/mkluks.sh "$@"; }
+function dummy() { . /sh/dummy.sh "$@"; }
 function comp() { . /sh/comp.sh "$@"; }
 function bepsonscan2() { . /sh/bepsonscan2.sh "$@"; }
 function tmp1() { . /sh/tmp1.sh "$@"; }
@@ -745,6 +747,7 @@ function ping() { . /sh/ping.sh "$@"; }
 function bigext() { . /sh/bigext.sh "$@"; }
 function scana() { . /sh/scana.sh "$@"; }
 function steroid() { . /sh/steroid.sh "$@"; }
+function testbg() { . /sh/testbg.sh "$@"; }
 function gmp() { . /sh/gmp.sh "$@"; }
 function nocolor() { . /sh/nocolor.sh "$@"; }
 function propac1() { . /sh/propac1.sh "$@"; }
