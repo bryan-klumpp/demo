@@ -14,11 +14,11 @@ elementFormDefault="qualified">
         </xs:complexType>
         <xs:key name="PKPasswords">
             <xs:selector xpath="Password/PasswordID"/>
-            <xs:field xpath="."/>
+            <xs:field xpath="@patt"/>
         </xs:key>
         <xs:keyref name="FKAccountToPassword" refer="PKPasswords">
             <xs:selector xpath="Account/PasswordID"/>
-            <xs:field xpath="."/>
+            <xs:field xpath="@patt"/>
         </xs:keyref>
     </xs:element>
     <xs:element name="Account">
@@ -37,8 +37,9 @@ elementFormDefault="qualified">
     <xs:element name="Password">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="PasswordID" type="xs:string"/>
-            </xs:sequence>
+                <xs:element name = "firstname" type = "xs:string"/>
+              </xs:sequence>
+            <xs:attribute name="patt" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 </xs:schema>
