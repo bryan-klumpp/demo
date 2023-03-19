@@ -18,9 +18,6 @@
             <xs:field xpath="."/>
         </xs:keyref>
     </xs:element>
-    <xs:complexType name="definitions">
-        
-    </xs:complexType>
     <xs:element name="Account">
         <xs:complexType>
             <xs:sequence>
