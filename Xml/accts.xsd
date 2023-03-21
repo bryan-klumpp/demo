@@ -1,42 +1,46 @@
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  targetNamespace="https://organize-your-accounts.com"
-  elementFormDefault="qualified">
-
+  elementFormDefault="qualified"
+  attributeFormDefault="qualified"
+>
 
   <xs:element name="accts">
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="acct" minOccurs="1">
-          <xs:complexType>
-
-            <xs:sequence>
-              <xs:element name="accountName" type="xs:string" minOccurs="1" maxOccurs="1">
-                <xs:annotation>
-                  <xs:documentation> The descriptive name for an account, i.e., "main Vanguard
-                    account" </xs:documentation>
-                </xs:annotation>
-              </xs:element>
-            </xs:sequence>
-          </xs:complexType>
-          <xs:keyref name="FKAccountToPassword" refer="PKPasswords">
-            <xs:selector xpath="Account/PasswordID" />
-            <xs:field xpath="." />
-          </xs:keyref>
-          <xs:key name="PKPasswords">
-            <xs:selector xpath="passwords/PasswordID" />
-            <xs:field xpath="." />
-          </xs:key>
-
+        <xs:element ref="acct">
         </xs:element>
-        <xs:element name="passwords" minOccurs="1">
-          <xs:complexType>
-            <xs:sequence>
-              <xs:element name="PasswordID" id="PasswordID" minOccurs="1"></xs:element>
-            </xs:sequence>
-          </xs:complexType>
+        
+      </xs:sequence>
+    </xs:complexType>
 
+    <xs:key name="PKpassword">
+      <xs:selector xpath="password/PasswordID"/>
+      <xs:field xpath="."/>
+  </xs:key>
+  <xs:keyref name="FKacctToPassword" refer="PKpassword">
+    <xs:selector xpath="acct/PasswordID"/>
+    <xs:field xpath="."/>
+</xs:keyref>
+  </xs:element>
+  <xs:element name="acct">
+    <xs:complexType>
+
+      <xs:sequence>
+        <xs:element name="accountName" type="xs:string" minOccurs="1" maxOccurs="1">
+          <xs:annotation>
+            <xs:documentation> The descriptive name for an account, i.e., "main Vanguard account" </xs:documentation>
+          </xs:annotation>
         </xs:element>
+        <xs:element name="PasswordID" minOccurs="1" type="xs:string">
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+
+  </xs:element>
+  <xs:element name="password">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="PasswordID" minOccurs="1"></xs:element>
       </xs:sequence>
     </xs:complexType>
 

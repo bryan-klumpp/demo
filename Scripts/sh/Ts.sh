@@ -11,10 +11,10 @@ find -H "$bdir" | sort | trzero | grep -viE --null-data -f "$(b 5)" \
 	   filename={}  
            #echo searching "$filename"
            ! test -f "$filename" && exit;	  
-           grep -H -E --color=always '"$@"' -e '"$searchstring"' "$filename"
+           grep -H -E -I -n --color=auto '"$@"' -e '"$searchstring"' "$filename"
       }'
 echo --------- Now searching file list itself ---------------
-find -H "$bdir"| sort | grep -E "$searchstringraw$leaf" "$therest"  | grep -E --color=always -e "$searchstringraw" "$therest" 
+find -H "$bdir"| sort | grep -E "$searchstringraw$leaf" "$therest"  | grep -E --color=auto -e "$searchstringraw" "$therest" 
 echo ----------------- done searching -----------------------
 
 
