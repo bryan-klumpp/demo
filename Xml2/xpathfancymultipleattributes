@@ -1,0 +1,7 @@
+s='eleph'
+xpath -e '//*[contains(@*[1],"'"$s"'")]'  keys2.xml
+xpath -e '//*[contains(@*[1],"'"$s"'")] | //*[contains(@*[2],"'"$s"'")]'  keys2.xml
+xpath -e '//*[contains(@*[1],"'"$s"'") or contains(@*[2],"'"$s"'")]'  keys2.xml
+xpath -e '//*[contains(@*[1],"'"$s"'") or contains(@*[2],"'"$s"'")]/..'  keys2.xml 
+xpath -e '//*/comment()[contains(.,"elephant")]/..'  keys2.xml
+
