@@ -203,6 +203,7 @@ function deep1() { . /sh/deep1.sh "$@"; }
 function setupUbuntu() { . /sh/setupUbuntu.sh "$@"; }
 function qb.bat() { . /sh/qb.bat.sh "$@"; }
 function ki() { . /sh/ki.sh "$@"; }
+function b14_wd.txt() { . /sh/b14_wd.txt.sh "$@"; }
 function sample() { . /sh/sample.sh "$@"; }
 function co() { . /sh/co.sh "$@"; }
 function greponefile() { . /sh/greponefile.sh "$@"; }
@@ -740,6 +741,7 @@ function mint() { . /sh/mint.sh "$@"; }
 function mkdvd2() { . /sh/mkdvd2.sh "$@"; }
 function r1() { . /sh/r1.sh "$@"; }
 function appendp() { . /sh/appendp.sh "$@"; }
+function fancybg() { . /sh/fancybg.sh "$@"; }
 function pgoff() { . /sh/pgoff.sh "$@"; }
 function perweek() { . /sh/perweek.sh "$@"; }
 function ping() { . /sh/ping.sh "$@"; }
