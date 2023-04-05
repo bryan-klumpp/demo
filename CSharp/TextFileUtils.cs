@@ -35,7 +35,7 @@ class TextFileUtils
         }
     }
 
-
+    /* ChatGPT: Please write a C# function to format a block of text to be formatted in a visual tabular format with fields separated by a delimiter.  The function will take the text block from the system clipboard and use the first line as a guide for formatting.  The function will take as an argument the delimiter that is used to separate the fields.  The code will search the first line of the text block for the positions of the delimiter and use that as a guide for formatting the remaining lines with the fields lined up by spaces.   The code will preserve the exact positioning of the delimiters in the first line and apply that to the following lines where possible, but the code can make the following rows longer if needed.  There must be at least one space before and after each delimiter occurrence.  After processing, the code will place the resulting formatted text block back on the system clipboard.  Please make this capable of executing on Ubuntu 20.04 if possible. */
     public static void formatClipboardTabular(string delimiter)
     {
         string text = GetTextFromClipboard();
