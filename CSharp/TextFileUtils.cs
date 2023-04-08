@@ -35,7 +35,50 @@ class TextFileUtils
         }
     }
 
+    /* ChatGPT: Please write a C# function to add a specified text block to a file after a text block that will be matched with a multi-line regular expression that I will provide (the file will not be considered to be line-separated; rather, I will provide \n endline characters as needed).   The arguments will be the file path, the regular expression to find, and a single string of the text to be added to the file after the regex match.   */
+
+    /* ChatGPT good regex tips in general for multiline...
+        string filePath = "example.txt";
+        string regexPattern = @"start of block\n.+?\nend of block";
+        string textToAdd = "This text will be added after the matched block.\n";
+
+        AppendTextAfterRegexMatch(filePath, regexPattern, textToAdd);
+
+        In this example, the regular expression pattern matches a block of text starting with the string "start of block" and ending with the string "end of block", with any text in between. The .+? pattern matches any character (except for newline characters) one or more times, but does so lazily (i.e., it matches as few characters as possible to satisfy the pattern). The RegexOptions.Multiline option allows the ^ and $ anchors to match at the beginning and end of lines within the input string.
+    */
+    public void AppendTextAfterRegexMatch(string filePath, string regexPattern, string textToAdd)
+    {
+        // Read the file contents into a string
+        string fileContents = File.ReadAllText(filePath);
+
+        // Use a regular expression to find the match
+        Regex regex = new Regex(regexPattern, RegexOptions.Multiline);
+        Match match = regex.Match(fileContents);
+
+        if (match.Success)
+        {
+            // Get the index of the end of the matched block
+            int endIndex = match.Index + match.Length;
+
+            // Insert the new text after the matched block
+            fileContents = fileContents.Insert(endIndex, textToAdd);
+        }
+        else
+        {
+            // If no match is found, add the text at the beginning of the file
+            fileContents = textToAdd + fileContents;
+        }
+
+        // Write the modified contents back to the file
+        File.WriteAllText(filePath, fileContents);
+    }
+
+
     /* ChatGPT: Please write a C# function to format a block of text to be formatted in a visual tabular format with fields separated by a delimiter.  The function will take the text block from the system clipboard and use the first line as a guide for formatting.  The function will take as an argument the delimiter that is used to separate the fields.  The code will search the first line of the text block for the positions of the delimiter and use that as a guide for formatting the remaining lines with the fields lined up by spaces.   The code will preserve the exact positioning of the delimiters in the first line and apply that to the following lines where possible, but the code can make the following rows longer if needed.  There must be at least one space before and after each delimiter occurrence.  After processing, the code will place the resulting formatted text block back on the system clipboard.  Please make this capable of executing on Ubuntu 20.04 if possible. */
+    /* 
+        
+     */
+
     public static void formatClipboardTabular(string delimiter)
     {
         string text = GetTextFromClipboard();

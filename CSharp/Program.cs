@@ -1,27 +1,219 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.Xml;
-using System.Xml.Schema;
+﻿using System;
+using System.Linq;
+using System.Text;
+using System.Diagnostics;
 
-Console.WriteLine("Hello, World!");
-System.Xml.XmlReader reader = XmlReader.Create(@"/home/klumpb/note.xml");
-XmlSchemaSet schemaSet = new XmlSchemaSet();
-XmlSchemaInference schema = new XmlSchemaInference();
-// make 
-schema.Occurrence = XmlSchemaInference.InferenceOption.Restricted;
-schema.TypeInference = XmlSchemaInference.InferenceOption.Restricted;
-//schema.Occurrence = XmlSchemaInference.InferenceOption.Relaxed;
-//schema.TypeInference = XmlSchemaInference.InferenceOption.Relaxed;
-schemaSet = schema.InferSchema(reader);
+class Program {
+    static void Main(string[] args) {
+        // string delimiter = "|";
+        // //string text = GetTextFromClipboard();
+        // String text = "		| header1 | header2         | header3                           |\n		| data1 | data2222222222222222222222222 | data3 |";
+        // string formattedText = FormatTextAsTable(text, delimiter);
+        // SetTextToClipboard(formattedText);
+        // Console.WriteLine("Formatted text copied to clipboard.");
 
-foreach (XmlSchema s in schemaSet.Schemas())
+
+
+
+//ChatGPT failed
+// string input = @"| header1 | header2         | header3                           |
+// | data1 | data2222222222222222222222222 | data3 |";
+// char delimiter = '|';
+// string formattedOutput = FormatTextBlock2(input, delimiter);
+// Console.WriteLine(formattedOutput);
+
+//         string input = @"| header1 | header2         | header3                           |
+// | data1 | data2222222222222222222222222 | data3 |";
+// char delimiter = '|';
+// string formattedOutput = FormatTextBlock(input, delimiter);
+// Console.WriteLine(formattedOutput);
+// File.WriteAllText("/tmp/fmt.txt",formattedOutput);
+
+
+    }
+
+    public static string lineColumns(String input) {
+        string[] lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+    }
+
+public static string FormatTextBlock2(string input, char delimiter)
 {
-    using (var stringWriter = new StringWriter())
+    // Split the input into lines
+    string[] lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.TrimEntries);
+
+    // Find the column widths based on the first line
+    int[] columnWidths = lines[0]
+        .Split(delimiter)
+        .Select(column => column.Trim().Length)
+        .ToArray();
+
+    // Build the format string
+    string format = "|";
+    for (int i = 0; i < columnWidths.Length; i++)
     {
-        using (var writer = XmlWriter.Create(stringWriter))
+        format += " {" + i + ",-" + (columnWidths[i] + 2) + "} |";
+    }
+
+    // Build the formatted output
+    StringBuilder output = new StringBuilder();
+    output.AppendLine(lines[0].TrimEnd(delimiter)); // Add the header row
+
+    for (int i = 1; i < lines.Length; i++)
+    {
+        string[] fields = lines[i].Split(delimiter).Select(field => field.Trim()).ToArray();
+
+        // Build the formatted fields
+        string[] formattedFields = new string[columnWidths.Length];
+        for (int j = 0; j < columnWidths.Length; j++)
         {
-            s.Write(writer);
+            if (j < fields.Length)
+            {
+                string field = fields[j];
+                int width = columnWidths[j];
+
+                if (field.Length > width)
+                {
+                    field = field.Substring(0, width);
+                }
+
+                formattedFields[j] = " " + field + " ";
+            }
+            else
+            {
+                formattedFields[j] = new string(' ', columnWidths[j] + 2);
+            }
         }
 
-        Console.WriteLine( stringWriter.ToString() );
+        // Append the formatted row to the output
+        output.AppendLine(string.Format(format, formattedFields).TrimEnd());
+    }
+
+    return output.ToString();
+}
+
+public static string FormatTextBlock1(string input, char delimiter)
+{
+    // Split the input into lines
+    string[] lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+
+    // Find the column widths based on the first line
+    int[] columnWidths = lines[0]
+        .Split(delimiter)
+        .Select(column => column.Trim().Length)
+        .ToArray();
+
+    // Build the format string
+    string format = "|";
+    for (int i = 0; i < columnWidths.Length; i++)
+    {
+        format += " {" + i + ",-" + (columnWidths[i] + 2) + "} |";
+    }
+
+    // Build the formatted output
+    StringBuilder output = new StringBuilder();
+    output.AppendLine(lines[0].TrimEnd(delimiter)); // Add the header row
+
+    for (int i = 1; i < lines.Length; i++)
+    {
+        string[] fields = lines[i].Split(delimiter).Select(field => field.Trim()).ToArray();
+
+        // Build the formatted fields
+        string[] formattedFields = new string[columnWidths.Length];
+        for (int j = 0; j < columnWidths.Length; j++)
+        {
+            if (j < fields.Length)
+            {
+                string field = fields[j];
+                int width = columnWidths[j];
+
+                if (field.Length > width)
+                {
+                    field = field.Substring(0, width);
+                }
+
+                formattedFields[j] = " " + field + " ";
+            }
+            else
+            {
+                formattedFields[j] = new string(' ', columnWidths[j] + 2);
+            }
+        }
+
+        // Append the formatted row to the output
+        output.AppendLine(string.Format(format, formattedFields));
+    }
+
+    return output.ToString();
+}
+
+
+    static string GetTextFromClipboard() {
+        Process process = new Process();
+        process.StartInfo.FileName = "xclip";
+        process.StartInfo.Arguments = "-o";
+        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.RedirectStandardOutput = true;
+        process.Start();
+        string text = process.StandardOutput.ReadToEnd();
+        process.WaitForExit();
+        return text;
+    }
+
+    static void SetTextToClipboard(string text) {
+        Process process = new Process();
+        process.StartInfo.FileName = "xclip";
+        process.StartInfo.Arguments = "-i";
+        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.RedirectStandardInput = true;
+        process.Start();
+        process.StandardInput.Write(text);
+        process.StandardInput.Close();
+        process.WaitForExit();
+    }
+
+    static string FormatTextAsTable(string text, string delimiter) {
+        string[] lines = text.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+        string[] headers = lines[0].Split(new[] { delimiter }, StringSplitOptions.None);
+        int[] columnWidths = new int[headers.Length];
+
+        for (int i = 0; i < headers.Length; i++) {
+            columnWidths[i] = headers[i].Length + 2; // add padding
+        }
+
+        for (int i = 1; i < lines.Length; i++) {
+            string[] fields = lines[i].Split(new[] { delimiter }, StringSplitOptions.None);
+            for (int j = 0; j < fields.Length; j++) {
+                columnWidths[j] = Math.Max(columnWidths[j], fields[j].Length + 2); // add padding
+            }
+        }
+
+        StringBuilder builder = new StringBuilder();
+        builder.AppendLine(string.Join(delimiter, headers.Select((h, i) => h.PadRight(columnWidths[i]))));
+
+        for (int i = 1; i < lines.Length; i++) {
+            string[] fields = lines[i].Split(new[] { delimiter }, StringSplitOptions.None);
+            string[] formattedFields = fields.Select((f, j) => f.PadRight(columnWidths[j])).ToArray();
+            int totalWidth = formattedFields.Sum(f => f.Length);
+            int excessWidth = totalWidth - (delimiter.Length * (formattedFields.Length - 1));
+            if (excessWidth > 0) {
+                int maxWidth = columnWidths.Max();
+                int shrinkableColumns = columnWidths.Count(w => w == maxWidth);
+                int excessPerColumn = excessWidth / shrinkableColumns;
+                int remainingExcess = excessWidth % shrinkableColumns;
+                for (int j = 0; j < formattedFields.Length; j++) {
+                    if (columnWidths[j] == maxWidth) {
+                        int width = columnWidths[j] - excessPerColumn;
+                        if (remainingExcess > 0) {
+                            width -= 1;
+                            remainingExcess -= 1;
+                        }
+                        formattedFields[j] = formattedFields[j].Substring(0, width) + delimiter;
+                    }
+                }
+            }
+            builder.AppendLine(string.Join(delimiter, formattedFields));
+        }
+
+        return builder.ToString();
     }
 }
