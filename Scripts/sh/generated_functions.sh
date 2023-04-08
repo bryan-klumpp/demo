@@ -134,6 +134,7 @@ function isint() { . /sh/isint.sh "$@"; }
 function fpa() { . /sh/fpa.sh "$@"; }
 function pgon() { . /sh/pgon.sh "$@"; }
 function PS1() { . /sh/PS1.sh "$@"; }
+function columnf_before_integrating_CtrlV() { . /sh/columnf_before_integrating_CtrlV.sh "$@"; }
 function h() { . /sh/h.sh "$@"; }
 function ted() { . /sh/ted.sh "$@"; }
 function slep() { . /sh/slep.sh "$@"; }
@@ -318,6 +319,7 @@ function becrec() { . /sh/becrec.sh "$@"; }
 function led() { . /sh/led.sh "$@"; }
 function filename() { . /sh/filename.sh "$@"; }
 function setislock() { . /sh/setislock.sh "$@"; }
+function touchit() { . /sh/touchit.sh "$@"; }
 function jig() { . /sh/jig.sh "$@"; }
 function jav() { . /sh/jav.sh "$@"; }
 function testsync.sh() { . /sh/testsync.sh.sh "$@"; }
@@ -583,6 +585,7 @@ function setwd() { . /sh/setwd.sh "$@"; }
 function ckwin1909() { . /sh/ckwin1909.sh "$@"; }
 function testechofunction() { . /sh/testechofunction.sh "$@"; }
 function icc() { . /sh/icc.sh "$@"; }
+function cfc() { . /sh/cfc.sh "$@"; }
 function l_template() { . /sh/l_template.sh "$@"; }
 function indmob() { . /sh/indmob.sh "$@"; }
 function mntFuse() { . /sh/mntFuse.sh "$@"; }
