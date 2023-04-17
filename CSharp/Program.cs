@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 
 class Program {
     static void Main(string[] args) {
@@ -20,9 +21,11 @@ class Program {
 
     class SortFormat {
         Regex regex;
+        String name;
 
-        SortFormat(String regexWithCapturingGroupsAndSortTags) {
-            Regex matchNextMetaCharacter = new Regex(or(onlyOne("("),"<sort:(\\w*)>"));
+        SortFormat(String name, String regexWithCapturingGroupsAndSortTags) {
+            this.name=name;
+            Regex matchNextMetaCharacter = new Regex(or(onlyOne("[^("),"<sort:(\\w*)>"));
             int pos = 0;
             Match m = matchNextMetaCharacter.Match(regexWithCapturingGroupsAndSortTags, pos);
             while(m.Success) {

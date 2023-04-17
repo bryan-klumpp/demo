@@ -1017,5 +1017,16 @@ function columnfSave9workingtret() { . /sh/columnfSave9workingtret.sh "$@"; }
 function columnf_GREAT() { . /sh/columnf_GREAT.sh "$@"; }
 function clipsort() { . /sh/clipsort.sh "$@"; }
 function codejson() { . /sh/codejson.sh "$@"; }
+<<<<<<< HEAD
 function lnrmine() { . /sh/lnrmine.sh "$@"; }
 function mkfrevert() { . /sh/mkfrevert.sh "$@"; }
+=======
+function loopyalloc() { . /sh/loopyalloc.sh "$@"; }
+function loopyfmt() { . /sh/loopyfmt.sh "$@"; }
+function loopymnt() { . /sh/loopymnt.sh "$@"; }
+function loopygrow1() { . /sh/loopygrow1.sh "$@"; }
+function loopyinfo() { . /sh/loopyinfo.sh "$@"; }
+function loopytrunc() { . /sh/loopytrunc.sh "$@"; }
+function loopyshrink() { . /sh/loopyshrink.sh "$@"; }
+function loopymax() { . /sh/loopymax.sh "$@"; }
+>>>>>>> c921f89c2cca7c0fc15c6a96aefdf59310a3feb3
