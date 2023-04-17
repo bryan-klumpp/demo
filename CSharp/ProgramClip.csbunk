@@ -24,7 +24,7 @@ class Program2
     [DllImport("libX11.so")]
     private static extern IntPtr XCreateSimpleWindow(IntPtr display, IntPtr
 
-    static void Main(string[] args)
+    static void Mainx(string[] args)
     {
         // Open X11 display connection
         IntPtr display = XOpenDisplay(IntPtr.Zero);

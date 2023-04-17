@@ -8,8 +8,8 @@ echo '' > /tmp/dummyrc
 #bln1 /media/b/*midsi*
 #bln1 /media/b/*enc_64*
 #bln1 /media/b/sd_e
-bln1 /b
 bln1 ~
+bln1 /b
 
 #bln1 /sh
 #bln1 /media/b/e/b
