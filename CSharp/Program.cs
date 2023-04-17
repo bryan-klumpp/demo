@@ -2,42 +2,51 @@
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 class Program {
     static void Main(string[] args) {
-        // string delimiter = "|";
-        // //string text = GetTextFromClipboard();
-        // String text = "		| header1 | header2         | header3                           |\n		| data1 | data2222222222222222222222222 | data3 |";
-        // string formattedText = FormatTextAsTable(text, delimiter);
-        // SetTextToClipboard(formattedText);
-        // Console.WriteLine("Formatted text copied to clipboard.");
+         String testData = @" { b, b , 9 }"+"\n"+ @"{ a, a , 8 }"+"\n"+@"{  a, a, 2}";
 
 
-
-
-//ChatGPT failed
-// string input = @"| header1 | header2         | header3                           |
-// | data1 | data2222222222222222222222222 | data3 |";
-// char delimiter = '|';
-// string formattedOutput = FormatTextBlock2(input, delimiter);
-// Console.WriteLine(formattedOutput);
-
-//         string input = @"| header1 | header2         | header3                           |
-// | data1 | data2222222222222222222222222 | data3 |";
-// char delimiter = '|';
-// string formattedOutput = FormatTextBlock(input, delimiter);
-// Console.WriteLine(formattedOutput);
-// File.WriteAllText("/tmp/fmt.txt",formattedOutput);
-
+        Console.WriteLine(sortByRegexCapturingGroups(testData));
 
     }
 
-    public static string lineColumns(String input) {
-        string[] lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+    public static string sortByRegexCapturingGroups(String input) {
+
+        return input;
+    }
+
+    class SortFormat {
+        Regex regex;
+        String name;
+
+        SortFormat(String name, String regexWithCapturingGroupsAndSortTags) {
+            this.name=name;
+            Regex matchNextMetaCharacter = new Regex(or(onlyOne("[^("),"<sort:(\\w*)>"));
+            int pos = 0;
+            Match m = matchNextMetaCharacter.Match(regexWithCapturingGroupsAndSortTags, pos);
+            while(m.Success) {
+                String match = m.Value;
+                // pos=m.Index + m.Length;
+
+                m = m.NextMatch();
+            }
+        }
+
+    }
+
+    public static string onlyOne(String oneChar) {
+        return "["+oneChar+"]($|[^"+oneChar+"])";
+    }
+    public static string or(String s1, String s2) {
+        return "("+s1+"|"+s2+")";
     }
 
 public static string FormatTextBlock2(string input, char delimiter)
 {
+    
     // Split the input into lines
     string[] lines = input.Split(new[] { Environment.NewLine }, StringSplitOptions.TrimEntries);
 
