@@ -2,45 +2,40 @@
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
-using System.Text.RegularExpressions;
 
 class Program {
     static void Main(string[] args) {
-         String testData = @" { b, b , 9 }"+"\n"+ @"{ a, a , 8 }"+"\n"+@"{  a, a, 2}";
+        String delim = ",";
+        String[] testData = new String[]{ @" { a, a , 9 }"+"\n"+ @"{ a, a , 8 }"+"\n"+@"{  b, b, 2}" };
+
+        Console.WriteLine("Hello world");
+        // string delimiter = "|";
+        // //string text = GetTextFromClipboard();
+        // String text = "		| header1 | header2         | header3                           |\n		| data1 | data2222222222222222222222222 | data3 |";
+        // string formattedText = FormatTextAsTable(text, delimiter);
+        // SetTextToClipboard(formattedText);
+        // Console.WriteLine("Formatted text copied to clipboard.");
 
 
-        Console.WriteLine(sortByRegexCapturingGroups(testData));
+
+
+//ChatGPT failed
+// string input = @"| header1 | header2         | header3                           |
+// | data1 | data2222222222222222222222222 | data3 |";
+// char delimiter = '|';
+// string formattedOutput = FormatTextBlock2(input, delimiter);
+// Console.WriteLine(formattedOutput);
+
+//         string input = @"| header1 | header2         | header3                           |
+// | data1 | data2222222222222222222222222 | data3 |";
+// char delimiter = '|';
+// string formattedOutput = FormatTextBlock(input, delimiter);
+// Console.WriteLine(formattedOutput);
+// File.WriteAllText("/tmp/fmt.txt",formattedOutput);
+
 
     }
 
-    public static string sortByRegexCapturingGroups(String input) {
-
-        return input;
-    }
-
-    class SortFormat {
-        Regex regex;
-
-        SortFormat(String regexWithCapturingGroupsAndSortTags) {
-            Regex matchNextMetaCharacter = new Regex(or(onlyOne("("),"<sort:(\\w*)>"));
-            int pos = 0;
-            Match m = matchNextMetaCharacter.Match(regexWithCapturingGroupsAndSortTags, pos);
-            while(m.Success) {
-                String match = m.Value;
-                // pos=m.Index + m.Length;
-
-                m = m.NextMatch();
-            }
-        }
-
-    }
-
-    public static string onlyOne(String oneChar) {
-        return "["+oneChar+"]($|[^"+oneChar+"])";
-    }
-    public static string or(String s1, String s2) {
-        return "("+s1+"|"+s2+")";
-    }
 
 public static string FormatTextBlock2(string input, char delimiter)
 {
