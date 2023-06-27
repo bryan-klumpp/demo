@@ -7,7 +7,6 @@ function b21_aliases() { . /sh/b21_aliases.sh "$@"; }
 function dummy() { . /sh/dummy.sh "$@"; }
 function ealiases() { . /sh/ealiases.sh "$@"; }
 function esh() { . /sh/esh.sh "$@"; }
-function generated_functions() { . /sh/generated_functions.sh "$@"; }
 function init() { . /sh/init.sh "$@"; }
 function te() { . /sh/te.sh "$@"; }
 function mkfa() { . /sh/mkfa.sh "$@"; }
@@ -74,7 +73,6 @@ function addrepository() { . /sh/addrepository.sh "$@"; }
 function alarm() { . /sh/alarm.sh "$@"; }
 function alarmcvlc() { . /sh/alarmcvlc.sh "$@"; }
 function alia() { . /sh/alia.sh "$@"; }
-function allmine() { . /sh/allmine.sh "$@"; }
 function allminex() { . /sh/allminex.sh "$@"; }
 function am() { . /sh/am.sh "$@"; }
 function amazon() { . /sh/amazon.sh "$@"; }
@@ -1017,16 +1015,17 @@ function columnfSave9workingtret() { . /sh/columnfSave9workingtret.sh "$@"; }
 function columnf_GREAT() { . /sh/columnf_GREAT.sh "$@"; }
 function clipsort() { . /sh/clipsort.sh "$@"; }
 function codejson() { . /sh/codejson.sh "$@"; }
-<<<<<<< HEAD
 function lnrmine() { . /sh/lnrmine.sh "$@"; }
 function mkfrevert() { . /sh/mkfrevert.sh "$@"; }
-=======
+function allmine() { . /sh/allmine.sh "$@"; }
+function generated_functions() { . /sh/generated_functions.sh "$@"; }
 function loopyalloc() { . /sh/loopyalloc.sh "$@"; }
 function loopyfmt() { . /sh/loopyfmt.sh "$@"; }
-function loopymnt() { . /sh/loopymnt.sh "$@"; }
 function loopygrow1() { . /sh/loopygrow1.sh "$@"; }
 function loopyinfo() { . /sh/loopyinfo.sh "$@"; }
-function loopytrunc() { . /sh/loopytrunc.sh "$@"; }
-function loopyshrink() { . /sh/loopyshrink.sh "$@"; }
 function loopymax() { . /sh/loopymax.sh "$@"; }
->>>>>>> c921f89c2cca7c0fc15c6a96aefdf59310a3feb3
+function loopymnt() { . /sh/loopymnt.sh "$@"; }
+function loopyshrink() { . /sh/loopyshrink.sh "$@"; }
+function loopytrunc() { . /sh/loopytrunc.sh "$@"; }
+function scan300() { . /sh/scan300.sh "$@"; }
+function newloopy() { . /sh/newloopy.sh "$@"; }

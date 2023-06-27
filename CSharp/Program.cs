@@ -1,16 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 class Program {
     static void Main(string[] args) {
-         String testData = @" { b, b , 9 }"+"\n"+ @"{ a, a , 8 }"+"\n"+@"{  a, a, 2}";
-
-
-        Console.WriteLine(sortByRegexCapturingGroups(testData));
+         
+        System.Xml.Linq.XElement xroot = System.Xml.Linq.XElement.Load(@"helloworld.xml");
+        Console.WriteLine(xroot);
+        String testData = @" { b, b , 9 }"+"\n"+ @"{ a, a , 8 }"+"\n"+@"{  a, a, 2}";
+        //Console.WriteLine(sortByRegexCapturingGroups(testData));
 
     }
 
