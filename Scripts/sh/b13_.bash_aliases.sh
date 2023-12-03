@@ -1,4 +1,4 @@
-grep 'b13_' /home/b/.bashrc || { echo '. /sh/b13_bashrc.sh' >> /home/b/.bashrc; }
+#grep 'b13_' /home/b/.bashrc || { echo '. /sh/b13_bashrc.sh' >> /home/b/.bashrc; }
 
 
 #return

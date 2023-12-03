@@ -1,5 +1,9 @@
 isint $1 && { scanres=$1; shift 1; } || scanres=150
-scannedfilename="./$(date +%Y%m%d%H%M%S)_"$*"_scanned.jpg"
+scannedfilename="./$(date +%Y%m%d%H%M%S)_"$*"_scanned.tiff"
+scanimage --resolution $scanres -d 'escl:http://localhost:60000' --format=tiff --mode Color > "$scannedfilename" && ls "$scannedfilename" 
+
+return
+
 scanimage --resolution $scanres -d 'escl:http://localhost:60000' --format=tiff --mode Color  |
   convert - "$scannedfilename" && ls "$scannedfilename" 
 

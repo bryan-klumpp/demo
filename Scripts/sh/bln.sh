@@ -9,7 +9,7 @@ echo '' > /tmp/dummyrc
 #bln1 /media/b/*enc_64*
 #bln1 /media/b/sd_e
 bln1 ~
-bln1 /b
+bln1 /b/ln/bp
 
 #bln1 /sh
 #bln1 /media/b/e/b
