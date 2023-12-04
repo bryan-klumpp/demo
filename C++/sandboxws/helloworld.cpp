@@ -16,6 +16,10 @@ template <typename T> void debugLine(string name, T& obj) {
     cout << name << ": " << obj << " -- type: " << getTypeName(obj) << endl;
 }
 
+template <typename T> T bitwiseNOT(T i) {
+    static_assert(std::is_unsigned<T>::value && std::is_integral<T>::value, "T must be unsigned integral type (integer, long, etc.)");
+    return ~i;
+}
 void ampersandAsteriskFun() { //https://stackoverflow.com/questions/6877052/use-of-the-operator-in-c-function-signatures
         string s = "Hello, wordl";
         string autos = "Hello, wordl";
@@ -55,11 +59,48 @@ void ampersandAsteriskFun() { //https://stackoverflow.com/questions/6877052/use-
         cout << "makecopyfrompointer: " << makecopyfrompointer << endl;
 }
 
+int multiply(int a, int b) { return a * b; }
+int foo(int x)
+{
+    return x;
+}
+string MultiCopyMethod(string s) {return "sssssssssssssssssss";}
+typedef decltype(&MultiCopyMethod) MultiCopyMethodDeclType;
+
+string MultiCopyMethod2(string s) {return "ssssssssssssssssssss 222222222222222222222222";}
+
 
 int main()
 {
-    vector<string> msg {"Hello", "C++", "World", "from", "VS Code", "and the C++ extensionx!"};
+    MultiCopyMethodDeclType mcmt = MultiCopyMethod2;
+    mcmt = &MultiCopyMethod2;  //& is optional
+    const MultiCopyMethodDeclType mcmtconst = mcmt; //& no worky here
+    cout << mcmt("a");
 
+
+
+    int (*fcnPtr)(int){ &foo }; // Initialize fcnPtr with function foo
+    cout << (*fcnPtr)(5) << endl; // call function foo(5) through fcnPtr.
+    //int (*func)(int, int);
+     // func is pointing to the multiplyTwoValues function
+    //func = multiply;
+    //int prod = func(15, 2);
+    //cout << "The value of the product is: " << prod << endl;
+
+    //decltype 
+    int (*func)(int, int) = multiply ;
+    auto functionPointer = multiply;
+    cout << (*functionPointer)(2,9) << endl;
+    decltype (functionPointer) declType1;
+    debugline(declType1)
+    //cout << "try to invoke declType1: "<<declType1(2,4)<<endl;  //infinite loop /segmentation fault?!
+    cout<<"fp1invoke: "<<(*functionPointer)(2,9) << endl;
+    cout<<"multiplyasterisk: "<<(*multiply)(2,9) << endl;
+    vector<string> msg {"Hello", "C++", "World", "from", "VS Code", "and the C++ extensionx!"};
+    cout << bitwiseNOT(1ul) << endl;
+    cout << bitwiseNOT(1u) << endl;
+    cout << bitwiseNOT((unsigned short)1) << endl;
+    cout << (int)(bitwiseNOT((unsigned char)1)) << endl;
     for (const string& word : msg)
     {
         dumbmacro
