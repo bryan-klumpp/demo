@@ -5,4 +5,4 @@ testf "$file" || file=$(echon "$file"|tr ' ' '_')
 #testf "$file" || { file="$(bdate)_$file"; }
 #nano  --syntax=none  "$file"  #--mouse
 #a leafpad "$file"
-a kate "$file"
+code "$file"

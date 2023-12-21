@@ -64,20 +64,37 @@ int foo(int x)
 {
     return x;
 }
-string MultiCopyMethod(string s) {return "sssssssssssssssssss";}
-typedef decltype(&MultiCopyMethod) MultiCopyMethodDeclType;
+string MultiCopyMethod(string&& s);
 
-string MultiCopyMethod2(string s) {return "ssssssssssssssssssss 222222222222222222222222";}
+string MultiCopyMethod10(string s) {return "sssssssssssssssssss";}
+string MultiCopyMethod15(const string& s) {return "sssssssssssssssssss";} //seems like this needs to take const argument to allow accepting "a" type string literals
+
+typedef decltype(&MultiCopyMethod) MultiCopyMethodDeclType;
+typedef decltype(&MultiCopyMethod10) MultiCopyMethodDeclType10;
+typedef decltype(&MultiCopyMethod15) MultiCopyMethodDeclType15;
+
+string MultiCopyMethod2(string&& s) {return s+"ssssssssssssssssssss 222222222222222222222222 MultiCopyMethod2";}
+string MultiCopyMethod12(string s) {return s+"ssssssssssssssssssss 222222222222222222222222 MultiCopyMethod12";}
+string MultiCopyMethod16(const string& s) {return s+"ssssssssssssssssssss 222222222222222222222222 MultiCopyMethod16";}
 
 
 int main()
 {
     MultiCopyMethodDeclType mcmt = MultiCopyMethod2;
     mcmt = &MultiCopyMethod2;  //& is optional
+    string a = "aa";
     const MultiCopyMethodDeclType mcmtconst = mcmt; //& no worky here
-    cout << mcmt("a");
-
-
+    const MultiCopyMethodDeclType10 mcmtconst10 = MultiCopyMethod12; //& no worky here
+    const MultiCopyMethodDeclType15 mcmtconst16 = MultiCopyMethod16; //& no worky here
+    //cout << mcmtconst(a) << endl; //will not accept lvalue
+    cout << mcmtconst("aa") << endl;
+    cout << mcmtconst10(a) << endl;
+    cout << mcmtconst10("aa") << endl;
+    cout << mcmtconst16(a) << endl;
+    cout << mcmtconst16(static_cast<basic_string<char>>("a")) << endl;
+    cout << mcmtconst16(static_cast<string>("aa")) << endl;
+    cout << mcmtconst16("aa") << endl;
+    //cout << MultiCopyMethod("a") << endl;
 
     int (*fcnPtr)(int){ &foo }; // Initialize fcnPtr with function foo
     cout << (*fcnPtr)(5) << endl; // call function foo(5) through fcnPtr.
