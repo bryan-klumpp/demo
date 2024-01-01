@@ -26,17 +26,42 @@ void playWithFunctionByConstPointer(const string* s) {
 void playWithFunctionByConstReference(const string& s) {
     cout << "stringSandbox: " << s << endl;
 }
+string copyConstStringToNonConst(const string& s) {
+    return s;
+}
+void functionThatTriesToChangeStringReference(string& s) {
+    s = "something else";
+
+}
+void functionThatTriesToChangeStringPointer(string* s) { //Probably not a great idea normally, but just playing with the language
+    string temps = "something else pointed to";
+    s = &temps;
+}
+const void functionThatTriesHarderToChangeStringPointer(string** s) { //Probably not a great idea normally, but just playing with the language
+    string temps = "something else 2 pointed to";
+    cout << temps << endl;
+    cout << **s << endl;
+    cout << *s << endl;
+    cout << s << endl;
+    *s = &temps;
+}
+void changethestring ( string ** thestring) //https://stackoverflow.com/questions/26590199/changing-a-string-pointer-in-c  (I realize this link is for C but trying in C++.  Probably bad idea but just playing with the language)
+{
+    string tempstring = "string two is longer";
+    *thestring = &tempstring;
+}
 
 void ampersandAsteriskFun() { //https://stackoverflow.com/questions/6877052/use-of-the-operator-in-c-function-signatures
-        string asdf = "asdf";
+        const string asdf = "asdf";
         //playWithFunction(*asdf);
         //playWithFunction(&asdf);
         string newasdf = "asdf";
         string tt = "Helloooooooo, wordl";
         string autos = "Hello, wordl";
-        string* p = &asdf; // Here you get an address of asdf
+        string copyofasdf = copyConstStringToNonConst(asdf);
+        string* p = &copyofasdf; // Here you get an address of asdf
         playWithFunctionByConstPointer(p);
-        //playWithFunctionByConstReference(asdf);
+        playWithFunctionByConstReference(asdf);
         string* pp = &newasdf; // Here you get an address of asdf
         string* pnullptr = nullptr;
         cout << "eg1" << (p == nullptr) << endl;
@@ -45,28 +70,28 @@ void ampersandAsteriskFun() { //https://stackoverflow.com/questions/6877052/use-
         cout << "eg3" << (p == pp) << endl;
         cout << "eg3.5" << (*p == *pp) << endl;
         cout << "eg4" << (newasdf == tt) << endl;
-        string& r = asdf; // Here, r is a reference to asdf  
+        const string& r = copyofasdf; // Here, r is a reference to asdf  
         auto saddress = (string*)&asdf;
         string* rereferenced = saddress;
         auto divergentcopy = asdf;  
-        auto autop = &asdf;
+        auto autop = &copyofasdf;
         string& makereferencefrompointer = *&*&*&*&*&*&*&*&*&*&*&*&*p; // compiler abuse: this is to make a copy using a pointer
         string& makereferencefromautop = *&*&*&*&*&*&*&*&*&*&*&*&*autop; // compiler abuse: this is to make a copy using a pointer
         string makecopyfrompointer = *p; // this is to make a copy using a pointer
 
-        asdf = "Hello, world"; // corrected
-        assert( asdf == *p ); // this should be familiar to you, dereferencing a pointer
-        assert( asdf == r ); // this will always be true, they are twins, or the same thing rather
+        copyofasdf = "Hello, world"; // corrected
+        assert( copyofasdf == *p ); // this should be familiar to you, dereferencing a pointer
+        assert( copyofasdf == r ); // this will always be true, they are twins, or the same thing rather
 
         string copy1 = *p; // this is to make a copy using a pointer
         string copy = r; // this is what you saw, hope now you understand it better.
 
-        cout << "asdf: " << asdf << endl;
-        debugline(asdf)
+        cout << "asdf: " << copyofasdf << endl;
+        debugline(copyofasdf)
         debugline(autos)
-        cout << "&asdf: " << &asdf << endl;
+        cout << "&asdf: " << &copyofasdf << endl;
         //debugline(#&asdf)
-        cout << "*&asdf: " << *&asdf << endl;
+        cout << "*&asdf: " << *&copyofasdf << endl;
         cout << "p: " << p << endl;
         debugline(p)
         debugline(autop)
@@ -78,6 +103,20 @@ void ampersandAsteriskFun() { //https://stackoverflow.com/questions/6877052/use-
         debugLine ("makereferencefromautop", makereferencefromautop);
         debugline(makereferencefromautop)
         cout << "makecopyfrompointer: " << makecopyfrompointer << endl;
+        functionThatTriesToChangeStringReference(copyofasdf);
+        cout << copyofasdf << endl;
+        string eees = "eeeeeeeeee";
+        string* eee = &eees;
+        functionThatTriesToChangeStringPointer(eee);
+        cout << *eee << endl;
+        functionThatTriesHarderToChangeStringPointer(&eee);
+        cout << *eee << endl;  //front-truncated and seems to vary??
+        string teststringl = "string one";
+        string * teststring = &teststringl;
+        changethestring(&teststring);
+        cout << "teststring: " << *teststring << endl; // this seems like a bad idea, no worky, probably unsafe pointer stuff
+
+        
 }
 
 int multiply(int a, int b) { return a * b; }
@@ -126,7 +165,7 @@ int main()
     //cout << "The value of the product is: " << prod << endl;
 
     //decltype 
-    int (*func)(int, int) = multiply ;
+    int (*func)(int, int) = multiply;
     auto functionPointer = multiply;
     cout << (*functionPointer)(2,9) << endl;
     decltype (functionPointer) declType1;
