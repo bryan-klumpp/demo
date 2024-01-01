@@ -22,8 +22,18 @@ template <typename T> T bitwiseNOT(T i) {
 }
 void ampersandAsteriskFun() { //https://stackoverflow.com/questions/6877052/use-of-the-operator-in-c-function-signatures
         string s = "Hello, wordl";
+        string ss = "Hello, wordl";
+        string tt = "Helloooooooo, wordl";
         string autos = "Hello, wordl";
         string* p = &s; // Here you get an address of s
+        string* pp = &ss; // Here you get an address of s
+        string* pnullptr = nullptr;
+        cout << "eg1" << (p == nullptr) << endl;
+        //cout << "eg1.5" << (*p == *pnullptr) << endl; //segfault
+        cout << "eg2" << (s == ss) << endl;
+        cout << "eg3" << (p == pp) << endl;
+        cout << "eg3.5" << (*p == *pp) << endl;
+        cout << "eg4" << (ss == tt) << endl;
         string& r = s; // Here, r is a reference to s  
         auto saddress = (string*)&s;
         string* rereferenced = saddress;
