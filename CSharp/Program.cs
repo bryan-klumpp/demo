@@ -8,7 +8,18 @@ class Program {
          
         System.Xml.Linq.XElement xroot = System.Xml.Linq.XElement.Load(@"helloworld.xml");
         Console.WriteLine(xroot);
-        String testData = @" { b, b , 9 }"+"\n"+ @"{ a, a , 8 }"+"\n"+@"{  a, a, 2}";
+        
+        String replaceInThis = "abcdeffghijklmnopqrstuvwxyz";
+        MatchEvaluator myEvaluator = new MatchEvaluator( ReplaceCC ); //https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.matchevaluator?view=net-6.0  but not sure where the ^ and & came from as I had to remove them
+        Console.WriteLine(Regex.Replace(replaceInThis, "e(.*)g", myEvaluator));
+        //Console.WriteLine(Regex.Replace(replaceInThis, "e(.*)g", match => return "HelloWorldLambda");
+        
+        
+        
+        
+        
+        
+        //String testData = @" { b, b , 9 }"+"\n"+ @"{ a, a , 8 }"+"\n"+@"{  a, a, 2}";
         //Console.WriteLine(sortByRegexCapturingGroups(testData));
 
     }
@@ -17,6 +28,11 @@ class Program {
 
         return input;
     }
+
+     static String ReplaceCC( Match m )
+   {   return  m.Groups.Values.ElementAt(1).ToString().ToUpper();
+        // return m.ToString().ToUpper();
+   }
 
     class SortFormat {
         Regex regex;
