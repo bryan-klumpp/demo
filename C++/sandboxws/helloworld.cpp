@@ -33,11 +33,11 @@ void functionThatTriesToChangeStringReference(string& s) {
     s = "something else";
 
 }
-void functionThatTriesToChangeStringPointer(string* s) { //Probably not a great idea normally, but just playing with the language
+void functionThatTriesToChangeStringPointer(string* s) { //Probably not a great idea normally, but just playing with the language to maybe watch how things break
     string temps = "something else pointed to";
     s = &temps;
 }
-const void functionThatTriesHarderToChangeStringPointer(string** s) { //Probably not a great idea normally, but just playing with the language
+const void functionThatTriesHarderToChangeStringPointer(string** s) { //Probably not a great idea normally, but just playing with the language to maybe watch how things break
     string temps = "something else 2 pointed to";
     cout << temps << endl;
     cout << **s << endl;
@@ -45,78 +45,86 @@ const void functionThatTriesHarderToChangeStringPointer(string** s) { //Probably
     cout << s << endl;
     *s = &temps;
 }
-void changethestring ( string ** thestring) //https://stackoverflow.com/questions/26590199/changing-a-string-pointer-in-c  (I realize this link is for C but trying in C++.  Probably bad idea but just playing with the language)
+void changethestring ( string ** thestring) //https://stackoverflow.com/questions/26590199/changing-a-string-pointer-in-c  (I realize this link is for C but trying in C++.  Probably bad idea but just playing with the language to watch how things break)
 {
     string tempstring = "string two is longer";
     *thestring = &tempstring;
 }
+void pf1(string pref, string&& prefuniv) {
+    cout << "pref: " << pref << endl;
+    cout << "prefuniv: " << prefuniv << endl;
+    cout << "&pref: " << &pref << endl;
+    cout << "&prefuniv: " << &prefuniv << endl;
+    pref = "temps";
+    
+}
 
 void ampersandAsteriskFun() { //https://stackoverflow.com/questions/6877052/use-of-the-operator-in-c-function-signatures
-        const string asdf = "asdf";
-        //playWithFunction(*asdf);
-        //playWithFunction(&asdf);
-        string newasdf = "asdf";
-        string tt = "Helloooooooo, wordl";
-        string autos = "Hello, wordl";
-        string copyofasdf = copyConstStringToNonConst(asdf);
-        string* p = &copyofasdf; // Here you get an address of asdf
-        playWithFunctionByConstPointer(p);
-        playWithFunctionByConstReference(asdf);
-        string* pp = &newasdf; // Here you get an address of asdf
-        string* pnullptr = nullptr;
-        cout << "eg1" << (p == nullptr) << endl;
-        //cout << "eg1.5" << (*p == *pnullptr) << endl; //segfault
-        cout << "eg2" << (asdf == newasdf) << endl;
-        cout << "eg3" << (p == pp) << endl;
-        cout << "eg3.5" << (*p == *pp) << endl;
-        cout << "eg4" << (newasdf == tt) << endl;
-        const string& r = copyofasdf; // Here, r is a reference to asdf  
-        auto saddress = (string*)&asdf;
-        string* rereferenced = saddress;
-        auto divergentcopy = asdf;  
-        auto autop = &copyofasdf;
-        string& makereferencefrompointer = *&*&*&*&*&*&*&*&*&*&*&*&*p; // compiler abuse: this is to make a copy using a pointer
-        string& makereferencefromautop = *&*&*&*&*&*&*&*&*&*&*&*&*autop; // compiler abuse: this is to make a copy using a pointer
-        string makecopyfrompointer = *p; // this is to make a copy using a pointer
+    const string asdf = "asdf";
+    pf1("pref1","prefuniv");
+    //playWithFunction(*asdf);
+    //playWithFunction(&asdf);
+    string newasdf = "asdf";
+    string tt = "Helloooooooo, wordl";
+    string autos = "Hello, wordl";
+    string copyofasdf = copyConstStringToNonConst(asdf);
+    string* p = &copyofasdf; // Here you get an address of asdf
+    playWithFunctionByConstPointer(p);
+    playWithFunctionByConstReference(asdf);
+    string* pp = &newasdf; // Here you get an address of asdf
+    string* pnullptr = nullptr;
+    cout << "eg1" << (p == nullptr) << endl;
+    //cout << "eg1.5" << (*p == *pnullptr) << endl; //segfault
+    cout << "eg2" << (asdf == newasdf) << endl;
+    cout << "eg3" << (p == pp) << endl;
+    cout << "eg3.5" << (*p == *pp) << endl;
+    cout << "eg4" << (newasdf == tt) << endl;
+    const string& r = copyofasdf; // Here, r is a reference to asdf  
+    auto saddress = (string*)&asdf;
+    string* rereferenced = saddress;
+    auto divergentcopy = asdf;  
+    auto autop = &copyofasdf;
+    string& makereferencefrompointer = *&*&*&*&*&*&*&*&*&*&*&*&*p; // compiler abuse: this is to make a copy using a pointer
+    string& makereferencefromautop = *&*&*&*&*&*&*&*&*&*&*&*&*autop; // compiler abuse: this is to make a copy using a pointer
+    string makecopyfrompointer = *p; // this is to make a copy using a pointer
 
-        copyofasdf = "Hello, world"; // corrected
-        assert( copyofasdf == *p ); // this should be familiar to you, dereferencing a pointer
-        assert( copyofasdf == r ); // this will always be true, they are twins, or the same thing rather
+    copyofasdf = "Hello, world"; // corrected
+    assert( copyofasdf == *p ); // this should be familiar to you, dereferencing a pointer
+    assert( copyofasdf == r ); // this will always be true, they are twins, or the same thing rather
 
-        string copy1 = *p; // this is to make a copy using a pointer
-        string copy = r; // this is what you saw, hope now you understand it better.
+    string copy1 = *p; // this is to make a copy using a pointer
+    string copy = r; // this is what you saw, hope now you understand it better.
 
-        cout << "asdf: " << copyofasdf << endl;
-        debugline(copyofasdf)
-        debugline(autos)
-        cout << "&asdf: " << &copyofasdf << endl;
-        //debugline(#&asdf)
-        cout << "*&asdf: " << *&copyofasdf << endl;
-        cout << "p: " << p << endl;
-        debugline(p)
-        debugline(autop)
-        cout << "*p: " << *p << endl;
-        cout << "saddress: " << saddress << endl;
-        cout << "rereferenced: " << rereferenced << endl;
-        cout << "divergentcopy: " << divergentcopy << endl;
-        cout << "makereferencefrompointer: " << makereferencefrompointer << endl;
-        debugLine ("makereferencefromautop", makereferencefromautop);
-        debugline(makereferencefromautop)
-        cout << "makecopyfrompointer: " << makecopyfrompointer << endl;
-        functionThatTriesToChangeStringReference(copyofasdf);
-        cout << copyofasdf << endl;
-        string eees = "eeeeeeeeee";
-        string* eee = &eees;
-        functionThatTriesToChangeStringPointer(eee);
-        cout << *eee << endl;
-        functionThatTriesHarderToChangeStringPointer(&eee);
-        cout << *eee << endl;  //front-truncated and seems to vary??
-        string teststringl = "string one";
-        string * teststring = &teststringl;
-        changethestring(&teststring);
-        cout << "teststring: " << *teststring << endl; // this seems like a bad idea, no worky, probably unsafe pointer stuff
+    cout << "asdf: " << copyofasdf << endl;
+    debugline(copyofasdf)
+    debugline(autos)
+    cout << "&asdf: " << &copyofasdf << endl;
+    //debugline(#&asdf)
+    cout << "*&asdf: " << *&copyofasdf << endl;
+    cout << "p: " << p << endl;
+    debugline(p)
+    debugline(autop)
+    cout << "*p: " << *p << endl;
+    cout << "saddress: " << saddress << endl;
+    cout << "rereferenced: " << rereferenced << endl;
+    cout << "divergentcopy: " << divergentcopy << endl;
+    cout << "makereferencefrompointer: " << makereferencefrompointer << endl;
+    debugLine ("makereferencefromautop", makereferencefromautop);
+    debugline(makereferencefromautop)
+    cout << "makecopyfrompointer: " << makecopyfrompointer << endl;
+    functionThatTriesToChangeStringReference(copyofasdf);
+    cout << copyofasdf << endl;
+    string eees = "eeeeeeeeee";
+    string* eee = &eees;
+    functionThatTriesToChangeStringPointer(eee);
+    cout << *eee << endl;
+    functionThatTriesHarderToChangeStringPointer(&eee);
+    cout << *eee << endl;  //front-truncated and seems to vary??
+    string teststringl = "string one";
+    string * teststring = &teststringl;
+    changethestring(&teststring);
+    cout << "teststring: " << *teststring << endl; // this seems like a bad idea, no worky, probably unsafe pointer stuff
 
-        
 }
 
 int multiply(int a, int b) { return a * b; }

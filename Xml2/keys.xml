@@ -9,7 +9,7 @@ xsi:noNamespaceSchemaLocation="keys.xsd">
         <Dateborn>1900-01-01</Dateborn>
         <Gender>Gender1</Gender>
         <StudentID>StudentID1</StudentID>
-        <AddressID>AddressID1</AddressID>
+        <AddressID>AddressID2</AddressID>
     </Student>
     <Student>
         <Title>Title1</Title>

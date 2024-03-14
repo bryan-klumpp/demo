@@ -1,0 +1,58 @@
+<!-- http://www.datypic.com/books/defxmlschema/chapter17.html -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://someurl.com"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="order" type="OrderType">
+    <xs:keyref name="prodNumKeyRef" refer="prodNumKey">
+      <xs:selector xpath="items/*"/>
+      <xs:field xpath="@number"/>
+    </xs:keyref>
+    <xs:key name="prodNumKey">
+      <xs:selector xpath=".//product"/>
+      <xs:field xpath="number"/>
+    </xs:key>
+  </xs:element>
+  <xs:complexType name="OrderType">
+    <xs:sequence>
+      <xs:element name="number" type="xs:string"/>
+      <xs:element name="items" type="ItemsType"/>
+      <xs:element name="products" type="ProductsType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ItemsType">
+    <xs:choice maxOccurs="unbounded">
+      <xs:element name="shirt" type="ProductOrderType"/>
+      <xs:element name="hat" type="ProductOrderType"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="ProductOrderType">
+    <xs:sequence>
+      <xs:element name="quantity" type="xs:integer"/>
+      <xs:element name="color" type="ColorType" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="number" type="xs:integer"/>
+  </xs:complexType>
+  <xs:complexType name="ProductsType">
+    <xs:sequence>
+      <xs:element name="product" type="ProductType"
+                   maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProductType">
+    <xs:sequence>
+      <xs:element name="number" type="xs:integer"/>
+      <xs:element name="name" type="xs:string"/>
+      <xs:element name="price" type="PriceType"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ColorType">
+    <xs:attribute name="value" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="PriceType">
+    <xs:simpleContent>
+      <xs:extension base="xs:decimal">
+        <xs:attribute name="currency" type="xs:token"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>
