@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using System.Runtime.CompilerServices;
 
 class Program {
     static void Main(string[] args) {
@@ -10,29 +11,56 @@ class Program {
         Console.WriteLine(xroot);
         
         String replaceInThis = "abcdeffghijklmnopqrstuvwxyz";
-        MatchEvaluator myEvaluator = new MatchEvaluator( ReplaceCC ); //https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.matchevaluator?view=net-6.0  but not sure where the ^ and & came from as I had to remove them
-        Console.WriteLine(Regex.Replace(replaceInThis, "e(.*)g", myEvaluator));
-        //Console.WriteLine(Regex.Replace(replaceInThis, "e(.*)g", match => return "HelloWorldLambda");
-        
-        
-        
-        
-        
-        
+        Console.WriteLine(Regex.Replace(replaceInThis, "e(.*)g", new MatchEvaluator( ReplaceCC ))); //https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.matchevaluator?view=net-6.0  but not sure where the ^ and & came from as I had to remove them
+        Console.WriteLine(Regex.Replace(replaceInThis, "e(.*)g", m=>(m.Groups.Values.ElementAt(1).ToString().ToUpper())));
+        var enumerator = xroot.Descendants().Where(elem => (elem.Attribute("id").Value.Equals("elementl2id1"))).GetEnumerator();
+        while(enumerator.MoveNext()) {
+            Console.WriteLine(enumerator.Current);
+        }
+        Console.WriteLine(getSingleChildElementShallowWithAttribute1value2("id","elementl2id1",xroot));
         //String testData = @" { b, b , 9 }"+"\n"+ @"{ a, a , 8 }"+"\n"+@"{  a, a, 2}";
         //Console.WriteLine(sortByRegexCapturingGroups(testData));
+        Console.WriteLine(Regex.Replace(replaceInThis, "e(.*)g", m=>(getGroupI(m, 1)))); //go out with a bang
+        Console.WriteLine(Regex.Replace(replaceInThis, "e(.*)g", m=>(getGroupI(m, 2)))); //go out with a bang
 
+   }
+    static XElement getSingleChildElementShallowWithAttribute1value2(String attributeName, String attributeValue, XElement sourceElem) {
+        var enumerator = sourceElem.Descendants().Where(elem => (elem.Attribute("id") != null ? elem.Attribute("id").Value.Equals("elementl2id1") : false)).GetEnumerator();
+        String exceptionTextBase = " child element with attribute "+attributeName+"=\""+attributeValue+"\"";
+         if(enumerator.MoveNext()) {
+            var result = enumerator.Current;
+            if(enumerator.MoveNext()) {
+                throw new Exception("more than one (one level down - when one was expected)" + exceptionTextBase);
+            }
+            return result;
+        } else {
+            throw new Exception("could not find (one level down)"+exceptionTextBase);
+        }
     }
+
+     static String ReplaceCC( Match m )
+    { 
+              Console.WriteLine("Match value: "+m.Value);
+ 
+          return  m.Groups.Values.ElementAt(1).ToString().ToUpper();
+        // return m.ToString().ToUpper();
+   }
+   static String getGroupI(Match m, int base1GroupNum) {
+        int groupNum = base1GroupNum + 1; //I like base 0 for this where 0 is the whole string
+        IEnumerable<Group> groupValues = m.Groups.Values;
+        if(groupValues.Count() < groupNum) {
+            throw new Exception("Cannot find group index "+base1GroupNum+" in match string "+m.Value+" (where 0 is the whole string, 1 is the first subgroup)");
+        } else {
+            return groupValues.ElementAt(1).ToString().ToUpper();
+        }
+   }
+
 
     public static string sortByRegexCapturingGroups(String input) {
 
         return input;
     }
 
-     static String ReplaceCC( Match m )
-   {   return  m.Groups.Values.ElementAt(1).ToString().ToUpper();
-        // return m.ToString().ToUpper();
-   }
 
     class SortFormat {
         Regex regex;
