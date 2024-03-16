@@ -181,7 +181,7 @@ int main()
     //cout << "try to invoke declType1: "<<declType1(2,4)<<endl;  //infinite loop /segmentation fault?!
     cout<<"fp1invoke: "<<(*functionPointer)(2,9) << endl;
     cout<<"multiplyasterisk: "<<(*multiply)(2,9) << endl;
-    vector<string> msg {"Hello", "C++", "World", "from", "VS Code", "and the C++ extensionx!"};
+    vector<string> msg {"Hello", "C++", "World", "from", "VS Code Eclipse", "and the C++ extensionx!"};
     cout << bitwiseNOT(1ul) << endl;
     cout << bitwiseNOT(1u) << endl;
     cout << bitwiseNOT((unsigned short)1) << endl;

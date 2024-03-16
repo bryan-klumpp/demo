@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/b/mnt/loopy8/b8_/code/github_demo/C++/eclcpp/cmakeExample/cmakeExample.cpp
+iostream
+-
+config.h
+/home/b/mnt/loopy8/b8_/code/github_demo/C++/eclcpp/cmakeExample/config.h
+
+config.h
+

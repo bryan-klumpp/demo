@@ -1,6 +1,6 @@
 <xml>
     <elementl1 id="elementl1id1">
-        <elementl2 id="elementl2id1"></elementl2>
+        <elementl2 id="elementl2id1" val="Hello World"></elementl2>
     </elementl1>
     <elementl1 id="elementl1id2">
         <elementl2 id="elementl2id2"></elementl2>

@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/b/mnt/loopy8/b8_/code/github_demo/C++/eclcpp/cmakeExample/build/default",
+  "command": "/usr/bin/c++      -o CMakeFiles/helloworld.dir/helloworld.cpp.o -c /home/b/mnt/loopy8/b8_/code/github_demo/C++/eclcpp/cmakeExample/helloworld.cpp",
+  "file": "/home/b/mnt/loopy8/b8_/code/github_demo/C++/eclcpp/cmakeExample/helloworld.cpp"
+},
+{
+  "directory": "/home/b/mnt/loopy8/b8_/code/github_demo/C++/eclcpp/cmakeExample/build/default",
+  "command": "/usr/bin/c++   -I/home/b/mnt/loopy8/b8_/code/github_demo/C++/eclcpp/cmakeExample/build/default    -o CMakeFiles/cmakeExample.dir/cmakeExample.cpp.o -c /home/b/mnt/loopy8/b8_/code/github_demo/C++/eclcpp/cmakeExample/cmakeExample.cpp",
+  "file": "/home/b/mnt/loopy8/b8_/code/github_demo/C++/eclcpp/cmakeExample/cmakeExample.cpp"
+}
+]
