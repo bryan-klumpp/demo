@@ -1,7 +1,7 @@
 #sef "$@"; return;
 
 #browser=/usr/bin/google-chrome
-browser=firefox
+browser=/usr/bin/google-chrome
 isequal "$1" f && { browser=firefox; shift 1; }
 jnl "searched for $*"
 searchstr="$(j urlencode "$*")"

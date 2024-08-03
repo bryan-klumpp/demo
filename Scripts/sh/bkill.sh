@@ -1,1 +1,1 @@
-sudo kill -9 $1
+sudo kill -9 "$@"

@@ -1,1 +1,1 @@
-/usr/share/code/code "$1"
+/usr/share/code/code —disable-gpu "$1"

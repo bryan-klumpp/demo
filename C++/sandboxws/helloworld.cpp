@@ -123,7 +123,7 @@ void ampersandAsteriskFun() { //https://stackoverflow.com/questions/6877052/use-
     string teststringl = "string one";
     string * teststring = &teststringl;
     changethestring(&teststring);
-    cout << "teststring: " << *teststring << endl; // this seems like a bad idea, no worky, probably unsafe pointer stuff
+    cout << "teststring: " << *teststring << endl; // this seems like a bad idea after changing the pointer, no worky, probably unsafe pointer stuff
 
 }
 
