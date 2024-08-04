@@ -1,5 +1,5 @@
-cd /b/mnt/loopy8/b8_/code/github_demo/C++/sandboxws &&
-cmake --build /l/8/code/github_demo/C++/sandboxws/build --config Debug --target all -j 6 -- &&
+cd /b/mnt/loopy8/b8_/code/github_demo/cpp/sandboxws &&
+cmake --build /l/8/code/github_demo/cpp/sandboxws/build --config Debug --target all -j 6 -- &&
 ./build/BasicProject
 
 

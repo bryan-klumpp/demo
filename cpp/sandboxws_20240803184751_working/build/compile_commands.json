@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/l/8/code/github_demo/C++/sandboxws/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/BasicProject.dir/helloworld.cpp.o -c /l/8/code/github_demo/C++/sandboxws/helloworld.cpp",
+  "file": "/l/8/code/github_demo/C++/sandboxws/helloworld.cpp"
+}
+]

@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/b/mnt/loopy8/b8_/code/github_demo/cpp/sandboxws/build",
+  "command": "/usr/bin/c++   -g -std=c++14 -o CMakeFiles/BasicProject.dir/helloworld.cpp.o -c /b/mnt/loopy8/b8_/code/github_demo/cpp/sandboxws/helloworld.cpp",
+  "file": "/b/mnt/loopy8/b8_/code/github_demo/cpp/sandboxws/helloworld.cpp"
+}
+]
