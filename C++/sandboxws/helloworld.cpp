@@ -20,6 +20,18 @@ template <typename T> T bitwiseNOT(T i) {
     static_assert(std::is_unsigned<T>::value && std::is_integral<T>::value, "T must be unsigned integral type (integer, long, etc.)");
     return ~i;
 }
+
+enum MyType { enum1 = 1<<1, enum2 =  1<<2, enum3 = 1<<3, LASTBASE = enum3, ALL = enum1 | enum2 | enum3 };
+constexpr static bool enumtest(const MyType& ALL, const MyType& lastBase) {
+    return ((ALL + 2) & (ALL + 1)) == 0 && ALL > lastBase;
+}
+static_assert( enumtest(MyType::ALL, MyType::LASTBASE) );
+static_assert( ((MyType::ALL + 2) & (MyType::ALL + 1)) == 0 && MyType::ALL > MyType::LASTBASE );
+
+void enumfun() {
+// see the static_asserts, this is just for developing additional functionality
+}
+
 void playWithFunctionByConstPointer(const string* s) {
     cout << "stringSandbox: " << s << endl;
 }
@@ -148,6 +160,11 @@ string MultiCopyMethod16(const string& s) {return s+"ssssssssssssssssssss 222222
 
 int main()
 {
+    enumfun();
+}
+
+void allfun() {
+    enumfun();
     MultiCopyMethodDeclType mcmt = MultiCopyMethod2;
     mcmt = &MultiCopyMethod2;  //& is optional
     string a = "aa";

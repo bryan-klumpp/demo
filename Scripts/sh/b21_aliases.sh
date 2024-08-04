@@ -327,7 +327,6 @@ alias body='c 444'
 alias vanguard='fox https://investor.vanguard.com/home/'
 alias flax='optimalflax'
 alias kcd='kcdefense'
-alias go='0day'
 alias 0day='o /l/27/0day.odt'
 alias ckcd='ckdvd'
 
