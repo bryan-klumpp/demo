@@ -7,17 +7,16 @@ import { HousingLocationInfoInterface } from '../housinglocation';
   selector: 'app-details',
   imports: [],
   template: `
-    <p>
-      details works!  {{housingLocationId}}
-    </p>
+    <article><img class="listing-photo" src="{{housingLocation?.photo}}" alt="Exterior of {{housingLocation?.name}}" crossorigin/></article>
   `,
-  styles: ``
+  styleUrls: ['./details.css'],
 })
 export class Details {
 route:ActivatedRoute = inject(ActivatedRoute);
-housingLocationId = -1;
+housingService=inject(HousingService);
+housingLocation:HousingLocationInfoInterface | undefined;
 constructor(){
-this.housingLocationId = Number(this.route.snapshot.params['id']);
-
+const housingLocationId=Number(this.route.snapshot.params['id']);
+this.housingLocation=this.housingService.getHousingLocationById(housingLocationId);
 }
 }
