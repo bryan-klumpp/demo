@@ -7,9 +7,11 @@ import { HousingService } from '../housingservice';
   selector: 'app-home',
   imports: [HousingLocation],
   template: `
-    <section><form><input type="text" placeholder="Filter by city" /><button class="primary" type="button">Search</button></form></section>
+    <section><form>
+      <input type="text" placeholder="Filter by city" #filter />
+      <button class="primary" type="button" (click)="filterResults(filter.value)">Search</button></form></section>
     <section class="results">
-      @for(nextHousingLocation of housingLocationList; track $index) {
+      @for(nextHousingLocation of filteredLocationList; track $index) {
         <app-housing-location [housingLocation]="nextHousingLocation"></app-housing-location>
       }
     </section>
@@ -17,11 +19,21 @@ import { HousingService } from '../housingservice';
   styleUrls: ['./home.css'],
 })
 export class Home {
-     readonly baseUrl = 'https://angular.dev/assets/images/tutorials/common';
+     //readonly baseUrl = 'https://angular.dev/assets/images/tutorials/common';
+
+     filterResults(text:string){
+      if(!text){
+        this.filteredLocationList = this.housingLocationList;
+      }else {
+        this.filteredLocationList = this.housingLocationList.filter((housingLocation)=>housingLocation?.city.toLowerCase().includes(text.toLowerCase()));
+      }
+     }
+
 
 
   //housingService:HousingService= ;
   housingLocationList: HousingLocationInfoInterface[] = inject(HousingService).getAllHousingLocations();
+  filteredLocationList: HousingLocationInfoInterface[] = this.housingLocationList;
   // constructor() {
   //   this.housingLocationList = ;
   // }
