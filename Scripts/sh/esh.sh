@@ -1,19 +1,23 @@
 [ $# -eq 0 ] && { c $(b 644)/sh; return; }
 
+#shpath=$(first /sh /c/b/code/demo/Scripts/sh /mnt/c/b/code/demo/Scripts/sh)
+shpath=$(shpath)
+
+echo 'using shpath: '$shpath
 
 echo asdf
 #it worked!!
-eshalias=$(grep -E '\W'$1'=' /sh/b21_* )
+eshalias=$(grep -E '\W'$1'=' "shpath"/b21_* )
 isval $eshalias && { ealiases ; return; }
 
-sfile=/sh/$1.sh
+sfile="$shpath"/$1.sh
 rchive 'before editing script '"$1.sh" "$sfile"
 ! test -f $sfile && newscript=yes || newscript=no
 #nano --syntax=none $sfile   #--mouse disables selection so not always desirable
 nano $sfile
 
 test -f $sfile || return 84  #must not have saved new file, skip extra steps
-#echo 'trying to copy' && cp -a $sfile /sh  
+#echo 'trying to copy' && cp -a $sfile "$shpath"  
 # co $newscript 'yes' && mkf  #does not seem to work unless you do manually
 
 mkfa
