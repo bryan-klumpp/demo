@@ -1,1 +1,0 @@
-. /t/brscommit.sh

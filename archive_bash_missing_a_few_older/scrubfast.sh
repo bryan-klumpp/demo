@@ -1,1 +1,0 @@
-sd btrfs scrub start -B -r -c 1 -n 0 "$@"

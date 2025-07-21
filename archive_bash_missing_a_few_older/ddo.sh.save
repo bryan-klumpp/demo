@@ -1,5 +1,0 @@
-qgsettings set org.gnome.desktop.media-handling automount false
-mount |grep -E "$1" && { echo 'ERROR - ALREADY MOUNTED'; return 43; exit 34; }
-bbof="$1"; shift 1
-ps -ef | grep --silent ' pv ' && { sudo dd of="$bbof" bs=MiB "$@"; return; }
-                              pv | sudo dd of="$bbof" bs=MiB "$@"

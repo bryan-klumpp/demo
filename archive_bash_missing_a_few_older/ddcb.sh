@@ -1,1 +1,0 @@
-dd iflag=count_bytes count="$1"

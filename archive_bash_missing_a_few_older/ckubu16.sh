@@ -1,1 +1,0 @@
-ddi $1 iflag=count_bytes count=1649590272 | sha256sum | grep -E '^|^6b505fd3b6f816f8ff058710f127a9900e9233e496783ce08a0022814d224810'

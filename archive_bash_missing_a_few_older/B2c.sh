@@ -1,1 +1,0 @@
-pill B2_riboflavin_biocoenzymated_NewPi_50mg

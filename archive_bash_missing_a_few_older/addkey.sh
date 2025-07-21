@@ -1,1 +1,0 @@
-sd cryptsetup luksAddKey /dev/disk/by-uuid/$1 /root/keyfile_slot_8

@@ -1,1 +1,0 @@
-mkdir "$(echo -n "$(paste)" | sed --regexp-extended 's#/#_#g')"

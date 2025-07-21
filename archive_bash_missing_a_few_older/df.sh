@@ -1,1 +1,0 @@
-/bin/df -h | ug ' /(snap|dev|run|sys|boot)'

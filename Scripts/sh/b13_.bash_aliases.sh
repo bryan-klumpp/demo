@@ -16,8 +16,8 @@ fourtd=/dev/disk/by-uuid/e1af1621-c92e-4013-8c8b-67a8e6b69297
 #  grep -E --silent '\S' <(ls /4) || { echo '/4 not mounted properly'; return 4; }
 
 #test -e /sh/b2323_* || . /sh/mkf.sh
-#. /sh/b2323_* # generated functions - maybe should come before aliases due to possible issue with dependencies
-. /sh/b21_*   # manual aliases
+. "$(shpath)"/generated_functions.sh # generated functions - maybe should come before aliases due to possible issue with dependencies
+. "$(shpath)"/b21_*   # manual aliases
 xrandr -q | grep 'current 320 x 200' && { son; exit; } #special case just turn screen on and close prompt
 bbg #will invoke redshift etc
 #test -e /ram || { sudo mkdir /ram && sudo chown b /ram; }
@@ -41,7 +41,7 @@ false && {   #see init.sh - this is redundant
  }  #RAMDISK!
 
 
-. /sh/b222_*  # global constants
+. "$(shpath)"/b222_*  # global constants
 #echo 'should have created vars'
 #echo Hello World
 
@@ -89,7 +89,7 @@ export qq='"'
 
 #declare -x -g -f function testfunction() { echo woohoo; }
 
-. /sh/functions_ripped_from_b13_bashrc.sh
+. "$(shpath)"/functions_ripped_from_b13_bashrc.sh
 # how NOT to write scripts
 
 #credit1  Modified by me but got the sort-then-head idea, putting a number at the beginning of the line so you can sort numerically, from Ted Hopp (http://stackoverflow.com/users/535871/ted-hopp) at http://stackoverflow.com/questions/5046261/grepsort-and-display-only-the-first-line which was licensed under https://creativecommons.org/licenses/by-sa/3.0/

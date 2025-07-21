@@ -1,1 +1,0 @@
-f '(nocopy|Moth[1-9]|Greed[1-9])[^/]*$'

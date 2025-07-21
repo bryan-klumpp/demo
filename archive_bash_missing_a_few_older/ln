@@ -1,3 +1,0 @@
-/usr/bin/sudo rm /sh
-/usr/bin/sudo ln -s $(/bin/pwd) /sh
-/usr/bin/sudo -K

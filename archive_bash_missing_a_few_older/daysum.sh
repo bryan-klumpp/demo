@@ -1,1 +1,0 @@
-sql 'select sum(duration) from v_do_log where bday like '$(bdates)' 

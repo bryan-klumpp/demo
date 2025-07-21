@@ -1,1 +1,0 @@
-tswitch $work:Becky "$@"

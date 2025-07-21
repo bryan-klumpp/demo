@@ -1,1 +1,0 @@
-find "$@"|bxargs '[ $(grep -c '\''\$'\'' {}) -eq 0 ] && echo {}' 

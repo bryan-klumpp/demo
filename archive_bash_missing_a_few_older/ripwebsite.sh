@@ -1,1 +1,0 @@
-wget --wait=0 --tries=1 --read-timeout=.3 --level=inf --limit-rate=2000K --recursive --page-requisites --user-agent=Mozilla --no-parent --convert-links --adjust-extension --no-clobber -e robots=off "$1"  #credit https://simpleit.rocks/linux/how-to-download-a-website-with-wget-the-right-way/

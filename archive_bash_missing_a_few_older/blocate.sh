@@ -1,1 +1,0 @@
-sudo locate --regex --database=/mnt/5tb/b/locatedb/main "$@"

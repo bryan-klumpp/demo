@@ -1,1 +1,0 @@
-a chromium-browser https://leplb0240.upoint.alight.com/web/cat/login?forkPage=false#/

@@ -1,1 +1,0 @@
-url /media/b/enc_midsize/b22_rchive/archive/20191016140514_before editing script ssu.sh

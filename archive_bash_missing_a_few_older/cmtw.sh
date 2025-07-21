@@ -1,1 +1,0 @@
-tfile=/t/$(btime).txt; mcmt $@ > $tfile; a lowriter $tfile ;

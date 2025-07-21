@@ -1,1 +1,0 @@
-sudo umount /4

@@ -1,1 +1,0 @@
-sd smartctl -a -d sat /dev/disk/by-id/ata-SanDisk_SD9SN8W256G_181227423863

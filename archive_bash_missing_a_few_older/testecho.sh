@@ -1,1 +1,0 @@
-echo this was output by /b/sh/testecho.sh

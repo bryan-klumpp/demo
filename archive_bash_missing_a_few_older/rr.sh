@@ -1,1 +1,0 @@
-grep --color=none Ringger

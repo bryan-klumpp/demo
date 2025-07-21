@@ -1,1 +1,0 @@
-echo "$@" 1>&2   #pretty basic but credit http://www.linuxquestions.org/questions/linux-newbie-8/bash-scripting-echo-to-standard-error-542868/

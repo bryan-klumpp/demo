@@ -1,1 +1,0 @@
-sudo e2label "$@"

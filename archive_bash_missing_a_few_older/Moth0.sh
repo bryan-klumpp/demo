@@ -1,1 +1,0 @@
-grep -vE 'Moth[1-9]|\.(img(\.(gz|7z|zip))?|(gz|7z|zip))$'

@@ -1,1 +1,0 @@
-xcopy /e /c /i /f /g /h /r /k /y /b c:\Users\* %2

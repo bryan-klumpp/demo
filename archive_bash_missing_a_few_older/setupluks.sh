@@ -1,3 +1,0 @@
-[ $# -eq 0 ] && { echo 'usage: setupluks e /e uuid1 uuid2 ,noatime,autodefrag'; return; } #compress=zli...
-mappera=$1; mountpt=$2; uuid1=$3; uuid2=$4; opts=$5
-grep $uuid1 crypttab 

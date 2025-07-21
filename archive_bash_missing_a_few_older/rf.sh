@@ -1,1 +1,0 @@
-jnl|g 'red flag warning sign'

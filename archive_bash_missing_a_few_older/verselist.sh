@@ -1,1 +1,0 @@
-bxargs '. /sh/kjvx.sh {}'

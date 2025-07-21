@@ -1,1 +1,0 @@
-sed --zero-terminated 's/ \|\n\|\r//g'

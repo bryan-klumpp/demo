@@ -1,1 +1,0 @@
-inf bash|g 'SHELL GRAMMAR' -A 10000|l

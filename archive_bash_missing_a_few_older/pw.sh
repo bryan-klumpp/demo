@@ -1,1 +1,0 @@
-cat /b/google/google.txt | g $1 ;
