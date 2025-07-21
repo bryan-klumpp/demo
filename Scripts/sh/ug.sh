@@ -1,1 +1,1 @@
-nocolor | G -v "$@"
+nocolor | gg -v "$@"

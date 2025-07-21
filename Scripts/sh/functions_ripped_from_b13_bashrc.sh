@@ -370,13 +370,13 @@ function storein2() {
 
 
 function gC() { 
-G "$@" -i --color=always 
+gg "$@" -i --color=always 
 } 
 
 
-function G0() { G "$@" --null-data ; }
+function G0() { gg "$@" --null-data ; }
 
-function Gleaf() { G "$@"'[^/]*/?$' ; }
+function Gleaf() { gg "$@"'[^/]*/?$' ; }
 
 
 
@@ -534,7 +534,7 @@ function dad() { te $(b 3)/dad.txt; }
 function jnlG() { 
 isval $1 || { cat $jnlfile; return; }
 mytime=$(btime)
-echo "\n$mytime $@" >> $jnlfile ; tail -n 3 $jnlfile |G $mytime'.*$|^' ; 
+echo "\n$mytime $@" >> $jnlfile ; tail -n 3 $jnlfile |gg $mytime'.*$|^' ; 
 }
 function jnlbak() { cp $jnlfile /b/archive/$(btime)_jnl.txt; }
 function jnlf() { 
