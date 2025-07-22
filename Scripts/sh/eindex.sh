@@ -1,1 +1,1 @@
-a vscode /l/8/index.htm
+a vscode ${HOME}/l/8/index.htm

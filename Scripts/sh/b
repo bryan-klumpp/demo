@@ -14,8 +14,8 @@ fourtd=/dev/disk/by-uuid/e1af1621-c92e-4013-8c8b-67a8e6b69297
 #  grep -E --silent '\S' <(ls /4) || { echo '/4 not mounted properly'; return 4; }
 
 test 
-. /sh/b2323_* # generated functions - maybe should come before aliases due to possible issue with dependencies
-. /sh/b21_*   # manual aliases
+. $(shpath)/b2323_* # generated functions - maybe should come before aliases due to possible issue with dependencies
+. $(shpath)/b21_*   # manual aliases
 xrandr -q | grep 'current 320 x 200' && { son; exit; } #special case just turn screen on and close prompt
 #test -e /ram || { sudo mkdir /ram && sudo chown b /ram; }
 test -e /ram/t.flag || init
@@ -35,8 +35,8 @@ false && {   #see init.sh - this is redundant
 	########## bbg  #should invoke bredshift but seems to be failing to register anything permanently
         #cp -a $(b 19)/*txt /ram/filenamefindcache & disown;    #async launch copy filename cache to RAM
  }  #RAMDISK!
-co "$(pwd)" '^/home/b$' && cd $(cat /l/14)  #last used directory shortcut if starting at default
-. /sh/b222_*  # global constants
+co "$(pwd)" '^/home/b$' && cd $(cat /tmp/b14_wd.txt)  #last used directory shortcut if starting at default
+. $(shpath)/b222_*  # global constants
 #echo 'should have created vars'
 #echo Hello World
 
@@ -46,7 +46,7 @@ shopt -s dotglob
 #gsettings set org.gnome.desktop.media-handling automount false
 gsettings set org.gnome.desktop.wm.preferences focus-new-windows smart #default was 'smart', enum and strict are options  #gsettings range org.gnome.desktop.wm.preferences focus-new-windows
 
-#source /l/1/dec myexport yuio
+#source ${HOME}/l/1/dec myexport yuio
 #echo 'trysubdeclare:'$myexport
 
 #colori=40
@@ -57,12 +57,12 @@ gsettings set org.gnome.desktop.wm.preferences focus-new-windows smart #default 
 
 #echo asdf|grep --color=auto sd  #grep test debugging
 #-----------  end of startup stuff -------------------------#
-shdir=/l/1
+shdir=${HOME}/l/1
 
 strn='\s*(\s*<[HG][0-9]{1,5}>)*\s*'
 
 #---------------------------------------------------------------------------------------------
-function echofunction() { . /l/1/becho.sh "$@"; }
+function echofunction() { . ${HOME}/l/1/becho.sh "$@"; }
 function btr() { ! isval $1 && jnl|g 'tr:' || jnl tr:"$*" ; }
 
 GC="ms=30;47:mc=02;32:sl=:cx=:fn=34:ln=31:bn=30:se=30"  
@@ -84,15 +84,15 @@ export qq='"'
 
 #declare -x -g -f function testfunction() { echo woohoo; }
 
-. /sh/functions_ripped_from_b13_bashrc.sh
+. $(shpath)/functions_ripped_from_b13_bashrc.sh
 # how NOT to write scripts
 
 #credit1  Modified by me but got the sort-then-head idea, putting a number at the beginning of the line so you can sort numerically, from Ted Hopp (http://stackoverflow.com/users/535871/ted-hopp) at http://stackoverflow.com/questions/5046261/grepsort-and-display-only-the-first-line which was licensed under https://creativecommons.org/licenses/by-sa/3.0/
 
 #tee http://unix.stackexchange.com/questions/41246/how-to-redirect-output-to-multiple-log-files
 
-#. /l/1/generated_functions.sh
-#. /l/21  #manual aliases
+#. ${HOME}/l/1/generated_functions.sh
+#. ${HOME}/l/21  #manual aliases
 
 bset gmtoffset 5
 

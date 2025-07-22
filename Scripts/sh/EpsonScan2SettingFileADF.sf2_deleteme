@@ -154,7 +154,7 @@
                         "int": 1
                     },
                     "UserDefinePath": {
-                        "string": "/l/889"
+                        "string": "${HOME}/l/889"
                     },
                     "UserScanAreaHeight": {
                         "int": 0

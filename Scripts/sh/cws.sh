@@ -1,1 +1,1 @@
-c /l/8/code/github_demo
+c ${HOME}/l/8/code/github_demo

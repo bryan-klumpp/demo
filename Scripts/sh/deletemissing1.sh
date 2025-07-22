@@ -3,5 +3,5 @@ test -z "$refdir" && refdir="$(cat /ram/var/refdir)"   #just in case $2 refdir n
 
 test -f "$1" || exit 0      #only process real files
 
-echo 'rm '$(. /sh/esc.sh "$1") >> /t/deletemissingdebug.sh  #debugging
-test -f "$refdir/$1" || echo 'rm '$(. /sh/esc.sh "$1") >> /t/deletemissing.sh
+echo 'rm '$(. $(shpath)/esc.sh "$1") >> /t/deletemissingdebug.sh  #debugging
+test -f "$refdir/$1" || echo 'rm '$(. $(shpath)/esc.sh "$1") >> /t/deletemissing.sh

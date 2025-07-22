@@ -1,1 +1,1 @@
-bxargs '. /sh/b21_* && . /sh/b2323_* && '"$@"
+bxargs '. $(shpath)/b21_* && . $(shpath)/b2323_* && '"$@"

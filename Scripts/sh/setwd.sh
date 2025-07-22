@@ -1,3 +1,3 @@
 wd=$(can $(pwd))
-test -f $(b 14) || { echo -n "$wd" > /sh/b14_wd.txt && bln1 /sh; return; }
-echo -n "$wd" > $(b 14)
+test -f ${HOME}/b14_wd.txt || { echo -n "$wd" > ${HOME}/b14_wd.txt && bln1 ~; return; }
+echo -n "$wd" > ${HOME}/b14_wd.txt

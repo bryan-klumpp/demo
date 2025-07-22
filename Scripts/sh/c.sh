@@ -18,9 +18,9 @@ echo '' > /tmp/nosuch  #initialize
 p1="$*"
 #test -d "$(paste)" && p1="$(paste)"
 
-isint "$p1" && test -e "$p1" && test -d /l/"$p1" && { echo 'sorry... ambiguous command due to direct integer subdirectory existence; aborting.' ; return; } 
-  isint "$p1" && { test -d /l/"$p1" && cd /l/"$p1" && can && bd; return; }   #shortcut for integer arguments going straight to special marked directories b1_*, etc
-# isint "$p1" && { test -d /l/"$p1" && cd /l/"$p1"        && bd; return; }   #shortcut for integer arguments going straight to special marked directories b1_*, etc
+isint "$p1" && test -e "$p1" && test -d ${HOME}/l/"$p1" && { echo 'sorry... ambiguous command due to direct integer subdirectory existence; aborting.' ; return; } 
+  isint "$p1" && { test -d ${HOME}/l/"$p1" && cd ${HOME}/l/"$p1" && can && bd; return; }   #shortcut for integer arguments going straight to special marked directories b1_*, etc
+# isint "$p1" && { test -d ${HOME}/l/"$p1" && cd ${HOME}/l/"$p1"        && bd; return; }   #shortcut for integer arguments going straight to special marked directories b1_*, etc
 
                                        echo "$p1" | csubrout "$p1" || 
                                        ls -d 2>&1 | csubrout "$p1" ||

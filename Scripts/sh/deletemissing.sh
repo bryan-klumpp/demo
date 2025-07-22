@@ -7,7 +7,7 @@
 
 escapedref="$(esc "$1")"
 echo "cd $(pwd) || return 39" | tee /t/deletemissingdirs.sh > /t/deletemissing.sh #overwrite create new output batches
-f|bxargs '. /sh/deletemissingx.sh {} '"$escapedref"
+f|bxargs '. $(shpath)/deletemissingx.sh {} '"$escapedref"
 cat /t/deletemissingdirs.sh | tros >> /t/deletemissing.sh
 echo -n '. /t/deletemissing.sh' | clip
 cat /t/deletemissing.sh

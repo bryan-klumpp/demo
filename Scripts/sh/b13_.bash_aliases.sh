@@ -1,4 +1,4 @@
-#grep 'b13_' /home/b/.bashrc || { echo '. /sh/b13_bashrc.sh' >> /home/b/.bashrc; }
+#grep 'b13_' /home/b/.bashrc || { echo '. $(shpath)/b13_bashrc.sh' >> /home/b/.bashrc; }
 
 
 #return
@@ -15,13 +15,13 @@ fourtd=/dev/disk/by-uuid/e1af1621-c92e-4013-8c8b-67a8e6b69297
 }
 #  grep -E --silent '\S' <(ls /4) || { echo '/4 not mounted properly'; return 4; }
 
-#test -e /sh/b2323_* || . /sh/mkf.sh
+#test -e $(shpath)/b2323_* || . $(shpath)/mkf.sh
 . "$(shpath)"/generated_functions.sh # generated functions - maybe should come before aliases due to possible issue with dependencies
 . "$(shpath)"/b21_*   # manual aliases
 xrandr -q | grep 'current 320 x 200' && { son; exit; } #special case just turn screen on and close prompt
 bbg #will invoke redshift etc
 #test -e /ram || { sudo mkdir /ram && sudo chown b /ram; }
-#test -e /ram/t.flag || . /sh/bootinit.sh
+#test -e /ram/t.flag || . $(shpath)/bootinit.sh
 
 false && {   #see init.sh - this is redundant
         mkdir /ram/var
@@ -51,7 +51,7 @@ shopt -s dotglob
 #gsettings set org.gnome.desktop.media-handling automount false
 gsettings set org.gnome.desktop.wm.preferences focus-new-windows smart #default was 'smart', enum and strict are options  #gsettings range org.gnome.desktop.wm.preferences focus-new-windows
 
-#source /l/1/dec myexport yuio
+#source ${HOME}/l/1/dec myexport yuio
 #echo 'trysubdeclare:'$myexport
 
 #colori=40
@@ -62,12 +62,12 @@ gsettings set org.gnome.desktop.wm.preferences focus-new-windows smart #default 
 
 #echo asdf|grep --color=auto sd  #grep test debugging
 #-----------  end of startup stuff -------------------------#
-shdir=/l/1
+shdir=${HOME}/l/1
 
 strn='\s*(\s*<[HG][0-9]{1,5}>)*\s*'
 
 #---------------------------------------------------------------------------------------------
-function echofunction() { . /l/1/becho.sh "$@"; }
+function echofunction() { . ${HOME}/l/1/becho.sh "$@"; }
 function btr() { ! isval $1 && jnl|g 'tr:' || jnl tr:"$*" ; }
 
 GC="ms=30;47:mc=02;32:sl=:cx=:fn=34:ln=31:bn=30:se=30"  
@@ -96,8 +96,8 @@ export qq='"'
 
 #tee http://unix.stackexchange.com/questions/41246/how-to-redirect-output-to-multiple-log-files
 
-#. /l/1/generated_functions.sh
-#. /l/21  #manual aliases
+#. ${HOME}/l/1/generated_functions.sh
+#. ${HOME}/l/21  #manual aliases
 
 bset gmtoffset 5
 

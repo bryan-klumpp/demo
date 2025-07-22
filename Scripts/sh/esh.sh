@@ -1,6 +1,6 @@
-[ $# -eq 0 ] && { c $(b 644)/sh; return; }
+[ $# -eq 0 ] && { c $(b 644)$(shpath); return; }
 
-#shpath=$(first /sh /c/b/code/demo/Scripts/sh /mnt/c/b/code/demo/Scripts/sh)
+#shpath=$(first $(shpath) /c/b/code/demo/Scripts/sh /mnt/c/b/code/demo/Scripts/sh)
 shpath=$(shpath)
 
 echo 'using shpath: '$shpath

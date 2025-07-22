@@ -1,2 +1,2 @@
 esh b21_aliases
-. /sh/b21_aliases
+. $(shpath)/b21_aliases

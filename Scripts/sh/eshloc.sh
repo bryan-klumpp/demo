@@ -1,7 +1,7 @@
-eshalias=$(grep -E '\W'$1'=' /sh/b21_* )
+eshalias=$(grep -E '\W'$1'=' $(shpath)/b21_* )
 isval $eshalias && { echo "$eshalias" ; return; }
 
-sfile=/sh/$1.sh
+sfile=$(shpath)/$1.sh
 ! test -f $sfile && newscript=yes || newscript=no
 nano --syntax=none $sfile   #--mouse disables selection so not always desirable
 co $newscript 'yes' && test -f $sfile && mkf
