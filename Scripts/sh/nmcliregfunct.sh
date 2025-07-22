@@ -2,23 +2,23 @@
 # nmcliregfunct.sh
 #
 # This script contains and registers two functions for use with nmcli:
-#   1. nmcliassoc - Associates a network adapter with a predefined network connection.
-#   2. nmclimkstatic - Creates a new nmcli connection for a static IP address and subnet mask if it doesn't already exist.
+#   1. nmcli-apply-conn - Associates a network adapter with a predefined network connection.
+#   2. nmcli-make-static-conn - Creates a new nmcli connection for a static IP address and subnet mask if it doesn't already exist.
 #
-# --- nmcliassoc ---
+# --- nmcli-apply-conn ---
 # Usage:
-#   nmcliassoc eth0 "My WiFi"
+#   nmcli-apply-conn eth0 "My WiFi"
 # - The first argument is the network adapter name (e.g., eth0).
 # - The second argument is the connection name (e.g., "My WiFi").
 # If the number of arguments is not exactly 2, it prints the usage example and exits immediately.
 # If the connection does not exist, it prints a relevant error.
 # If the interface name (adapter) does not exist, it prints a relevant error.
 # Example:
-#   nmcliassoc eth0 "My WiFi"
+#   nmcli-apply-conn eth0 "My WiFi"
 
-nmcliassoc() {
+nmcli-apply-conn() {
   if [ "$#" -ne 2 ]; then
-    echo 'Usage: nmcliassoc eth0 "My WiFi"'
+    echo 'Usage: nmcli-apply-conn eth0 "My WiFi"'
     return 1
   fi
   local adapter="$1"
@@ -34,20 +34,20 @@ nmcliassoc() {
   echo "Please execute this:  sudo nmcli connection modify \"$connection\" connection.interface-name \"$adapter\""
 }
 
-# --- nmclimkstatic ---
+# --- nmcli-make-static-conn ---
 # Usage:
-#   nmclimkstatic 192.168.1.100 24
+#   nmcli-make-static-conn 192.168.1.100 24
 # - The first argument is the static IP address (e.g., 192.168.1.100).
 # - The second argument is the subnet mask in CIDR notation (e.g., 24).
 # If the number of arguments is not exactly 2, it prints the usage example and exits immediately.
 # If the connection already exists, it does not create a new one.
 # The script outputs only the name of the connection.
 # Example:
-#   nmclimkstatic 192.168.1.100 23
+#   nmcli-make-static-conn 192.168.1.100 23
 
-nmclimkstatic() {
+nmcli-make-static-conn() {
   if [ "$#" -ne 2 ]; then
-    echo 'Usage: nmclimkstatic 192.168.1.100 23'
+    echo 'Usage: nmcli-make-static-conn 192.168.1.100 23'
     return 1
   fi
   local ip="$1"
@@ -61,16 +61,16 @@ nmclimkstatic() {
   echo "$conn_name"
 }
 
-# --- nmcliapplyconndynamic ---
+# --- nmcli-apply-connection-dynamic ---
 # Usage:
-#   nmcliapplyconndynamic "My WiFi"
+#   nmcli-apply-connection-dynamic "My WiFi"
 # - Takes one argument: the connection name.
 # - Validates that the connection exists.
 # - Applies the connection to all real network adapters that do not already have a static IP address and are not docker or loopback devices.
 #
-nmcliapplyconndynamic() {
+nmcli-apply-connection-dynamic() {
   if [ "$#" -ne 1 ]; then
-    echo 'Usage: nmcliapplyconndynamic "Connection Name"'
+    echo 'Usage: nmcli-apply-connection-dynamic "Connection Name"'
     return 1
   fi
   local connection="$1"
