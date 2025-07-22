@@ -90,17 +90,4 @@ nmcli-apply-connection-dynamic() {
   done
 }
 
-# --- lucky_push ---
-# Usage:
-#   lucky_push
-# - Shows git status and waits 5 seconds for user to press Ctrl+C to cancel.
-# - If not cancelled, runs git add *, commits with a lazy message, and pushes.
-lucky_push() {
-  git status
-  echo "Press Ctrl+C within 5 seconds to cancel push..."
-  sleep 5 && {}
-  git add *
-  git commit -m "Sorry, I'm being lazy"
-  git push
-}
 }
