@@ -41,7 +41,6 @@ nmcli-apply-conn() {
 # - The second argument is the subnet mask in CIDR notation (e.g., 24).
 # If the number of arguments is not exactly 2, it prints the usage example and exits immediately.
 # If the connection already exists, it does not create a new one.
-# The script outputs only the name of the connection.
 # Example:
 #   nmcli-make-static-conn 192.168.1.100 23
 
@@ -57,8 +56,7 @@ nmcli-make-static-conn() {
     echo "$conn_name"
     return 0
   fi
-  #echo "sudo nmcli connection add type ethernet ifname '' con-name \"$conn_name\" ipv4.method manual ipv4.addresses \"$ip/$mask\" ipv4.gateway '' ipv4.dns '' ipv6.method ignore"
-  echo "$conn_name"
+  echo "Run this:  sudo nmcli connection add type ethernet ifname '' con-name \"$conn_name\" ipv4.method manual ipv4.addresses \"$ip/$mask\" ipv4.gateway '' ipv4.dns '' ipv6.method ignore"
 }
 
 # --- nmcli-apply-connection-dynamic ---
