@@ -1,3 +1,5 @@
+echo 'bln disabled...'; return;
+
 test -e /l || { sudo mkdir /l && sudo chown b /l; }
 echo '' > /tmp/dummyrc
 #rm /l/*   #do NOT do -R for safety's sake

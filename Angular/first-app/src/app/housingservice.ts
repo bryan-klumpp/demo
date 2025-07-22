@@ -5,7 +5,7 @@ import { HousingLocationInfoInterface } from './housinglocation';
   providedIn: 'root'
 })
 export class HousingService {
-
+    url='http://localhost:3000/locations'
        readonly baseUrl = 'https://angular.dev/assets/images/tutorials/common';
 
   constructor() { }
