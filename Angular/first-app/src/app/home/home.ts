@@ -13,7 +13,7 @@ import { debounceTime, switchMap, takeUntil, tap, delay } from 'rxjs/operators';
       <input type="text" [value]="changeCounter" placeholder="Filter by city" #changeCounterInput readonly/>
       <!-- https://www.google.com/search?q=button+debounce+using+angular+pipe&oq=button+debounce+using+angular+pipe&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCDg0MjJqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8 -->
       <!--                                                               (I used [disabled] but could use the [busy] property which we have in our app?) -->
-      <button class="primary" type="button" (click)="buttonTapped(changeCounterInput.value)" [disabled]="this.isButtonDebounced">Debounce Test</button></form></section>
+      <button class="primary" type="button" (click)="buttonTapped(changeCounterInput.value)">Debounce Test</button></form></section>
     <section class="results">
       @for(nextHousingLocation of filteredLocationList; track $index) {
         <app-housing-location [housingLocation]="nextHousingLocation"></app-housing-location>
@@ -24,6 +24,7 @@ import { debounceTime, switchMap, takeUntil, tap, delay } from 'rxjs/operators';
 })
 export class Home implements OnInit, OnDestroy {
     private buttonClicks = new Subject<void>();
+    private buttonClicks2 = new Subject<void>();
     changeCounter:string = "0";
     private destroy$ = new Subject<void>(); // For unsubscribing on component destruction
     isButtonDebounced = false;
@@ -35,12 +36,19 @@ export class Home implements OnInit, OnDestroy {
     buttonTapped(textValue: string) {
        console.log('Button tapped');
        this.buttonClicks.next();
+       this.doDebounce();
+    }
+    async doDebounce() {
+        this.buttonClicks2.next();
     }
     ngOnInit(): void {
       this.buttonClicks.pipe(
         takeUntil(this.destroy$), // Unsubscribe when the component is destroyed
         tap(() => this.doRightAway()), // Increment the counter
-      ).pipe(debounceTime(1000)).pipe(switchMap(() => {
+      ).subscribe();
+      this.buttonClicks2.pipe(debounceTime(1000)).pipe(
+          takeUntil(this.destroy$), // Unsubscribe when the component is destroyed
+          switchMap(() => {
           this.isButtonDebounced = false; // Reset the debounce state
           console.log('setting isButtonDebounced to false');
           return "dummyToken";
