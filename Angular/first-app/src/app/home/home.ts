@@ -24,46 +24,31 @@ import { debounceTime, switchMap, takeUntil, tap, delay } from 'rxjs/operators';
 })
 export class Home implements OnInit, OnDestroy {
     private buttonClicks = new Subject<void>();
-    private buttonClicks2 = new Subject<void>();
     changeCounter:string = "0";
     private destroy$ = new Subject<void>(); // For unsubscribing on component destruction
     isButtonDebounced = false;
-    timeout: number | undefined;
 
-    isButtonDisabled(): boolean {
-       return this.isButtonDebounced /* AND values not matched...  */;
-    }
     buttonTapped(textValue: string) {
        console.log('Button tapped');
        this.buttonClicks.next();
-       this.doDebounce();
-    }
-    async doDebounce() {
-        this.buttonClicks2.next();
     }
     ngOnInit(): void {
       this.buttonClicks.pipe(
-        takeUntil(this.destroy$), // Unsubscribe when the component is destroyed
-        tap(() => this.doRightAway()), // Increment the counter
+        takeUntil(this.destroy$),                  // Unsubscribe when the component is destroyed
+        tap(() => this.doRightAway()),             // This function will check the debounce status and actually do something useful if not debounced
+        debounceTime(1000),                        // Wait for 1 second of inactivity before resetting the debounce state
+        tap(() => this.isButtonDebounced = false), // Reset the debounce state
       ).subscribe();
-      this.buttonClicks2.pipe(debounceTime(1000)).pipe(
-          takeUntil(this.destroy$), // Unsubscribe when the component is destroyed
-          switchMap(() => {
-          this.isButtonDebounced = false; // Reset the debounce state
-          console.log('setting isButtonDebounced to false');
-          return "dummyToken";
-        })).subscribe();
+    }
+    doRightAway() {
+        if( ! this.isButtonDebounced ) {
+          this.changeCounter = (parseInt(this.changeCounter, 10) + 1).toString(); // This is the actual stuff we want the button to do, in this case just incrementing a value displayed on screen
+          this.isButtonDebounced = true;           // Prevent button taps from doing anything for another second after a tap
+        }
     }
     ngOnDestroy(): void {
       this.destroy$.next();
       this.destroy$.complete();
-    }
-    doRightAway() {
-        console.log('doRightAway called');
-        if( ! this.isButtonDebounced ) {
-          this.changeCounter = (parseInt(this.changeCounter, 10) + 1).toString();
-        }
-        this.isButtonDebounced = true;
     }
 
 
