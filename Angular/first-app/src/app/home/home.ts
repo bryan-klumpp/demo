@@ -10,10 +10,10 @@ import { debounceTime, takeUntil, tap } from 'rxjs/operators';
   imports: [HousingLocation],
   template: `
     <section><form>
-      <input type="text" placeholder="Filter by city" #filter />
+      <input type="text" [value]="changeCounter" placeholder="Filter by city" #changeCounterInput readonly/>
       <!-- https://www.google.com/search?q=button+debounce+using+angular+pipe&oq=button+debounce+using+angular+pipe&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCDg0MjJqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8 -->
       <!--                                                               (I used [disabled] but could use the [busy] property which we have in our app?) -->
-      <button class="primary" type="button" (click)="buttonTapped(filter.value)" [disabled]="this.isButtonDebounced">Debounce Test</button></form></section>
+      <button class="primary" type="button" (click)="buttonTapped(changeCounterInput.value)" [disabled]="this.isButtonDebounced">Debounce Test</button></form></section>
     <section class="results">
       @for(nextHousingLocation of filteredLocationList; track $index) {
         <app-housing-location [housingLocation]="nextHousingLocation"></app-housing-location>
@@ -24,6 +24,7 @@ import { debounceTime, takeUntil, tap } from 'rxjs/operators';
 })
 export class Home implements OnInit, OnDestroy {
     private buttonClicks = new Subject<void>();
+    changeCounter:string = "0";
     private destroy$ = new Subject<void>(); // For unsubscribing on component destruction
     isButtonDebounced = false;
     timeout: number | undefined;
@@ -48,6 +49,9 @@ export class Home implements OnInit, OnDestroy {
     ngOnDestroy(): void {
       this.destroy$.next();
       this.destroy$.complete();
+    }
+    incrementCounter() {
+      this.changeCounter = (parseInt(this.changeCounter, 10) + 1).toString();
     }
 
 
