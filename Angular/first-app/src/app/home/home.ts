@@ -2,7 +2,7 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { HousingLocation } from '../housing-location/housing-location';
 import { HousingLocationInfoInterface } from '../housinglocation';
 import { HousingService } from '../housingservice';
-import { Subject } from 'rxjs';
+import { Subject, throttleTime  } from 'rxjs';
 import { debounceTime, switchMap, takeUntil, tap, delay } from 'rxjs/operators';
 
 @Component({
@@ -40,18 +40,18 @@ export class Home implements OnInit, OnDestroy {
       this.buttonClicks.pipe(
         takeUntil(this.destroy$), // Unsubscribe when the component is destroyed
         tap(() => this.doRightAway()), // Increment the counter
-        debounceTime(1000), // Increment the counter
-        switchMap(() => {
+      ).pipe(debounceTime(1000)).pipe(switchMap(() => {
           this.isButtonDebounced = false; // Reset the debounce state
-          return "done";
-        })
-      ).subscribe();
+          console.log('setting isButtonDebounced to false');
+          return "dummyToken";
+        })).subscribe();
     }
     ngOnDestroy(): void {
       this.destroy$.next();
       this.destroy$.complete();
     }
     doRightAway() {
+        console.log('doRightAway called');
         if( ! this.isButtonDebounced ) {
           this.changeCounter = (parseInt(this.changeCounter, 10) + 1).toString();
         }
