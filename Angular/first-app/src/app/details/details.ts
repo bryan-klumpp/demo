@@ -37,7 +37,8 @@ applyForm = new FormGroup({
 })
 constructor(){
 const housingLocationId=Number(this.route.snapshot.params['id']);
-this.housingLocation=this.housingService.getHousingLocationById(housingLocationId);
+this.housingService.getHousingLocationById(housingLocationId).then((housingLocation:HousingLocationInfoInterface|undefined)=>{
+this.housingLocation=housingLocation;})
 }
 submitApplication() {
   this.housingService.submitApplication(

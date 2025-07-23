@@ -32,11 +32,15 @@ export class Home {
 
 
   //housingService:HousingService= ;
-  housingLocationList: HousingLocationInfoInterface[] = inject(HousingService).getAllHousingLocations();
+  housingLocationList: HousingLocationInfoInterface[] = [];
+  housingService = inject(HousingService);
   filteredLocationList: HousingLocationInfoInterface[] = this.housingLocationList;
-  // constructor() {
-  //   this.housingLocationList = ;
-  // }
+   constructor() {
+     this.housingService.getAllHousingLocations().then((housingLocationList: HousingLocationInfoInterface[]) => {
+        this.housingLocationList = housingLocationList;
+        this.filteredLocationList = housingLocationList;
+     }); 
+   }
 //       availableUnits: 4,
 //       wifi: true,
 //       laundry: true,
