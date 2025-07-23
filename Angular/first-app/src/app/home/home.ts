@@ -1,7 +1,9 @@
-import { Component,inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { HousingLocation } from '../housing-location/housing-location';
 import { HousingLocationInfoInterface } from '../housinglocation';
 import { HousingService } from '../housingservice';
+import { Subject } from 'rxjs';
+import { debounceTime, takeUntil, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -9,7 +11,9 @@ import { HousingService } from '../housingservice';
   template: `
     <section><form>
       <input type="text" placeholder="Filter by city" #filter />
-      <button class="primary" type="button" (click)="filterResults(filter.value)">Search</button></form></section>
+      <!-- https://www.google.com/search?q=button+debounce+using+angular+pipe&oq=button+debounce+using+angular+pipe&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCDg0MjJqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8 -->
+      <!--                                                               (I used [disabled] but could use the [busy] property which we have in our app?) -->
+      <button class="primary" type="button" (click)="buttonTapped(filter.value)" [disabled]="this.isButtonDebounced">Debounce Test</button></form></section>
     <section class="results">
       @for(nextHousingLocation of filteredLocationList; track $index) {
         <app-housing-location [housingLocation]="nextHousingLocation"></app-housing-location>
@@ -18,16 +22,33 @@ import { HousingService } from '../housingservice';
   `,
   styleUrls: ['./home.css'],
 })
-export class Home {
-     //readonly baseUrl = 'https://angular.dev/assets/images/tutorials/common';
+export class Home implements OnInit, OnDestroy {
+    private buttonClicks = new Subject<void>();
+    private destroy$ = new Subject<void>(); // For unsubscribing on component destruction
+    isButtonDebounced = false;
+    timeout: number | undefined;
 
-     filterResults(text:string){
-      if(!text){
-        this.filteredLocationList = this.housingLocationList;
-      }else {
-        this.filteredLocationList = this.housingLocationList.filter((housingLocation)=>housingLocation?.city.toLowerCase().includes(text.toLowerCase()));
-      }
-     }
+    isButtonDisabled(): boolean {
+       return this.isButtonDebounced /* AND values not matched...  */;
+    }
+    buttonTapped(textValue: string) {
+       console.log('Button tapped');
+       if ( ! this.isButtonDebounced) {
+          this.isButtonDebounced = true;
+          this.buttonClicks.next();
+       }
+    }
+    ngOnInit(): void {
+      this.buttonClicks.pipe(
+        debounceTime(1000), // Debounce for 1 second
+        tap(() => this.isButtonDebounced = false), // Execute your action
+        takeUntil(this.destroy$) // Unsubscribe when the component is destroyed
+      ).subscribe();
+    }
+    ngOnDestroy(): void {
+      this.destroy$.next();
+      this.destroy$.complete();
+    }
 
 
 
@@ -41,112 +62,5 @@ export class Home {
         this.filteredLocationList = housingLocationList;
      }); 
    }
-//       availableUnits: 4,
-//       wifi: true,
-//       laundry: true,
-//     },
-//     {
-//       id: 1,
-//       name: 'A113 Transitional Housing',
-//       city: 'Santa Monica',
-//       state: 'CA',
-//       photo: `${this.baseUrl}/brandon-griggs-wR11KBaB86U-unsplash.jpg`,
-//       availableUnits: 0,
-//       wifi: false,
-//       laundry: true,
-//     },
-//     {
-//       id: 2,
-//       name: 'Warm Beds Housing Support',
-//       city: 'Juneau',
-//       state: 'AK',
-//       photo: `${this.baseUrl}/i-do-nothing-but-love-lAyXdl1-Wmc-unsplash.jpg`,
-//       availableUnits: 1,
-//       wifi: false,
-//       laundry: false,
-//     },
-//     {
-//       id: 3,
-//       name: 'Homesteady Housing',
-//       city: 'Chicago',
-//       state: 'IL',
-//       photo: `${this.baseUrl}/ian-macdonald-W8z6aiwfi1E-unsplash.jpg`,
-//       availableUnits: 1,
-//       wifi: true,
-//       laundry: false,
-//     },
-//     {
-//       id: 4,
-//       name: 'Happy Homes Group',
-//       city: 'Gary',
-//       state: 'IN',
-//       photo: `${this.baseUrl}/krzysztof-hepner-978RAXoXnH4-unsplash.jpg`,
-//       availableUnits: 1,
-//       wifi: true,
-//       laundry: false,
-//     },
-//     {
-//       id: 5,
-//       name: 'Hopeful Apartment Group',
-//       city: 'Oakland',
-//       state: 'CA',
-//       photo: `${this.baseUrl}/r-architecture-JvQ0Q5IkeMM-unsplash.jpg`,
-//       availableUnits: 2,
-//       wifi: true,
-//       laundry: true,
-//     },
-//     {
-//       id: 6,
-//       name: 'Seriously Safe Towns',
-//       city: 'Oakland',
-//       state: 'CA',
-//       photo: `${this.baseUrl}/phil-hearing-IYfp2Ixe9nM-unsplash.jpg`,
-//       availableUnits: 5,
-//       wifi: true,
-//       laundry: true,
-//     },
-//     {
-//       id: 7,
-//       name: 'Hopeful Housing Solutions',
-//       city: 'Oakland',
-//       state: 'CA',
-//       photo: `${this.baseUrl}/r-architecture-GGupkreKwxA-unsplash.jpg`,
-//       availableUnits: 2,
-//       wifi: true,
-//       laundry: true,
-//     },
-//     {
-//       id: 8,
-//       name: 'Seriously Safe Towns',
-//       city: 'Oakland',
-//       state: 'CA',
-//       photo: `${this.baseUrl}/saru-robert-9rP3mxf8qWI-unsplash.jpg`,
-//       availableUnits: 10,
-//       wifi: false,
-//       laundry: false,
-//     },
-//     {
-//       id: 9,
-//       name: 'Capital Safe Towns',
-//       city: 'Portland',
-//       state: 'OR',
-//       photo: `${this.baseUrl}/webaliser-_TPTXZd9mOo-unsplash.jpg`,
-//       availableUnits: 6,
-//       wifi: true,
-//       laundry: true,
-//     },];
-
-
-
-// // housingLocation: HousinglocationInfo = {
-// //     id: 9999,
-// //     name: 'Test Home',
-// //     city: 'Test city',
-// //     state: 'ST',
-// //     photo: `${this.baseUrl}/example-house.jpg`,
-// //     availableUnits: 99,
-// //     wifi: true,
-// //     laundry: false,
-// //   };
 
 }
