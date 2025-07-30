@@ -23,6 +23,7 @@
     "@angular/build": "^20.1.0-next",
     "@angular/cli": "^20.1.0-next",
     "@angular/compiler-cli": "^20.1.0-next",
+    "@types/jasmine": "^5.1.8",
     "@types/node": "^16.11.35",
     "jasmine": "^5.9.0",
     "ts-node": "~10.9.0",

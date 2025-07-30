@@ -1,3 +1,5 @@
+ // to get VSCode support for these, run:  npm install --save-dev typescript jasmine @types/jasmine
+
 describe('Simple Math', () => {
   it('should add numbers correctly', () => {
     const sum = 1 + 2;
