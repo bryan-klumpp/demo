@@ -4,27 +4,33 @@ import { HousingLocationInfoInterface } from '../housinglocation';
 import { HousingService } from '../housingservice';
 import { Subject, throttleTime  } from 'rxjs';
 import { debounceTime, switchMap, takeUntil, tap, delay } from 'rxjs/operators';
+import { Input, input } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   imports: [HousingLocation],
   template: `
     <section><form>
-      <!-- https://www.google.com/search?q=button+debounce+using+angular+pipe&oq=button+debounce+using+angular+pipe&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCDg0MjJqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8 -->
+      <input type="text" placeholder="Filter by city" #filter />
+      <button class="primary" type="button" (click)="filterResults(filter.value)">Search</button></form>
+          <!-- https://www.google.com/search?q=button+debounce+using+angular+pipe&oq=button+debounce+using+angular+pipe&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCDg0MjJqMGo0qAIAsAIB&sourceid=chrome&ie=UTF-8 -->
       <input type="text" [value]="changeCounter" placeholder="Filter by city" #changeCounterInput readonly/>
+    <button class="primary" type="button" (click)="buttonTapped(changeCounterInput.value)">Debounce Test</button>
+
+    </section>
+    <section class="results">
+      @for(nextHousingLocation of filteredLocationList; track $index) {
+        <app-housing-location [housingLocation]="nextHousingLocation"></app-housing-location>
+      }
 
     <!-- This button will be debounced, meaning it will block for one second after every click.
          There are, unfortunately, two different means of the word "debounce" on the Internet,
          the difference being whether or not the intended action is executed immediately if there 
          were no recent clicks.  In this case, yes, we want it to take action immediately if there 
          were no recent clicks.  The button simply increments the value in the input box.  -->
-    <button class="primary" type="button" (click)="buttonTapped(changeCounterInput.value)">Debounce Test</button></form></section>
-
-    <section class="results"> 
-        @for(nextHousingLocation of filteredLocationList; track $index) {
-          <app-housing-location [housingLocation]="nextHousingLocation"></app-housing-location>
-        }
+    
     </section>
+
   `,
   styleUrls: ['./home.css'],
 })
@@ -33,7 +39,7 @@ export class Home implements OnInit, OnDestroy {
     changeCounter:string = "0";
     private destroy$ = new Subject<void>(); // For unsubscribing on component destruction
     isButtonDebounced = false;
-
+    @Input({required: true}) debounceTimeout: number = 5000; // give it a silly high value to prove it's getting set lower TODO still working on inputs to main component
     buttonTapped(textValue: string) {
        this.buttonClicks.next();                   // Kick off the pipe chain
     }
@@ -41,7 +47,7 @@ export class Home implements OnInit, OnDestroy {
       this.buttonClicks.pipe(
         takeUntil(this.destroy$),                  // Unsubscribe when the component is destroyed
         tap(() => this.doRightAway()),             // This function will check the debounce status and actually do something useful ONLY if not debounced
-        debounceTime(1000),                        // Wait for 1 second of inactivity before resetting the debounce state
+        debounceTime(this.debounceTimeout),       // Wait for 1 second of inactivity before resetting the debounce state
         tap(() => this.isButtonDebounced = false), // Reset the debounce state
       ).subscribe();
     }
@@ -55,6 +61,13 @@ export class Home implements OnInit, OnDestroy {
       this.destroy$.next();
       this.destroy$.complete();
     }
+     filterResults(text:string){
+      if(!text){
+        this.filteredLocationList = this.housingLocationList;
+      }else {
+        this.filteredLocationList = this.housingLocationList.filter((housingLocation)=>housingLocation?.city.toLowerCase().includes(text.toLowerCase()));
+      }
+     }
 
 
 
@@ -68,5 +81,4 @@ export class Home implements OnInit, OnDestroy {
         this.filteredLocationList = housingLocationList;
      }); 
    }
-
 }

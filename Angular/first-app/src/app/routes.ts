@@ -1,4 +1,4 @@
-import {Routes} from '@angular/router';
+import {Routes, provideRouter, withComponentInputBinding} from '@angular/router';
 import {Home} from './home/home';
 import {Details} from './details/details';
 
