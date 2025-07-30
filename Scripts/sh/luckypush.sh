@@ -4,7 +4,7 @@
   { sleep 5 &&
   (git add *) &&
   git commit -m "I will not dignify this code with a comment" &&
-  git push
+  git push && echo 'pushed!'
 } || {
   echo "Push cancelled or failed." #not sure why this won't print on cancel?
 }
