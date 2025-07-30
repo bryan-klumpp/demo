@@ -1,7 +1,7 @@
 export default {
   spec_dir: "spec",
   spec_files: [
-    "../sampleSpec.js",
+    "sampleSpec.*",
   ],
   spec_files_default: [
     "**/*[sS]pec.?(m)js"
