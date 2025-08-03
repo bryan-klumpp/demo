@@ -93,8 +93,8 @@ export class FloatingMenuComponent {
       action: () => this.navigateToNgTemplateOutletDemo()
     },
     {
-      label: 'Leaf 2',
-      action: () => this.showDialog('Leaf 2')
+      label: 'Enum Demo',
+      action: () => this.navigateToEnumDemo()
     }
   ];
 
@@ -159,6 +159,11 @@ export class FloatingMenuComponent {
   navigateToNgTemplateOutletDemo(): void {
     this.closeMenu(); // Hide menu before navigation
     this.router.navigate(['/ng-template-outlet-demo']);
+  }
+
+  navigateToEnumDemo(): void {
+    this.closeMenu(); // Hide menu before navigation
+    this.router.navigate(['/enum-demo']);
   }
 
   closeDialog(): void {
