@@ -278,9 +278,173 @@ type HouseFeature = typeof HouseFeatures[keyof typeof HouseFeatures];</code></pr
         </div>
       </section>
 
+      <!-- Constants-First Pattern -->
+      <section class="demo-section">
+        <h2>7. Constants-First Pattern</h2>
+        <div class="code-example">
+          <h4>Define constants first, then use them to initialize arrays:</h4>
+          <pre><code>// Define individual constants first
+private readonly RANCH_HOUSE: HouseCharacteristics = &#123;
+  type: HouseType.RANCH,
+  priceRange: PriceRange.MODERATE,
+  typicalPrice: 350000,
+  // ... other properties
+&#125;;
+
+private readonly TOWNHOUSE_HOUSE: HouseCharacteristics = &#123;
+  type: HouseType.TOWNHOUSE,
+  priceRange: PriceRange.BUDGET,
+  // ... other properties
+&#125;;
+
+// Then use constants to initialize arrays
+houseCharacteristics: HouseCharacteristics[] = [
+  this.RANCH_HOUSE,
+  this.TOWNHOUSE_HOUSE,
+  this.MANSION_HOUSE,
+  this.APARTMENT_HOUSE
+];
+
+// Complete array with all constants
+readonly allHouseCharacteristics: HouseCharacteristics[] = [
+  this.RANCH_HOUSE,
+  this.TOWNHOUSE_HOUSE,
+  this.MANSION_HOUSE,
+  this.APARTMENT_HOUSE,
+  this.CONDO_HOUSE,
+  this.COTTAGE_HOUSE
+];</code></pre>
+        </div>
+
+        <div class="constants-demo">
+          <!-- Individual Constants Display -->
+          <div class="constants-grid">
+            <div class="constant-card">
+              <h4>🏡 RANCH_HOUSE Constant</h4>
+              <div class="constant-details">
+                <p><strong>Type:</strong> {{ RANCH_HOUSE.type }}</p>
+                <p><strong>Price:</strong> {{ RANCH_HOUSE.typicalPrice | currency }}</p>
+                <p><strong>Sq Ft:</strong> {{ RANCH_HOUSE.squareFootage | number }}</p>
+                <p><strong>Occupants:</strong> {{ RANCH_HOUSE.typicalOccupants }}</p>
+              </div>
+            </div>
+
+            <div class="constant-card">
+              <h4>🏘️ TOWNHOUSE_HOUSE Constant</h4>
+              <div class="constant-details">
+                <p><strong>Type:</strong> {{ TOWNHOUSE_HOUSE.type }}</p>
+                <p><strong>Price:</strong> {{ TOWNHOUSE_HOUSE.typicalPrice | currency }}</p>
+                <p><strong>Sq Ft:</strong> {{ TOWNHOUSE_HOUSE.squareFootage | number }}</p>
+                <p><strong>Occupants:</strong> {{ TOWNHOUSE_HOUSE.typicalOccupants }}</p>
+              </div>
+            </div>
+
+            <div class="constant-card">
+              <h4>🏰 MANSION_HOUSE Constant</h4>
+              <div class="constant-details">
+                <p><strong>Type:</strong> {{ MANSION_HOUSE.type }}</p>
+                <p><strong>Price:</strong> {{ MANSION_HOUSE.typicalPrice | currency }}</p>
+                <p><strong>Sq Ft:</strong> {{ MANSION_HOUSE.squareFootage | number }}</p>
+                <p><strong>Occupants:</strong> {{ MANSION_HOUSE.typicalOccupants }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Array Comparison -->
+          <div class="array-comparison">
+            <div class="array-example">
+              <h4>Original Array ({{ houseCharacteristics.length }} items)</h4>
+              <div class="array-items">
+                <span *ngFor="let house of houseCharacteristics; let last = last" class="array-item">
+                  {{ getHouseTypeDisplayName(house.type) }}{{ !last ? ', ' : '' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="array-example">
+              <h4>Complete Array ({{ allHouseCharacteristics.length }} items)</h4>
+              <div class="array-items">
+                <span *ngFor="let house of allHouseCharacteristics; let last = last" class="array-item">
+                  {{ getHouseTypeDisplayName(house.type) }}{{ !last ? ', ' : '' }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Benefits Display -->
+          <div class="benefits-section">
+            <h4>Benefits of Constants-First Pattern:</h4>
+            <div class="benefits-grid">
+              <div class="benefit-card">
+                <h5>🔄 Reusability</h5>
+                <p>Constants can be used in multiple arrays or contexts</p>
+                <div class="benefit-example">
+                  <code>Budget Houses: {{ getBudgetHousesFromConstants().length }} found</code>
+                </div>
+              </div>
+
+              <div class="benefit-card">
+                <h5>🛠️ Maintainability</h5>
+                <p>Update once, changes reflect everywhere</p>
+                <div class="benefit-example">
+                  <button (click)="demonstrateConstantUpdate()" class="demo-btn">
+                    {{ constantUpdateDemo ? 'Reset Demo' : 'Demo Price Update' }}
+                  </button>
+                </div>
+              </div>
+
+              <div class="benefit-card">
+                <h5>🧪 Testability</h5>
+                <p>Individual constants can be tested in isolation</p>
+                <div class="benefit-example">
+                  <code>RANCH_HOUSE.type === '{{ RANCH_HOUSE.type }}'</code>
+                </div>
+              </div>
+
+              <div class="benefit-card">
+                <h5>📖 Readability</h5>
+                <p>Clear naming makes code self-documenting</p>
+                <div class="benefit-example">
+                  <code>const luxury = [MANSION_HOUSE, CONDO_HOUSE]</code>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Array Building -->
+          <div class="dynamic-building">
+            <h4>Dynamic Array Building with Constants:</h4>
+            <div class="building-controls">
+              <button (click)="addToCustomArray(RANCH_HOUSE)" class="add-btn" 
+                      [disabled]="isInCustomArray(RANCH_HOUSE)">
+                + Ranch {{ isInCustomArray(RANCH_HOUSE) ? '(added)' : '' }}
+              </button>
+              <button (click)="addToCustomArray(TOWNHOUSE_HOUSE)" class="add-btn"
+                      [disabled]="isInCustomArray(TOWNHOUSE_HOUSE)">
+                + Townhouse {{ isInCustomArray(TOWNHOUSE_HOUSE) ? '(added)' : '' }}
+              </button>
+              <button (click)="addToCustomArray(MANSION_HOUSE)" class="add-btn"
+                      [disabled]="isInCustomArray(MANSION_HOUSE)">
+                + Mansion {{ isInCustomArray(MANSION_HOUSE) ? '(added)' : '' }}
+              </button>
+              <button (click)="clearCustomArray()" class="clear-btn">Clear All</button>
+            </div>
+            
+            <div *ngIf="customHouseArray.length > 0" class="custom-array-display">
+              <h5>Custom Array ({{ customHouseArray.length }} items):</h5>
+              <div class="custom-items">
+                <div *ngFor="let house of customHouseArray" class="custom-item">
+                  {{ getHouseTypeDisplayName(house.type) }} - {{ house.typicalPrice | currency }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Array Lookup Examples -->
       <section class="demo-section">
-        <h2>6. Array Lookup with Enum Values</h2>
+        <h2>8. Array Lookup with Enum Values</h2>
         <div class="code-example">
           <h4>Array lookup examples:</h4>
           <pre><code>// Find specific house type and store in constant
@@ -388,7 +552,7 @@ readonly houseCharacteristicsMap: Map&lt;HouseType, HouseCharacteristics&gt; =
 
       <!-- Utility Functions Demo -->
       <section class="demo-section">
-        <h2>7. Enum Utility Functions</h2>
+        <h2>9. Enum Utility Functions</h2>
         <div class="utilities-demo">
           <div class="utility-example">
             <h4>Enum Keys:</h4>
@@ -427,54 +591,100 @@ export class EnumDemoComponent {
   selectedLookupResult: HouseCharacteristics | undefined;
   lookupAttempted: boolean = false;
   mapLookupResult: HouseCharacteristics | undefined;
+  
+  // Properties for constants-first pattern demo
+  constantUpdateDemo: boolean = false;
+  customHouseArray: HouseCharacteristics[] = [];
 
   // Enum values for iteration
   houseTypeValues = Object.values(HouseType);
   priceRangeValues = Object.values(PriceRange).filter(v => typeof v === 'number') as PriceRange[];
   houseFeatureValues = Object.values(HouseFeatures);
 
-  // Sample data
+  // Define individual house characteristic constants first
+  readonly RANCH_HOUSE: HouseCharacteristics = {
+    type: HouseType.RANCH,
+    priceRange: PriceRange.MODERATE,
+    typicalPrice: 350000,
+    typicalOccupants: 4,
+    typicalFloors: FloorCount.SINGLE_STORY,
+    squareFootage: 1800,
+    hasGarage: true,
+    hasYard: true
+  };
+
+  readonly TOWNHOUSE_HOUSE: HouseCharacteristics = {
+    type: HouseType.TOWNHOUSE,
+    priceRange: PriceRange.BUDGET,
+    typicalPrice: 275000,
+    typicalOccupants: 3,
+    typicalFloors: FloorCount.TWO_STORY,
+    squareFootage: 1200,
+    hasGarage: false,
+    hasYard: false
+  };
+
+  readonly MANSION_HOUSE: HouseCharacteristics = {
+    type: HouseType.MANSION,
+    priceRange: PriceRange.ULTRA_LUXURY,
+    typicalPrice: 2500000,
+    typicalOccupants: 6,
+    typicalFloors: FloorCount.MULTI_STORY,
+    squareFootage: 8000,
+    hasGarage: true,
+    hasYard: true
+  };
+
+  readonly APARTMENT_HOUSE: HouseCharacteristics = {
+    type: HouseType.APARTMENT,
+    priceRange: PriceRange.BUDGET,
+    typicalPrice: 200000,
+    typicalOccupants: 2,
+    typicalFloors: FloorCount.SINGLE_STORY,
+    squareFootage: 900,
+    hasGarage: false,
+    hasYard: false
+  };
+
+  // Additional house types to demonstrate the pattern
+  readonly CONDO_HOUSE: HouseCharacteristics = {
+    type: HouseType.CONDO,
+    priceRange: PriceRange.PREMIUM,
+    typicalPrice: 450000,
+    typicalOccupants: 2,
+    typicalFloors: FloorCount.SINGLE_STORY,
+    squareFootage: 1100,
+    hasGarage: true,
+    hasYard: false
+  };
+
+  readonly COTTAGE_HOUSE: HouseCharacteristics = {
+    type: HouseType.COTTAGE,
+    priceRange: PriceRange.MODERATE,
+    typicalPrice: 320000,
+    typicalOccupants: 3,
+    typicalFloors: FloorCount.SINGLE_STORY,
+    squareFootage: 1400,
+    hasGarage: false,
+    hasYard: true
+  };
+
+  // Sample data - using constants to initialize the array
   houseCharacteristics: HouseCharacteristics[] = [
-    {
-      type: HouseType.RANCH,
-      priceRange: PriceRange.MODERATE,
-      typicalPrice: 350000,
-      typicalOccupants: 4,
-      typicalFloors: FloorCount.SINGLE_STORY,
-      squareFootage: 1800,
-      hasGarage: true,
-      hasYard: true
-    },
-    {
-      type: HouseType.TOWNHOUSE,
-      priceRange: PriceRange.BUDGET,
-      typicalPrice: 275000,
-      typicalOccupants: 3,
-      typicalFloors: FloorCount.TWO_STORY,
-      squareFootage: 1200,
-      hasGarage: false,
-      hasYard: false
-    },
-    {
-      type: HouseType.MANSION,
-      priceRange: PriceRange.ULTRA_LUXURY,
-      typicalPrice: 2500000,
-      typicalOccupants: 6,
-      typicalFloors: FloorCount.MULTI_STORY,
-      squareFootage: 8000,
-      hasGarage: true,
-      hasYard: true
-    },
-    {
-      type: HouseType.APARTMENT,
-      priceRange: PriceRange.BUDGET,
-      typicalPrice: 200000,
-      typicalOccupants: 2,
-      typicalFloors: FloorCount.SINGLE_STORY,
-      squareFootage: 900,
-      hasGarage: false,
-      hasYard: false
-    }
+    this.RANCH_HOUSE,
+    this.TOWNHOUSE_HOUSE,
+    this.MANSION_HOUSE,
+    this.APARTMENT_HOUSE
+  ];
+
+  // Alternative: Complete array using all constants
+  readonly allHouseCharacteristics: HouseCharacteristics[] = [
+    this.RANCH_HOUSE,
+    this.TOWNHOUSE_HOUSE,
+    this.MANSION_HOUSE,
+    this.APARTMENT_HOUSE,
+    this.CONDO_HOUSE,
+    this.COTTAGE_HOUSE
   ];
 
   // Array lookup examples using enum values
@@ -646,5 +856,30 @@ export class EnumDemoComponent {
 
   getCottageProperty(property: HouseProperty): { type: HouseType.COTTAGE; isWaterfront: boolean } {
     return property as { type: HouseType.COTTAGE; isWaterfront: boolean };
+  }
+
+  // Methods for constants-first pattern demo
+  getBudgetHousesFromConstants(): HouseCharacteristics[] {
+    return this.allHouseCharacteristics.filter(house => house.priceRange === PriceRange.BUDGET);
+  }
+
+  demonstrateConstantUpdate(): void {
+    this.constantUpdateDemo = !this.constantUpdateDemo;
+    // In a real scenario, you might update the constant's value
+    // This is just for demonstration purposes
+  }
+
+  addToCustomArray(house: HouseCharacteristics): void {
+    if (!this.isInCustomArray(house)) {
+      this.customHouseArray.push(house);
+    }
+  }
+
+  isInCustomArray(house: HouseCharacteristics): boolean {
+    return this.customHouseArray.some(h => h.type === house.type);
+  }
+
+  clearCustomArray(): void {
+    this.customHouseArray = [];
   }
 }
