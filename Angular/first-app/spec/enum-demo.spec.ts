@@ -173,6 +173,43 @@ describe('EnumDemoComponent', () => {
     expect(component.constantUpdateDemo).toBe(false);
   });
 
+  type stringLiteralUnion = 'ranch' | 'townhouse' | 'mansion' | 'cottage' | 'condo' | 'apartment';
+
+  // Generic utility function for compile-time validation that all enum string values are in a string literal union
+  function staticAssertEnumSubset<
+    E extends Record<string, string>,
+    U extends string
+  >(): (`${E[keyof E]}` extends U ? true : never) {
+    return true as any;
+  }
+
+  enum HouseType2 {
+    RANCH = 'ranch',
+    TOWNHOUSE = 'townhouse',
+    MANSION = 'mansion',
+    COTTAGE = 'cottage',
+    CONDO = 'condo',
+    APARTMENT = 'apartment'
+  };
+enum HouseTypeLimited {
+    RANCH = 'ranch',
+    TOWNHOUSE = 'townhouse',
+  };
+  type HouseTypeEnumValues = `${HouseType2}`; // This gives you a union of all enum string values
+  type AssertAllEnumValuesInUnion = HouseTypeEnumValues extends stringLiteralUnion ? true : never;
+  type AssertAllOriginalUnionValuesInEnum = stringLiteralUnion extends HouseTypeEnumValues ? true : never;
+  const staticcheck: AssertAllEnumValuesInUnion = true;
+  const staticcheckOriginal: AssertAllOriginalUnionValuesInEnum = true;
+  const staticcheckLimited: (`${HouseTypeLimited}` extends stringLiteralUnion ? true : never) = true;
+
+  // Using the generic utility function as well
+  const utilityFunctionCheck = staticAssertEnumSubset<typeof HouseType2, stringLiteralUnion>() as true;
+  const utilityFunctionCheckLimited = staticAssertEnumSubset<typeof HouseTypeLimited, stringLiteralUnion>() as true;
+
+  
+
+
+
   it('should manage custom house array', () => {
     expect(component.customHouseArray.length).toBe(0);
     
