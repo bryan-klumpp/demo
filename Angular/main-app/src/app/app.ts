@@ -16,6 +16,7 @@ export class App {
   mainIframeSrc: SafeResourceUrl;
 
   constructor(private sanitizer: DomSanitizer) {
+    console.log('App component initialized at '+ new Date().toLocaleTimeString());
     const v = Date.now().toString(); // cache-busting version
     this.leftRailSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`/left-rail.html?v=${v}`);
     this.mainIframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`/main-iframe.html?v=${v}`);
