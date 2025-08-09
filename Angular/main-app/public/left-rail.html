@@ -33,9 +33,23 @@
     </style>
   </head>
   <body>
-    <div class="widget">Left Rail (fixed % wide, full height)</div>
+    <div class="widget">
+      <label for="leftText">Left Rail Text:</label>
+      <input id="leftText" type="text" style="width:100%;" autocomplete="off" />
+    </div>
     <div class="widget">Widget 1</div>
     <div class="widget">Widget 2</div>
     <div class="widget">Widget 3</div>
+    <script>
+      const input = document.getElementById('leftText');
+      input.addEventListener('input', () => {
+        window.parent.postMessage({ type: 'sync-text', value: input.value, source: 'left' }, '*');
+      });
+      window.addEventListener('message', (event) => {
+        if (event.data?.type === 'sync-text' && event.data.source !== 'left') {
+          input.value = event.data.value;
+        }
+      });
+    </script>
   </body>
 </html>

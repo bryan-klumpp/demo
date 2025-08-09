@@ -201,11 +201,13 @@
 
 <div class="app-grid" [style.gridTemplateColumns]="leftRailWidthCss + ' 1fr'">
   <iframe
+    #leftIframe
     class="left-rail"
     [src]="leftRailSrc"
     [title]="'Left navigation iframe (' + leftRailWidthCss + ' wide, full height)'">
   </iframe>
   <iframe
+    #mainIframe
     class="main-frame"
     [src]="mainIframeSrc"
     title="Main content iframe">
