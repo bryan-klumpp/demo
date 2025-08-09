@@ -183,6 +183,12 @@ describe('EnumDemoComponent', () => {
     return true as any;
   }
 
+  //no worky but interesting to study why
+  function staticAssertStringLiteralUnionAllOfAareOptionsInB<A extends Record<string,string>, B extends string>(Ap: A extends string ? true : never, Bp: B extends string ? true : never) : A extends B ? true : never {
+    //const staticassertX : A = Bp;
+    return true as any;
+  }
+
   enum HouseType2 {
     RANCH = 'ranch',
     TOWNHOUSE = 'townhouse',
@@ -195,6 +201,7 @@ enum HouseTypeLimited {
     RANCH = 'ranch',
     TOWNHOUSE = 'townhouse',
   };
+  //staticAssertStringLiteralUnionAllOfAareOptionsInB<typeof HouseTypeLimited, stringLiteralUnion>(HouseTypeLimited, `${stringLiteralUnion}`); //no worky
   type HouseTypeEnumValues = `${HouseType2}`; // This gives you a union of all enum string values
   type AssertAllEnumValuesInUnion = HouseTypeEnumValues extends stringLiteralUnion ? true : never;
   type AssertAllOriginalUnionValuesInEnum = stringLiteralUnion extends HouseTypeEnumValues ? true : never;
