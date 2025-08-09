@@ -197,22 +197,17 @@
     border: none;
     display: block;
   }
-
-  .left-rail {
-    /* width will be set via style binding */
-  }
 </style>
 
-<div class="app-grid" [style.gridTemplateColumns]="leftRailWidthPx + ' 1fr'">
+<div class="app-grid" [style.gridTemplateColumns]="leftRailWidthCss + ' 1fr'">
   <iframe
     class="left-rail"
-    [style.width]="leftRailWidthPx"
     [src]="leftRailSrc"
-    [title]="'Left navigation iframe (' + leftRailWidthPx + ' wide, full height)'">
+    [title]="'Left navigation iframe (' + leftRailWidthCss + ' wide, full height)'">
   </iframe>
   <iframe
     class="main-frame"
-    src="/main-iframe.html"
+    [src]="mainIframeSrc"
     title="Main content iframe">
   </iframe>
 </div>

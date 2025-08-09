@@ -10,15 +10,18 @@ import { RouterOutlet } from '@angular/router';
 })
 export class App {
   protected readonly title = signal('main-app');
-  leftRailWidth = 150; // px
+  leftRailWidth = '15%';
 
   leftRailSrc: SafeResourceUrl;
+  mainIframeSrc: SafeResourceUrl;
 
   constructor(private sanitizer: DomSanitizer) {
-    this.leftRailSrc = this.sanitizer.bypassSecurityTrustResourceUrl('/left-rail.html');
+    const v = Date.now().toString(); // cache-busting version
+    this.leftRailSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`/left-rail.html?v=${v}`);
+    this.mainIframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`/main-iframe.html?v=${v}`);
   }
 
-  get leftRailWidthPx(): string {
-    return `${this.leftRailWidth}px`;
+  get leftRailWidthCss(): string {
+    return this.leftRailWidth;
   }
 }
