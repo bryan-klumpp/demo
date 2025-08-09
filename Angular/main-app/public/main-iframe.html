@@ -179,83 +179,46 @@
          </div>
          <script>
            // Post Message demo
--          const input = document.getElementById('mainText');
--          input.addEventListener('input', () => {
--            window.parent.postMessage({ type: 'sync-text', value: input.value, source: 'main' }, '*');
--          });
--          window.addEventListener('message', (event) => {
--            if (event.data?.type === 'sync-text' && event.data.source !== 'main') {
--              input.value = event.data.value;
--            }
--          });
-+          var input = document.getElementById('mainText');
-+          input.addEventListener('input', function () {
-+            window.parent.postMessage({ type: 'sync-text', value: input.value, source: 'main' }, '*');
-+          });
-+          window.addEventListener('message', function (event) {
-+            var data = event && event.data;
-+            if (data && data.type === 'sync-text' && data.source !== 'main') {
-+              input.value = data.value;
-+            }
-+          });
- 
+           var input = document.getElementById('mainText');
+           input.addEventListener('input', function () {
+             window.parent.postMessage({ type: 'sync-text', value: input.value, source: 'main' }, '*');
+           });
+           window.addEventListener('message', function (event) {
+             var data = event && event.data;
+             if (data && data.type === 'sync-text' && data.source !== 'main') {
+               input.value = data.value;
+             }
+           });
+
            // WebSocket demo
--          let ws;
--          function connect() {
--            try {
--              ws = new WebSocket('ws://localhost:4401');
--              ws.onopen = () => { document.getElementById('wsStatus').textContent = 'connected'; };
--              ws.onclose = () => { document.getElementById('wsStatus').textContent = 'disconnected'; setTimeout(connect, 1000); };
--              ws.onerror = () => { document.getElementById('wsStatus').textContent = 'error'; };
--              ws.onmessage = (ev) => {
--                try {
--                  const msg = JSON.parse(ev.data);
--                  if (msg && msg.type === 'ws-text') {
--                    const field = document.getElementById('wsText');
--                    if (field && document.activeElement !== field) {
--                      field.value = msg.value ?? '';
--                    }
--                  }
--                } catch { /* ignore */ }
--              };
--            } catch {}
--          }
--          connect();
--
--          document.getElementById('wsText').addEventListener('input', (e) => {
--            const value = e.target.value;
--            if (ws && ws.readyState === WebSocket.OPEN) {
--              ws.send(JSON.stringify({ type: 'ws-text', value }));
--            }
--          });
-+          var ws;
-+          function connect() {
-+            try {
-+              ws = new WebSocket('ws://localhost:4401');
-+              ws.onopen = function () { document.getElementById('wsStatus').textContent = 'connected'; };
-+              ws.onclose = function () { document.getElementById('wsStatus').textContent = 'disconnected'; setTimeout(connect, 1000); };
-+              ws.onerror = function () { document.getElementById('wsStatus').textContent = 'error'; };
-+              ws.onmessage = function (ev) {
-+                try {
-+                  var msg = JSON.parse(ev.data);
-+                  if (msg && msg.type === 'ws-text') {
-+                    var field = document.getElementById('wsText');
-+                    if (field && document.activeElement !== field) {
-+                      field.value = (msg.value != null ? msg.value : '');
-+                    }
-+                  }
-+                } catch (err) { /* ignore */ }
-+              };
-+            } catch (err) {}
-+          }
-+          connect();
-+
-+          document.getElementById('wsText').addEventListener('input', function (e) {
-+            var value = e.target && e.target.value;
-+            if (ws && ws.readyState === WebSocket.OPEN) {
-+              ws.send(JSON.stringify({ type: 'ws-text', value: value }));
-+            }
-+          });
+           var ws;
+           function connect() {
+             try {
+               ws = new WebSocket('ws://localhost:4401');
+               ws.onopen = function () { document.getElementById('wsStatus').textContent = 'connected'; };
+               ws.onclose = function () { document.getElementById('wsStatus').textContent = 'disconnected'; setTimeout(connect, 1000); };
+               ws.onerror = function () { document.getElementById('wsStatus').textContent = 'error'; };
+               ws.onmessage = function (ev) {
+                 try {
+                   var msg = JSON.parse(ev.data);
+                   if (msg && msg.type === 'ws-text') {
+                     var field = document.getElementById('wsText');
+                     if (field && document.activeElement !== field) {
+                       field.value = (msg.value != null ? msg.value : '');
+                     }
+                   }
+                 } catch (err) { /* ignore */ }
+               };
+             } catch (err) {}
+           }
+           connect();
+
+           document.getElementById('wsText').addEventListener('input', function (e) {
+             var value = e.target && e.target.value;
+             if (ws && ws.readyState === WebSocket.OPEN) {
+               ws.send(JSON.stringify({ type: 'ws-text', value: value }));
+             }
+           });
          </script>
       </div>
     </div>

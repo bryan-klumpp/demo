@@ -1,4 +1,5 @@
-import { Component, signal, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, signal, ViewChild, ElementRef, AfterViewInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 
@@ -18,8 +19,11 @@ export class App implements AfterViewInit, OnDestroy {
   @ViewChild('leftIframe') leftIframe?: ElementRef<HTMLIFrameElement>;
   @ViewChild('mainIframe') mainIframe?: ElementRef<HTMLIFrameElement>;
 
-  constructor(private sanitizer: DomSanitizer) {
+  private readonly isBrowser: boolean;
+
+  constructor(private sanitizer: DomSanitizer, @Inject(PLATFORM_ID) platformId: Object) {
     console.log('App component initialized at '+ new Date().toLocaleTimeString());
+    this.isBrowser = isPlatformBrowser(platformId);
     const v = Date.now().toString(); // cache-busting version
     this.leftRailSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`/left-rail.html?v=${v}`);
     this.mainIframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`/main-iframe.html?v=${v}`);
@@ -43,10 +47,12 @@ export class App implements AfterViewInit, OnDestroy {
   };
 
   ngAfterViewInit(): void {
+    if (!this.isBrowser) return;
     window.addEventListener('message', this.onMessage);
   }
 
   ngOnDestroy(): void {
+    if (!this.isBrowser) return;
     window.removeEventListener('message', this.onMessage);
   }
 }
