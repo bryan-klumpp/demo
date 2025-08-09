@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Main Iframe</title>
+    <style>
+      :root {
+        --banner-h: 28px;
+        --gap: 12px;
+        --border: 1px solid #e5e7eb;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; margin: 0; }
+      body {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+        color: #0f172a;
+        background: #fff;
+        display: grid;
+        grid-template-rows: var(--banner-h) auto 1fr;
+        gap: var(--gap);
+        padding: var(--gap);
+      }
+
+      /* 1) Thin banner across the top */
+      .banner {
+        grid-row: 1 / 2;
+        background: #fef3c7;
+        color: #92400e;
+        border: var(--border);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        padding: 0 10px;
+        font-size: 12px;
+      }
+
+      /* 2) Single grid row with two cells */
+      .two-cell-row {
+        grid-row: 2 / 3;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--gap);
+        align-items: start; /* height governed by tallest child */
+      }
+      .cell {
+        border: var(--border);
+        border-radius: 6px;
+        padding: 12px;
+        background: #f8fafc;
+      }
+
+      /* Responsive stacking when too narrow */
+      @media (max-width: 800px) {
+        .two-cell-row {
+          grid-template-columns: 1fr; /* left becomes top, right becomes bottom */
+        }
+      }
+
+      /* 3) Remaining area split into upper and lower halves */
+      .split-vertical {
+        grid-row: 3 / 4;
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        gap: var(--gap);
+        min-height: 0; /* allow grid children to shrink */
+      }
+      .panel {
+        border: var(--border);
+        border-radius: 6px;
+        padding: 12px;
+        background: #eef2ff;
+        overflow: auto;
+      }
+
+      .label {
+        font-size: 14px;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Banner -->
+    <div class="banner" role="status" aria-live="polite">
+      Placeholder: Horizontal thin banner for alert icons (full width at top)
+    </div>
+
+    <!-- Two-cell row -->
+    <div class="two-cell-row">
+      <div class="cell">
+        <div class="label">
+          Placeholder: Left cell in the single grid row. Height is determined by the tallest of the two cells; width shares available space. When narrow, this cell stacks on top.
+        </div>
+      </div>
+      <div class="cell">
+        <div class="label">
+          Placeholder: Right cell in the single grid row. Height follows the tallest cell; width shares available space. When narrow, this cell stacks below the left.
+        </div>
+      </div>
+    </div>
+
+    <!-- Remaining split area -->
+    <div class="split-vertical">
+      <div class="panel">
+        <div class="label">Placeholder: Upper half of remaining area.</div>
+      </div>
+      <div class="panel">
+        <div class="label">Placeholder: Lower half of remaining area.</div>
+      </div>
+    </div>
+  </body>
+</html>
