@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { EnumDemoComponent } from '../src/app/enum-demo/enum-demo';
+import { unlink } from 'fs';
 
 describe('EnumDemoComponent', () => {
   let component: EnumDemoComponent;
@@ -173,7 +174,6 @@ describe('EnumDemoComponent', () => {
     expect(component.constantUpdateDemo).toBe(false);
   });
 
-  type stringLiteralUnion = 'ranch' | 'townhouse' | 'mansion' | 'cottage' | 'condo' | 'apartment';
 
   // Generic utility function for compile-time validation that all enum string values are in a string literal union
   function staticAssertEnumSubset<
@@ -183,11 +183,25 @@ describe('EnumDemoComponent', () => {
     return true as any;
   }
 
+//   function isMyType1(obj: any): obj is MyType1 {
+//   return typeof obj.property1 === 'string';
+// }
+
+// function isMyType2(obj: any): obj is MyType2 {
+//   return typeof obj.property2 === 'number';
+// }
+
+// function isMyCombinedType(obj: any): obj is MyType1 & MyType2 {
+//   return isMyType1(obj) && isMyType2(obj);
+// }
   //no worky but interesting to study why
-  function staticAssertStringLiteralUnionAllOfAareOptionsInB<A extends Record<string,string>, B extends string>(Ap: A extends string ? true : never, Bp: B extends string ? true : never) : A extends B ? true : never {
-    //const staticassertX : A = Bp;
+  function staticAssertStringLiteralUnionAllOfAareOptionsInB<A extends Record<string,string>, B extends string>(Ap: A extends string & B ? true : never, Bp: B extends string & A ? true : never) : A extends B ? true : never {
+    // const staticassertX : A = Bp;
     return true as any;
   }
+
+  type stringLiteralUnion = 'ranch' | 'townhouse' | 'mansion' | 'cottage' | 'condo' | 'apartment';
+  
 
   enum HouseType2 {
     RANCH = 'ranch',
@@ -201,14 +215,36 @@ enum HouseTypeLimited {
     RANCH = 'ranch',
     TOWNHOUSE = 'townhouse',
   };
+function assertTrue<T extends true>(): void{
+  const staticcheck: T = true as T;
+}
+function assert2<T>(val: T): asserts val is (T extends stringLiteralUnion ? T : never) { //https://www.google.com/search?q=how+to+assert+TypeScript+conditional+type+expression&oq=how+to+assert+TypeScript+conditional+type+expression&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCDM4MTVqMGo5qAIAsAIB&sourceid=chrome&ie=UTF-8
+  if (typeof val !== 'string' && typeof val !== 'number') {
+    throw new Error("Value is not a string or a number.");
+  }
+}
+const newstringliteraluniontype = `${HouseTypeLimited}`;
+assert2<typeof newstringliteraluniontype>('ranch'); // This is just to use the assert function and not throw an error
+
+/* I could not find a way to do some static asserts without creating a const.
+This is a workaround so that callers pass a lint check when doing the static assert */
+function unLintStaticAssert(result : true): void {
+}
+  type AssertAllEnumValuesInUnion2 = `${HouseTypeLimited}` extends stringLiteralUnion ? true : never;
+// This line will cause a compile-time error if the condition is not met:
+assertTrue<AssertAllEnumValuesInUnion2>(); // \(\s*`\s*\$\s*\{
+ const staticcheckLimited: (`${HouseTypeLimited}` extends stringLiteralUnion ? true : never) = true; // assertion not working directly this way?
+ unLintStaticAssert(staticcheckLimited);
+ //unLintStaticAssert('asdf'); //should fail
+ 
+ true as (`${HouseTypeLimited}` extends stringLiteralUnion ? true : never);
   //staticAssertStringLiteralUnionAllOfAareOptionsInB<typeof HouseTypeLimited, stringLiteralUnion>(HouseTypeLimited, `${stringLiteralUnion}`); //no worky
   type HouseTypeEnumValues = `${HouseType2}`; // This gives you a union of all enum string values
   type AssertAllEnumValuesInUnion = HouseTypeEnumValues extends stringLiteralUnion ? true : never;
   type AssertAllOriginalUnionValuesInEnum = stringLiteralUnion extends HouseTypeEnumValues ? true : never;
   const staticcheck: AssertAllEnumValuesInUnion = true;
   const staticcheckOriginal: AssertAllOriginalUnionValuesInEnum = true;
-  const staticcheckLimited: (`${HouseTypeLimited}` extends stringLiteralUnion ? true : never) = true;
-
+ 
   // Using the generic utility function as well
   const utilityFunctionCheck = staticAssertEnumSubset<typeof HouseType2, stringLiteralUnion>() as true;
   const utilityFunctionCheckLimited = staticAssertEnumSubset<typeof HouseTypeLimited, stringLiteralUnion>() as true;
