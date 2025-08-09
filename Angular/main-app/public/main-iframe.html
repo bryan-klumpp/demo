@@ -41,13 +41,17 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: var(--gap);
-        align-items: start; /* height governed by tallest child */
+        align-items: stretch; /* both cells stretch to the row height, which is set by the tallest */
       }
       .cell {
         border: var(--border);
         border-radius: 6px;
         padding: 12px;
         background: #f8fafc;
+        height: 100%; /* ensure cell fills the row height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       /* Responsive stacking when too narrow */
