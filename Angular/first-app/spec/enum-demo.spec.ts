@@ -218,23 +218,42 @@ enum HouseTypeLimited {
 function assertTrue<T extends true>(): void{
   const staticcheck: T = true as T;
 }
+function assertTypeTrue<T extends true>() {
+  const staticcheck: T = true as T;
+}
+
+
 function assert2<T>(val: T): asserts val is (T extends stringLiteralUnion ? T : never) { //https://www.google.com/search?q=how+to+assert+TypeScript+conditional+type+expression&oq=how+to+assert+TypeScript+conditional+type+expression&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBCDM4MTVqMGo5qAIAsAIB&sourceid=chrome&ie=UTF-8
   if (typeof val !== 'string' && typeof val !== 'number') {
     throw new Error("Value is not a string or a number.");
   }
 }
+function staticTypeAssert<T = true>(): void { /* noop */ }
 const newstringliteraluniontype = `${HouseTypeLimited}`;
 assert2<typeof newstringliteraluniontype>('ranch'); // This is just to use the assert function and not throw an error
 
 /* I could not find a way to do some static asserts without creating a const.
-This is a workaround so that callers pass a lint check when doing the static assert */
-function unLintStaticAssert(result : true): void {
+This is a workaround so that no problems are flagged when doing the static assert.
+eslint configuration can be updated, but I had difficulty getting VSCode to completely
+ignore it, such as when you hover the cursor over it.  This function will reject anything
+other than true, so cannot be used to throw away most variables that might actually
+suggest a bug. */
+function unLintOnlyTrue(result : true): void {
 }
   type AssertAllEnumValuesInUnion2 = `${HouseTypeLimited}` extends stringLiteralUnion ? true : never;
 // This line will cause a compile-time error if the condition is not met:
+
+const linterThrowAwayStaticTypeChecks : true = true;
+
+//staticTypeAssert<typeof HouseTypeLimited)[keyof typeof HouseTypeLimited] extends stringLiteralUnion ? true : never>();
 assertTrue<AssertAllEnumValuesInUnion2>(); // \(\s*`\s*\$\s*\{
- const staticcheckLimited: (`${HouseTypeLimited}` extends stringLiteralUnion ? true : never) = true; // assertion not working directly this way?
- unLintStaticAssert(staticcheckLimited);
+ const staticcheckLimited3: ((typeof HouseTypeLimited)[keyof typeof HouseTypeLimited] extends stringLiteralUnion ? true : never) = true; // alternate way to get string literal union from enum
+const staticcheckLimited: (`${HouseTypeLimited}` extends stringLiteralUnion ? true : never) = true; // assertion not working directly this way?
+ unLintOnlyTrue(staticcheckLimited);
+ const _staticcheckLimited2: ((typeof HouseTypeLimited)[keyof typeof HouseTypeLimited] extends stringLiteralUnion ? true : never) = true; // alternate way to get string literal union from enum
+ assertTypeTrue<((typeof HouseTypeLimited)[keyof typeof HouseTypeLimited] extends stringLiteralUnion ? true : never)>();
+ 
+
  //unLintStaticAssert('asdf'); //should fail
  
  true as (`${HouseTypeLimited}` extends stringLiteralUnion ? true : never);
