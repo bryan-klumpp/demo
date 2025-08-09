@@ -34,20 +34,57 @@
   </head>
   <body>
     <div class="widget">
-      <label for="leftText">Left Rail Text:</label>
+      <label for="leftText">Left Rail Text (Post Message):</label>
       <input id="leftText" type="text" style="width:100%;" autocomplete="off" />
+    </div>
+    <div class="widget">
+      <div style="margin-bottom:6px;">WebSocket:</div>
+      <input id="wsTextLeft" type="text" style="width:100%;" placeholder="Type to broadcast..." />
+      <div id="wsStatusLeft" style="margin-top:6px; font-size:12px; color:#93c5fd;">connecting...</div>
     </div>
     <div class="widget">Widget 1</div>
     <div class="widget">Widget 2</div>
     <div class="widget">Widget 3</div>
     <script>
-      const input = document.getElementById('leftText');
-      input.addEventListener('input', () => {
-        window.parent.postMessage({ type: 'sync-text', value: input.value, source: 'left' }, '*');
+      // Post Message demo for left rail
+      var leftInput = document.getElementById('leftText');
+      leftInput.addEventListener('input', function () {
+        window.parent.postMessage({ type: 'sync-text', value: leftInput.value, source: 'left' }, '*');
       });
-      window.addEventListener('message', (event) => {
-        if (event.data?.type === 'sync-text' && event.data.source !== 'left') {
-          input.value = event.data.value;
+      window.addEventListener('message', function (event) {
+        var data = event && event.data;
+        if (data && data.type === 'sync-text' && data.source !== 'left') {
+          leftInput.value = data.value;
+        }
+      });
+
+      // WebSocket demo for left rail
+      var wsLeft;
+      function connectLeft() {
+        try {
+          wsLeft = new WebSocket('ws://localhost:4401');
+          wsLeft.onopen = function () { document.getElementById('wsStatusLeft').textContent = 'connected'; };
+          wsLeft.onclose = function () { document.getElementById('wsStatusLeft').textContent = 'disconnected'; setTimeout(connectLeft, 1000); };
+          wsLeft.onerror = function () { document.getElementById('wsStatusLeft').textContent = 'error'; };
+          wsLeft.onmessage = function (ev) {
+            try {
+              var msg = JSON.parse(ev.data);
+              if (msg && msg.type === 'ws-text') {
+                var field = document.getElementById('wsTextLeft');
+                if (field && document.activeElement !== field) {
+                  field.value = (msg.value != null ? msg.value : '');
+                }
+              }
+            } catch (err) { /* ignore */ }
+          };
+        } catch (err) {}
+      }
+      connectLeft();
+
+      document.getElementById('wsTextLeft').addEventListener('input', function (e) {
+        var value = e.target && e.target.value;
+        if (wsLeft && wsLeft.readyState === WebSocket.OPEN) {
+          wsLeft.send(JSON.stringify({ type: 'ws-text', value: value }));
         }
       });
     </script>

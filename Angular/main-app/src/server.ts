@@ -6,11 +6,36 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { WebSocketServer } from 'ws';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+// Start a standalone WebSocket server for demo/broadcast on port 4401
+let wsStarted = false;
+function startWebSocketServer() {
+  if (wsStarted) return;
+  try {
+    const wss = new WebSocketServer({ port: 4401 });
+    wss.on('connection', (ws) => {
+      ws.on('message', (data) => {
+        // Broadcast to all clients
+        wss.clients.forEach((client) => {
+          if (client.readyState === 1 /* OPEN */) {
+            client.send(data.toString());
+          }
+        });
+      });
+    });
+    console.log('WebSocket server listening on ws://localhost:4401');
+    wsStarted = true;
+  } catch (e) {
+    console.warn('WebSocket server start failed:', (e as any)?.message);
+  }
+}
+startWebSocketServer();
 
 /**
  * Example Express Rest API endpoints can be defined here.
