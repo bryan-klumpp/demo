@@ -11,7 +11,8 @@ describe('App', () => {
   beforeEach(async () => {
     // Create spy object for DomSanitizer
     mockDomSanitizer = jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustResourceUrl']);
-    mockDomSanitizer.bypassSecurityTrustResourceUrl.and.returnValue('trusted-url' as any);
+    // Return the input URL as-is, but typed as SafeResourceUrl
+    mockDomSanitizer.bypassSecurityTrustResourceUrl.and.callFake((url: string) => url as any);
 
     await TestBed.configureTestingModule({
       imports: [App],
@@ -58,10 +59,14 @@ describe('App', () => {
     const iframes = compiled.querySelectorAll('iframe');
     expect(iframes.length).toBe(2);
     
-    const leftIframe = compiled.querySelector('.left-rail');
-    const mainIframe = compiled.querySelector('.main-frame');
+    const leftIframe = compiled.querySelector('.left-rail') as HTMLIFrameElement;
+    const mainIframe = compiled.querySelector('.main-frame') as HTMLIFrameElement;
     expect(leftIframe).toBeTruthy();
     expect(mainIframe).toBeTruthy();
+    
+    // Check that src attributes are set (they should contain the URLs returned by sanitizer)
+    expect(leftIframe.src).toContain('left-rail.html');
+    expect(mainIframe.src).toContain('main-iframe.html');
   });
 
   describe('PostMessage Communication', () => {
@@ -69,19 +74,19 @@ describe('App', () => {
     let mockMainWindow: any;
 
     beforeEach(() => {
+      fixture.detectChanges(); // This triggers component initialization
+      
       // Mock iframe content windows
       mockLeftWindow = { postMessage: jasmine.createSpy('leftPostMessage') };
       mockMainWindow = { postMessage: jasmine.createSpy('mainPostMessage') };
 
-      // Mock ViewChild iframes
+      // Mock ViewChild iframes after component is initialized
       component.leftIframe = {
         nativeElement: { contentWindow: mockLeftWindow }
       } as any;
       component.mainIframe = {
         nativeElement: { contentWindow: mockMainWindow }
       } as any;
-
-      fixture.detectChanges();
     });
 
     it('should relay message from left iframe to main iframe', () => {
