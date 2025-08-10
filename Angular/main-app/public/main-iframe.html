@@ -152,11 +152,6 @@
       </div>
       <div class="panel">
         <div class="main-grid">
-          <div class="main-grid-cell" style="grid-column: 1 / span 3; display:flex; gap:8px; align-items:center; justify-content:space-between;">
-            <div style="flex:0 0 auto;">WebSocket:</div>
-            <input id="wsText" type="text" style="flex:1 1 auto; min-width:0;" placeholder="Type to broadcast..." />
-            <span id="wsStatus" style="flex:0 0 auto; font-size:12px; color:#334155;">connecting...</span>
-          </div>
            <div class="main-grid-cell">1,1</div>
            <div class="main-grid-cell">1,2</div>
            <div class="main-grid-cell">
@@ -165,7 +160,11 @@
            </div>
            <div class="main-grid-cell">2,1</div>
            <div class="main-grid-cell">2,2</div>
-           <div class="main-grid-cell">2,3</div>
+           <div class="main-grid-cell">
+                 <div style="flex:0 0 auto;">WebSocket:</div>
+              <input id="wsText" type="text" style="flex:1 1 auto; min-width:0;" placeholder="Type to broadcast..." />
+              <span id="wsStatus" style="flex:0 0 auto; font-size:12px; color:#334155;">connecting...</span>
+        </div>
            <div class="main-grid-cell">3,1</div>
            <div class="main-grid-cell">3,2</div>
            <div class="main-grid-cell">
