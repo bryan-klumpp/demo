@@ -1,25 +1,213 @@
-import { provideZonelessChangeDetection } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { provideZonelessChangeDetection, PLATFORM_ID } from '@angular/core';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { DomSanitizer } from '@angular/platform-browser';
 import { App } from './app';
 
 describe('App', () => {
+  let component: App;
+  let fixture: ComponentFixture<App>;
+  let mockDomSanitizer: jasmine.SpyObj<DomSanitizer>;
+
   beforeEach(async () => {
+    // Create spy object for DomSanitizer
+    mockDomSanitizer = jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustResourceUrl']);
+    mockDomSanitizer.bypassSecurityTrustResourceUrl.and.returnValue('trusted-url' as any);
+
     await TestBed.configureTestingModule({
       imports: [App],
-      providers: [provideZonelessChangeDetection()]
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: DomSanitizer, useValue: mockDomSanitizer },
+        { provide: PLATFORM_ID, useValue: 'browser' }
+      ]
     }).compileComponents();
+
+    fixture = TestBed.createComponent(App);
+    component = fixture.componentInstance;
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(App);
+  it('should initialize with correct default values', () => {
+    expect(component.leftRailWidth).toBe('15%');
+    expect(component.leftRailWidthCss).toBe('15%');
+    // Note: title is protected, so we test it through the template
+  });
+
+  it('should create sanitized iframe URLs with cache-busting', () => {
+    fixture.detectChanges();
+    
+    expect(mockDomSanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledTimes(2);
+    expect(mockDomSanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledWith(
+      jasmine.stringMatching(/^\/left-rail\.html\?v=\d+$/)
+    );
+    expect(mockDomSanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledWith(
+      jasmine.stringMatching(/^\/main-iframe\.html\?v=\d+$/)
+    );
+  });
+
+  it('should render iframe grid layout', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, main-app');
+    
+    const appGrid = compiled.querySelector('.app-grid');
+    expect(appGrid).toBeTruthy();
+    
+    const iframes = compiled.querySelectorAll('iframe');
+    expect(iframes.length).toBe(2);
+    
+    const leftIframe = compiled.querySelector('.left-rail');
+    const mainIframe = compiled.querySelector('.main-frame');
+    expect(leftIframe).toBeTruthy();
+    expect(mainIframe).toBeTruthy();
+  });
+
+  describe('PostMessage Communication', () => {
+    let mockLeftWindow: any;
+    let mockMainWindow: any;
+
+    beforeEach(() => {
+      // Mock iframe content windows
+      mockLeftWindow = { postMessage: jasmine.createSpy('leftPostMessage') };
+      mockMainWindow = { postMessage: jasmine.createSpy('mainPostMessage') };
+
+      // Mock ViewChild iframes
+      component.leftIframe = {
+        nativeElement: { contentWindow: mockLeftWindow }
+      } as any;
+      component.mainIframe = {
+        nativeElement: { contentWindow: mockMainWindow }
+      } as any;
+
+      fixture.detectChanges();
+    });
+
+    it('should relay message from left iframe to main iframe', () => {
+      const testMessage = {
+        type: 'sync-text',
+        value: 'test message from left',
+        source: 'left'
+      };
+
+      // Simulate message event
+      const messageEvent = new MessageEvent('message', { data: testMessage });
+      component['onMessage'](messageEvent);
+
+      expect(mockMainWindow.postMessage).toHaveBeenCalledWith(testMessage, '*');
+      expect(mockLeftWindow.postMessage).not.toHaveBeenCalled();
+    });
+
+    it('should relay message from main iframe to left iframe', () => {
+      const testMessage = {
+        type: 'sync-text',
+        value: 'test message from main',
+        source: 'main'
+      };
+
+      const messageEvent = new MessageEvent('message', { data: testMessage });
+      component['onMessage'](messageEvent);
+
+      expect(mockLeftWindow.postMessage).toHaveBeenCalledWith(testMessage, '*');
+      expect(mockMainWindow.postMessage).not.toHaveBeenCalled();
+    });
+
+    it('should relay message from external source to both iframes', () => {
+      const testMessage = {
+        type: 'sync-text',
+        value: 'test message from external',
+        source: 'external'
+      };
+
+      const messageEvent = new MessageEvent('message', { data: testMessage });
+      component['onMessage'](messageEvent);
+
+      expect(mockLeftWindow.postMessage).toHaveBeenCalledWith(testMessage, '*');
+      expect(mockMainWindow.postMessage).toHaveBeenCalledWith(testMessage, '*');
+    });
+
+    it('should ignore non sync-text messages', () => {
+      const testMessage = {
+        type: 'other-message',
+        value: 'should be ignored'
+      };
+
+      const messageEvent = new MessageEvent('message', { data: testMessage });
+      component['onMessage'](messageEvent);
+
+      expect(mockLeftWindow.postMessage).not.toHaveBeenCalled();
+      expect(mockMainWindow.postMessage).not.toHaveBeenCalled();
+    });
+
+    it('should handle missing iframe windows gracefully', () => {
+      component.leftIframe = { nativeElement: { contentWindow: null } } as any;
+      component.mainIframe = { nativeElement: { contentWindow: null } } as any;
+
+      const testMessage = {
+        type: 'sync-text',
+        value: 'test message',
+        source: 'left'
+      };
+
+      const messageEvent = new MessageEvent('message', { data: testMessage });
+      
+      expect(() => component['onMessage'](messageEvent)).not.toThrow();
+    });
+  });
+
+  describe('Lifecycle Hooks', () => {
+    it('should add message listener on ngAfterViewInit in browser', () => {
+      const addEventListenerSpy = spyOn(window, 'addEventListener');
+      
+      component.ngAfterViewInit();
+      
+      expect(addEventListenerSpy).toHaveBeenCalledWith('message', component['onMessage']);
+    });
+
+    it('should remove message listener on ngOnDestroy in browser', () => {
+      const removeEventListenerSpy = spyOn(window, 'removeEventListener');
+      
+      component.ngOnDestroy();
+      
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('message', component['onMessage']);
+    });
+  });
+
+  describe('SSR Compatibility', () => {
+    beforeEach(async () => {
+      // Reconfigure TestBed with server platform
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [App],
+        providers: [
+          provideZonelessChangeDetection(),
+          { provide: DomSanitizer, useValue: mockDomSanitizer },
+          { provide: PLATFORM_ID, useValue: 'server' }
+        ]
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(App);
+      component = fixture.componentInstance;
+    });
+
+    it('should not add event listeners on server platform', () => {
+      const addEventListenerSpy = spyOn(window, 'addEventListener');
+      const removeEventListenerSpy = spyOn(window, 'removeEventListener');
+      
+      component.ngAfterViewInit();
+      component.ngOnDestroy();
+      
+      expect(addEventListenerSpy).not.toHaveBeenCalled();
+      expect(removeEventListenerSpy).not.toHaveBeenCalled();
+    });
+
+    it('should still create iframe URLs on server', () => {
+      fixture.detectChanges();
+      
+      expect(component.leftRailSrc).toBeTruthy();
+      expect(component.mainIframeSrc).toBeTruthy();
+      expect(mockDomSanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledTimes(2);
+    });
   });
 });
