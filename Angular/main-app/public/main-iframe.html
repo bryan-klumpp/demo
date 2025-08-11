@@ -169,14 +169,35 @@
            <div class="main-grid-cell">3,2</div>
            <div class="main-grid-cell">
              <div class="subgrid">
-               <div class="subgrid-cell">A</div>
-               <div class="subgrid-cell">B</div>
+               <div class="subgrid-cell"><button id="playBtn" type="button">Play</button></div>
+               <div class="subgrid-cell" id="playerStatus">Player</div>
                <div class="subgrid-cell">C</div>
                <div class="subgrid-cell">D</div>
              </div>
            </div>
          </div>
          <script>
+           // Audio Player Service (simple injected pattern)
+           var audioPlayerService = {
+             play: function(url, onStart, onEnd) {
+               var audio = new Audio(url);
+               audio.addEventListener('play', function() { if (onStart) onStart(); });
+               audio.addEventListener('ended', function() { if (onEnd) onEnd(); });
+               audio.play();
+             }
+           };
+
+           // Play button logic
+           var playBtn = document.getElementById('playBtn');
+           var playerStatus = document.getElementById('playerStatus');
+           playBtn.addEventListener('click', function() {
+             audioPlayerService.play(
+               'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+               function() { playerStatus.textContent = 'Playing...'; },
+               function() { playerStatus.textContent = 'Player'; }
+             );
+           });
+
            // Post Message demo
            var input = document.getElementById('mainText');
            input.addEventListener('input', function () {

@@ -206,12 +206,19 @@
     [src]="leftRailSrc"
     [title]="'Left navigation iframe (' + leftRailWidthCss + ' wide, full height)'">
   </iframe>
-  <iframe
-    #mainIframe
-    class="main-frame"
-    [src]="mainIframeSrc"
-    title="Main content iframe">
-  </iframe>
+  <div style="display: flex; flex-direction: column; height: 100%; width: 100%; justify-content: center; align-items: center;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 200px; height: 100px; align-items: center; justify-items: center;">
+      <button (click)="playAudio()">Play</button>
+      <div>{{ playerStatus() }}</div>
+    </div>
+    <iframe
+      #mainIframe
+      class="main-frame"
+      [src]="mainIframeSrc"
+      title="Main content iframe"
+      style="flex: 1 1 auto; width: 100%; height: 100%; border: none; display: block; margin-top: 2rem;"
+    ></iframe>
+  </div>
 </div>
 
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->

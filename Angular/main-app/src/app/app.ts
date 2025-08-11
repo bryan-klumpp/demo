@@ -1,4 +1,5 @@
 import { Component, signal, ViewChild, ElementRef, AfterViewInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { AudioPlayerService } from './audio-player.service';
 import { isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
@@ -10,6 +11,7 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.scss'
 })
 export class App implements AfterViewInit, OnDestroy {
+  playerStatus = signal('Player');
   protected readonly title = signal('main-app');
   leftRailWidth = '15%';
 
@@ -21,12 +23,24 @@ export class App implements AfterViewInit, OnDestroy {
 
   private readonly isBrowser: boolean;
 
-  constructor(private sanitizer: DomSanitizer, @Inject(PLATFORM_ID) platformId: Object) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    @Inject(PLATFORM_ID) platformId: Object,
+    private audioPlayer: AudioPlayerService
+  ) {
     console.log('App component initialized at '+ new Date().toLocaleTimeString());
     this.isBrowser = isPlatformBrowser(platformId);
     const v = Date.now().toString(); // cache-busting version
     this.leftRailSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`/left-rail.html?v=${v}`);
     this.mainIframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`/main-iframe.html?v=${v}`);
+  }
+
+  playAudio() {
+    this.audioPlayer.play(
+      'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+      () => { this.playerStatus.set('Playing...'); },
+      () => { this.playerStatus.set('Player'); }
+    );
   }
 
   get leftRailWidthCss(): string {
