@@ -1,12 +1,14 @@
 import { provideZonelessChangeDetection, PLATFORM_ID } from '@angular/core';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, tick } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 import { App } from './app';
+import { AudioPlayerService } from './audio-player.service';
 
 describe('App', () => {
   let component: App;
   let fixture: ComponentFixture<App>;
   let mockDomSanitizer: jasmine.SpyObj<DomSanitizer>;
+  let mockAudioPlayer: jasmine.SpyObj<AudioPlayerService>;
 
   beforeEach(async () => {
     // Create spy object for DomSanitizer
@@ -14,17 +16,41 @@ describe('App', () => {
     // Return the input URL as-is, but typed as SafeResourceUrl
     mockDomSanitizer.bypassSecurityTrustResourceUrl.and.callFake((url: string) => url as any);
 
+    mockAudioPlayer = jasmine.createSpyObj('AudioPlayerService', ['play']);
+    mockAudioPlayer.play.and.callFake((url: string, onStart?: () => void, onEnd?: () => void) => {
+      if (onStart) {
+        onStart();
+        setTimeout(() => {
+          if (onEnd) onEnd();
+        }, 200);
+      }
+    });
+
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
         provideZonelessChangeDetection(),
         { provide: DomSanitizer, useValue: mockDomSanitizer },
-        { provide: PLATFORM_ID, useValue: 'browser' }
+        { provide: PLATFORM_ID, useValue: 'browser' },
+        { provide: AudioPlayerService, useValue: mockAudioPlayer },
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(App);
     component = fixture.componentInstance;
+  });
+
+  fit('should play audio when playAudio is called', (done) => {
+    component.playAudio();
+    expect(mockAudioPlayer.play).toHaveBeenCalled();
+    expect(component.playerStatus()).toBe('Playing...');
+    console.log('Audio started playing at ' + new Date().toLocaleTimeString());
+    setTimeout(() => {
+      expect(component.playerStatus()).toBe('Player');
+      done();
+      console.log('Audio ended at ' + new Date().toLocaleTimeString());
+      console.log('audio test passed?');
+    });
   });
 
   it('should create the app', () => {
