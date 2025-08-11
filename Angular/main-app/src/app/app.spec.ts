@@ -1,5 +1,5 @@
 import { provideZonelessChangeDetection, PLATFORM_ID } from '@angular/core';
-import { TestBed, ComponentFixture, tick } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
 import { App } from './app';
 import { AudioPlayerService } from './audio-player.service';
@@ -7,15 +7,10 @@ import { AudioPlayerService } from './audio-player.service';
 describe('App', () => {
   let component: App;
   let fixture: ComponentFixture<App>;
-  let mockDomSanitizer: jasmine.SpyObj<DomSanitizer>;
+  let sanitizer: DomSanitizer;
   let mockAudioPlayer: jasmine.SpyObj<AudioPlayerService>;
 
   beforeEach(async () => {
-    // Create spy object for DomSanitizer
-    mockDomSanitizer = jasmine.createSpyObj('DomSanitizer', ['bypassSecurityTrustResourceUrl']);
-    // Return the input URL as-is, but typed as SafeResourceUrl
-    mockDomSanitizer.bypassSecurityTrustResourceUrl.and.callFake((url: string) => url as any);
-
     mockAudioPlayer = jasmine.createSpyObj('AudioPlayerService', ['play']);
     mockAudioPlayer.play.and.callFake((url: string, onStart?: () => void, onEnd?: () => void) => {
       if (onStart) {
@@ -30,27 +25,38 @@ describe('App', () => {
       imports: [App],
       providers: [
         provideZonelessChangeDetection(),
-        { provide: DomSanitizer, useValue: mockDomSanitizer },
         { provide: PLATFORM_ID, useValue: 'browser' },
         { provide: AudioPlayerService, useValue: mockAudioPlayer },
       ]
     }).compileComponents();
 
+    // Use the real DomSanitizer but spy on the bypass method
+    sanitizer = TestBed.inject(DomSanitizer);
+    spyOn(sanitizer, 'bypassSecurityTrustResourceUrl').and.callThrough();
+
     fixture = TestBed.createComponent(App);
     component = fixture.componentInstance;
   });
 
-  fit('should play audio when playAudio is called', (done) => {
+  fit('should play audio when playAudio is called', async () => {
+    // fixture.detectChanges(); // Initialize component template
+    
     component.playAudio();
     expect(mockAudioPlayer.play).toHaveBeenCalled();
     expect(component.playerStatus()).toBe('Playing...');
     console.log('Audio started playing at ' + new Date().toLocaleTimeString());
-    setTimeout(() => {
-      expect(component.playerStatus()).toBe('Player');
-      done();
-      console.log('Audio ended at ' + new Date().toLocaleTimeString());
-      console.log('audio test passed?');
-    });
+    //     setTimeout(() => {
+    //   expect(component.playerStatus()).toBe('Player');
+    //   done();
+    //   console.log('Audio ended at ' + new Date().toLocaleTimeString());
+    //   console.log('audio test passed?');
+    // });
+
+    await new Promise(resolve => setTimeout(resolve, 300)); // Wait slightly longer than mock delay
+    
+    expect(component.playerStatus()).toBe('Player');
+    console.log('Audio ended at ' + new Date().toLocaleTimeString());
+    console.log('audio test passed?');
   });
 
   it('should create the app', () => {
@@ -66,11 +72,11 @@ describe('App', () => {
   it('should create sanitized iframe URLs with cache-busting', () => {
     fixture.detectChanges();
     
-    expect(mockDomSanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledTimes(2);
-    expect(mockDomSanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledWith(
+  expect(sanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledTimes(2);
+  expect(sanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledWith(
       jasmine.stringMatching(/^\/left-rail\.html\?v=\d+$/)
     );
-    expect(mockDomSanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledWith(
+  expect(sanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledWith(
       jasmine.stringMatching(/^\/main-iframe\.html\?v=\d+$/)
     );
   });
@@ -213,10 +219,13 @@ describe('App', () => {
         imports: [App],
         providers: [
           provideZonelessChangeDetection(),
-          { provide: DomSanitizer, useValue: mockDomSanitizer },
           { provide: PLATFORM_ID, useValue: 'server' }
         ]
       }).compileComponents();
+
+  // Spy on the real sanitizer in the SSR context as well
+  sanitizer = TestBed.inject(DomSanitizer);
+  spyOn(sanitizer, 'bypassSecurityTrustResourceUrl').and.callThrough();
 
       fixture = TestBed.createComponent(App);
       component = fixture.componentInstance;
@@ -238,7 +247,7 @@ describe('App', () => {
       
       expect(component.leftRailSrc).toBeTruthy();
       expect(component.mainIframeSrc).toBeTruthy();
-      expect(mockDomSanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledTimes(2);
+  expect(sanitizer.bypassSecurityTrustResourceUrl).toHaveBeenCalledTimes(2);
     });
   });
 });
