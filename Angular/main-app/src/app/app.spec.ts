@@ -4,6 +4,16 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { App } from './app';
 import { AudioPlayerService } from './audio-player.service';
 
+// Add this at the very top of your test entry file (e.g., src/test.ts)
+jasmine.getEnv().addReporter({
+  specStarted: function(result) {
+    // Print the full name of the test as it starts
+    // This will show up in the terminal or browser console
+    // For Karma, use console.log; for Node, process.stdout.write is also fine
+    console.log('RUNNING TEST:', result.fullName);
+  }
+});
+
 describe('App', () => {
   let component: App;
   let fixture: ComponentFixture<App>;
@@ -32,13 +42,13 @@ describe('App', () => {
 
     // Use the real DomSanitizer but spy on the bypass method
     sanitizer = TestBed.inject(DomSanitizer);
-    spyOn(sanitizer, 'bypassSecurityTrustResourceUrl').and.callThrough();
+    spyOn(sanitizer, 'bypassSecurityTrustResourceUrl').and.callThrough(); // I don't really need to spy on this, but just experimenting with syntax
 
     fixture = TestBed.createComponent(App);
     component = fixture.componentInstance;
   });
 
-  fit('should play audio when playAudio is called', async () => {
+  it('should play audio when playAudio is called', async () => {
     // fixture.detectChanges(); // Initialize component template
     
     component.playAudio();
