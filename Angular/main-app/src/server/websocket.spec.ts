@@ -37,6 +37,18 @@ describe('WebSocket Server', () => {
     };
   });
 
+  // this was AI-generated and not sure I trust it, will revisit to find the cleanest cleanup
+  // afterEach(() => {
+  //   // Clean up any pending operations
+  //   mockClients?.clear();
+  //   // Reset variables to prevent lingering references
+  //   mockWs1 = undefined as any;
+  //   mockWs2 = undefined as any;
+  //   mockWs3 = undefined as any;
+  //   mockWss = undefined as any;
+  //   mockClients = undefined as any;
+  // });
+
   it('should broadcast message to all open clients', () => {
     // Simulate the broadcast logic from server.ts
     const broadcastMessage = (data: string) => {
@@ -105,7 +117,8 @@ describe('WebSocket Server', () => {
     });
 
     // Simulate receiving a message from mockWs1
-    const testData = Buffer.from(JSON.stringify({ type: 'ws-text', value: 'relay test' }));
+    // const testData = Buffer.from(JSON.stringify({ type: 'ws-text', value: 'relay test' }));
+    const testData = new TextEncoder().encode(JSON.stringify({ type: 'ws-text', value: 'relay test' }));
     messageHandler!(testData);
 
     // Should broadcast to all open clients (including sender)
