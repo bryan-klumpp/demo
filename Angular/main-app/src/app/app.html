@@ -1,3 +1,10 @@
+<!-- SignalA demo -->
+<div style="margin: 1rem 0; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 8px; max-width: 300px;">
+  <div style="font-weight: 500; margin-bottom: 0.5rem;">SignalA: {{ SignalA() }}</div>
+  <button (click)="incrementSignalA()" style="padding: 0.5rem 1rem; border-radius: 4px; background: #4f46e5; color: #fff; border: none; cursor: pointer;">
+    Increment SignalA
+  </button>
+</div>
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
 <!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
@@ -207,9 +214,23 @@
     [title]="'Left navigation iframe (' + leftRailWidthCss + ' wide, full height)'">
   </iframe>
   <div style="display: flex; flex-direction: column; height: 100%; width: 100%; justify-content: center; align-items: center;">
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 200px; height: 100px; align-items: center; justify-items: center;">
-      <button (click)="playAudio()">Play</button>
-      <div>{{ playerStatus() }}</div>
+    <!-- Icons Demo Section -->
+    <app-icon-demo></app-icon-demo>
+    
+    <!-- Audio Controls -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 500px; height: 100px; align-items: center; justify-items: center;">
+      <button (click)="playAudio()" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem;">
+        <app-play-icon size="16" color="#4f46e5"></app-play-icon>
+        Play
+      </button>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <app-volume-icon size="16" color="#6b7280"></app-volume-icon>
+        {{ playerStatus() }}
+      </div>
+      <button>another row 1?</button>
+      <button>another row 2?</button>
+      <button>another row 3?</button>
+      <button>another row 4?</button>
     </div>
     <iframe
       #mainIframe

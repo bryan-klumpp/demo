@@ -1,12 +1,14 @@
-import { Component, signal, ViewChild, ElementRef, AfterViewInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, signal, effect, untracked, ViewChild, ElementRef, AfterViewInit, OnDestroy, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { AudioPlayerService } from './audio-player.service';
 import { isPlatformBrowser } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
+import { IconsModule } from './icons';
+import { IconDemoComponent } from './icons/icon-demo.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, IconsModule, IconDemoComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -15,6 +17,19 @@ export class App implements AfterViewInit, OnDestroy {
   protected readonly title = signal('main-app');
   leftRailWidth = '15%';
 
+    // Numeric signal initialized to 0
+    SignalA = signal(0);
+    SignalB = signal(0);;
+
+    // Method to increment SignalA
+    incrementSignalA() {
+       this.SignalA.set(this.SignalA() + 1);
+    }
+
+    // Extract SignalA value getter
+    getSignalA() {
+      console.log('SignalA value:', this.SignalA());
+    }
   leftRailSrc: SafeResourceUrl;
   mainIframeSrc: SafeResourceUrl;
 
@@ -26,13 +41,23 @@ export class App implements AfterViewInit, OnDestroy {
   constructor(
     private sanitizer: DomSanitizer,
     @Inject(PLATFORM_ID) platformId: Object,
-    private audioPlayer: AudioPlayerService
+    private audioPlayer: AudioPlayerService,
+    private cdr: ChangeDetectorRef
   ) {
-    console.log('App component initialized at '+ new Date().toLocaleTimeString());
     this.isBrowser = isPlatformBrowser(platformId);
     const v = Date.now().toString(); // cache-busting version
     this.leftRailSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`/left-rail.html?v=${v}`);
     this.mainIframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(`/main-iframe.html?v=${v}`);
+    
+    // Create effects in constructor to ensure proper timing
+    effect(() => {
+      this.getSignalA();
+      untracked(() => {this.SignalB.set(this.SignalB() + 1); });
+    });
+
+    effect(() => {
+      console.log('SignalB value:', this.SignalB());
+    });
   }
 
   playAudio() {
