@@ -7,12 +7,15 @@ import { SearchComponent } from './components/search.component';
 import { AddItemComponent } from './components/add-item.component';
 import { LocationManagementComponent } from './components/location-management.component';
 import { BackupRestoreComponent } from './components/backup-restore.component';
+import { TimeManagementLayoutComponent } from './components/time-management-layout.component';
+import { WakeAlarmsComponent } from './components/wake-alarms.component';
+import { DatabaseExportLayoutComponent } from './components/database-export-layout.component';
 
 export const routes: Routes = [
   { path: '', component: WelcomeComponent },
   { path: 'demo', component: DemoComponent },
-  { 
-    path: 'tracker', 
+  {
+    path: 'tracker',
     component: TrackerLayoutComponent,
     children: [
       { path: '', component: TrackerDashboardComponent },
@@ -20,8 +23,21 @@ export const routes: Routes = [
       { path: 'add-item', component: AddItemComponent },
       { path: 'add-location', component: LocationManagementComponent },
       { path: 'locations', component: LocationManagementComponent },
-      { path: 'backup', component: BackupRestoreComponent },
       { path: 'items', component: SearchComponent } // Alias for search
+    ]
+  },
+  {
+    path: 'time-management',
+    component: TimeManagementLayoutComponent,
+    children: [
+      { path: '', component: WakeAlarmsComponent }
+    ]
+  },
+  {
+    path: 'database-export',
+    component: DatabaseExportLayoutComponent,
+    children: [
+      { path: '', component: BackupRestoreComponent }
     ]
   }
 ];

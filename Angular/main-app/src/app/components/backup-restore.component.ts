@@ -11,8 +11,8 @@ import { format } from 'date-fns';
   template: `
     <div class="backup-container">
       <header class="backup-header">
-        <h1>💾 Backup & Restore</h1>
-        <p>Keep your data safe with easy backup and restore functionality</p>
+        <h1>🗄️ Database Export</h1>
+        <p>Export and import data shared across all app modules</p>
       </header>
 
       <div class="backup-sections">
@@ -118,9 +118,9 @@ import { format } from 'date-fns';
       </div>
 
       <div class="quick-links">
-        <button routerLink="/tracker" class="nav-link">🏠 Dashboard</button>
-        <button routerLink="/tracker/add-item" class="nav-link">➕ Add Item</button>
-        <button routerLink="/tracker/search" class="nav-link">🔍 Find Items</button>
+        <button routerLink="/" class="nav-link">🏠 Main Menu</button>
+        <button routerLink="/tracker" class="nav-link">📦 Household Tracker</button>
+        <button routerLink="/time-management" class="nav-link">⏰ Time Management</button>
       </div>
     </div>
   `,

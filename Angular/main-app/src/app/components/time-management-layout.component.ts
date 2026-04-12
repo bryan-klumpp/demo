@@ -3,26 +3,21 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-tracker-layout',
+  selector: 'app-time-management-layout',
   standalone: true,
   imports: [CommonModule, RouterModule, RouterOutlet],
   template: `
-    <!-- Navigation -->
-    <nav class="tracker-nav">
+    <nav class="tm-nav">
       <div class="nav-container">
-        <h1 routerLink="/tracker" class="nav-logo">📦 Household Tracker</h1>
+        <h1 routerLink="/time-management" class="nav-logo">⏰ Time Management</h1>
         <div class="nav-links">
-          <a routerLink="/tracker" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Dashboard</a>
-          <a routerLink="/tracker/search" routerLinkActive="active">Find Items</a>
-          <a routerLink="/tracker/add-item" routerLinkActive="active">Add Item</a>
-          <a routerLink="/tracker/locations" routerLinkActive="active">Locations</a>
+          <a routerLink="/time-management" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Wake Alarms</a>
         </div>
         <button routerLink="/" class="home-btn">🏠 Main Menu</button>
       </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="tracker-content">
+    <main class="tm-content">
       <router-outlet></router-outlet>
     </main>
   `,
@@ -36,8 +31,8 @@ import { RouterModule, RouterOutlet } from '@angular/router';
         "Segoe UI Symbol";
     }
 
-    .tracker-nav {
-      background: #4f46e5;
+    .tm-nav {
+      background: #0891b2;
       color: white;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       position: sticky;
@@ -105,8 +100,6 @@ import { RouterModule, RouterOutlet } from '@angular/router';
       cursor: pointer;
       font-size: 0.9rem;
       font-weight: 500;
-      text-decoration: none;
-      display: inline-block;
       transition: all 0.3s ease;
       white-space: nowrap;
     }
@@ -115,7 +108,7 @@ import { RouterModule, RouterOutlet } from '@angular/router';
       background: rgba(255, 255, 255, 0.3);
     }
 
-    .tracker-content {
+    .tm-content {
       flex: 1;
       background: #f9fafb;
       min-height: 0;
@@ -158,4 +151,4 @@ import { RouterModule, RouterOutlet } from '@angular/router';
     }
   `]
 })
-export class TrackerLayoutComponent {}
+export class TimeManagementLayoutComponent {}

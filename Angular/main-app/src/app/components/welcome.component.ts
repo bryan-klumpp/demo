@@ -21,10 +21,21 @@ import { RouterModule } from '@angular/router';
           <div class="app-features">
             <span class="feature">🔍 Search Items</span>
             <span class="feature">📍 Location Hierarchy</span>
-            <span class="feature">💾 Backup & Restore</span>
             <span class="feature">🏷️ Categories & Tags</span>
           </div>
-          <button class="app-button primary">Launch Tracker</button>
+          <button class="app-button tracker">Launch Tracker</button>
+        </div>
+
+        <div class="app-card" routerLink="/time-management">
+          <div class="app-icon">⏰</div>
+          <h2>Time Management</h2>
+          <p>Manage your time with smart tools. Set wake-up alarms with custom audio files and build productive daily routines.</p>
+          <div class="app-features">
+            <span class="feature">🔔 Wake Alarms</span>
+            <span class="feature">🎵 Custom Audio</span>
+            <span class="feature">📅 Day Scheduling</span>
+          </div>
+          <button class="app-button time">Open Time Management</button>
         </div>
 
         <div class="app-card" routerLink="/demo">
@@ -34,10 +45,21 @@ import { RouterModule } from '@angular/router';
           <div class="app-features">
             <span class="feature">⚡ Angular Signals</span>
             <span class="feature">🎵 Audio Player</span>
-            <span class="feature">🎨 Custom Icons</span>
             <span class="feature">🖼️ iFrame Communication</span>
           </div>
-          <button class="app-button secondary">View Demo</button>
+          <button class="app-button demo">View Demo</button>
+        </div>
+
+        <div class="app-card" routerLink="/database-export">
+          <div class="app-icon">🗄️</div>
+          <h2>Database Export</h2>
+          <p>Export and import your shared database. Back up all app data including household items, locations, and alarms.</p>
+          <div class="app-features">
+            <span class="feature">📤 Export Data</span>
+            <span class="feature">📥 Import & Restore</span>
+            <span class="feature">📋 Backup History</span>
+          </div>
+          <button class="app-button export">Manage Data</button>
         </div>
       </div>
 
@@ -61,7 +83,7 @@ import { RouterModule } from '@angular/router';
     .welcome-header {
       text-align: center;
       color: white;
-      margin-bottom: 4rem;
+      margin-bottom: 3rem;
     }
 
     .welcome-header h1 {
@@ -79,9 +101,9 @@ import { RouterModule } from '@angular/router';
 
     .app-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 2rem;
-      max-width: 1000px;
+      max-width: 1100px;
       width: 100%;
     }
 
@@ -151,30 +173,23 @@ import { RouterModule } from '@angular/router';
       cursor: pointer;
       transition: all 0.3s ease;
       min-width: 160px;
-    }
-
-    .app-button.primary {
-      background: #4f46e5;
       color: white;
     }
 
-    .app-button.primary:hover {
-      background: #4338ca;
-      transform: scale(1.05);
-    }
+    .app-button.tracker  { background: #4f46e5; }
+    .app-button.tracker:hover  { background: #4338ca; transform: scale(1.05); }
 
-    .app-button.secondary {
-      background: #059669;
-      color: white;
-    }
+    .app-button.time  { background: #0891b2; }
+    .app-button.time:hover  { background: #0e7490; transform: scale(1.05); }
 
-    .app-button.secondary:hover {
-      background: #047857;
-      transform: scale(1.05);
-    }
+    .app-button.demo  { background: #059669; }
+    .app-button.demo:hover  { background: #047857; transform: scale(1.05); }
+
+    .app-button.export { background: #b45309; }
+    .app-button.export:hover { background: #92400e; transform: scale(1.05); }
 
     .welcome-footer {
-      margin-top: 4rem;
+      margin-top: 3rem;
       text-align: center;
       color: white;
       opacity: 0.8;
@@ -185,27 +200,18 @@ import { RouterModule } from '@angular/router';
       margin: 0;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      .app-grid {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+      }
+
       .welcome-container {
         padding: 1rem;
       }
 
       .welcome-header h1 {
         font-size: 2.5rem;
-      }
-
-      .app-grid {
-        grid-template-columns: 1fr;
-        max-width: 500px;
-      }
-
-      .app-card {
-        padding: 2rem;
-      }
-
-      .app-features {
-        flex-direction: column;
-        align-items: center;
       }
     }
 
