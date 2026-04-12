@@ -1,0 +1,1 @@
+mv /home/b/Downloads/* .
