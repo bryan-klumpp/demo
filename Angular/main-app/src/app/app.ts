@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AlarmService } from './services/alarm.service';
 
@@ -15,5 +15,11 @@ export class App implements OnInit {
 
   ngOnInit(): void {
     this.alarmService.start();
+  }
+
+  @HostListener('document:click')
+  @HostListener('document:keydown')
+  onUserInteraction(): void {
+    this.alarmService.unlockAudioContext();
   }
 }

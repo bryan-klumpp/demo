@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Dexie, Table } from 'dexie';
 import { Item, ItemWithLocation } from '../models/item.model';
 import { Location, LocationType, LocationHierarchy } from '../models/location.model';
+import { Alarm } from '../models/alarm.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,13 +10,19 @@ import { Location, LocationType, LocationHierarchy } from '../models/location.mo
 export class DatabaseService extends Dexie {
   items!: Table<Item, number>;
   locations!: Table<Location, number>;
+  alarms!: Table<Alarm, number>;
 
   constructor() {
     super('HouseholdTracker');
-    
+
     this.version(1).stores({
       items: '++id, name, category, locationId, *tags, createdAt, updatedAt',
       locations: '++id, name, type, parentId, createdAt, updatedAt'
+    });
+
+    // Version 2: adds alarms table for time management feature
+    this.version(2).stores({
+      alarms: '++id, time, enabled, createdAt, updatedAt'
     });
 
     this.items.hook('creating', (primKey, obj, trans) => {
@@ -34,6 +41,16 @@ export class DatabaseService extends Dexie {
     });
 
     this.locations.hook('updating', (modifications, primKey, obj, trans) => {
+      const mod = modifications as any;
+      mod.updatedAt = new Date();
+    });
+
+    this.alarms.hook('creating', (primKey, obj, trans) => {
+      obj.createdAt = new Date();
+      obj.updatedAt = new Date();
+    });
+
+    this.alarms.hook('updating', (modifications, primKey, obj, trans) => {
       const mod = modifications as any;
       mod.updatedAt = new Date();
     });
@@ -243,42 +260,69 @@ export class DatabaseService extends Dexie {
     return await this.enrichItemsWithLocation(items);
   }
 
+  // Alarm operations
+  async addAlarm(alarm: Omit<Alarm, 'id'>): Promise<number> {
+    return await this.alarms.add({ ...alarm, createdAt: new Date(), updatedAt: new Date() } as any);
+  }
+
+  async updateAlarm(id: number, changes: Partial<Alarm>): Promise<number> {
+    return await this.alarms.update(id, changes);
+  }
+
+  async deleteAlarm(id: number): Promise<void> {
+    await this.alarms.delete(id);
+  }
+
+  async getAllAlarms(): Promise<Alarm[]> {
+    return await this.alarms.orderBy('time').toArray();
+  }
+
+  async getEnabledAlarms(): Promise<Alarm[]> {
+    return await this.alarms.where('enabled').equals(1).toArray();
+  }
+
   // Backup and restore functions
   async exportData(): Promise<string> {
     const items = await this.items.toArray();
     const locations = await this.locations.toArray();
-    
+    // Export alarm settings without binary audio data (files can be large)
+    const alarms = (await this.alarms.toArray()).map(({ audioData, ...rest }) => rest);
+
     const exportData = {
-      version: 1,
+      version: 2,
       timestamp: new Date().toISOString(),
       items,
-      locations
+      locations,
+      alarms
     };
-    
+
     return JSON.stringify(exportData, null, 2);
   }
 
   async importData(jsonData: string): Promise<void> {
     try {
       const data = JSON.parse(jsonData);
-      
-      if (data.version !== 1) {
+
+      if (data.version !== 1 && data.version !== 2) {
         throw new Error('Unsupported backup version');
       }
-      
-      await this.transaction('rw', [this.items, this.locations], async () => {
+
+      await this.transaction('rw', [this.items, this.locations, this.alarms], async () => {
         await this.items.clear();
         await this.locations.clear();
-        
+        await this.alarms.clear();
+
         if (data.locations) {
           await this.locations.bulkAdd(data.locations);
         }
-        
         if (data.items) {
           await this.items.bulkAdd(data.items);
         }
+        if (data.alarms) {
+          await this.alarms.bulkAdd(data.alarms);
+        }
       });
-      
+
     } catch (error) {
       throw new Error(`Failed to import data: ${error}`);
     }

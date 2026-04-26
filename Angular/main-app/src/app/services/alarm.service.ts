@@ -9,6 +9,7 @@ export class AlarmService {
   private intervalId: ReturnType<typeof setInterval> | null = null;
   /** Tracks alarms that have already fired to prevent duplicate plays within the same minute */
   private readonly firedAlarms = new Map<string, string>(); // key -> dateString
+  private audioCtx: AudioContext | null = null;
 
   constructor(private db: DatabaseService) {}
 
@@ -25,9 +26,28 @@ export class AlarmService {
     }
   }
 
+  /** Call on any user interaction to satisfy the browser autoplay policy. */
+  unlockAudioContext(): void {
+    if (!this.audioCtx) {
+      this.audioCtx = new AudioContext();
+    } else if (this.audioCtx.state === 'suspended') {
+      this.audioCtx.resume();
+    }
+  }
+
   async testAlarm(alarm: Alarm): Promise<void> {
-    if (!alarm.audioData) return;
-    await this.playAudio(alarm.audioData);
+    if (alarm.audioData) {
+      await this.playAudio(alarm.audioData);
+    } else {
+      await this.playBeep();
+    }
+  }
+
+  private getAudioContext(): AudioContext {
+    if (!this.audioCtx) {
+      this.audioCtx = new AudioContext();
+    }
+    return this.audioCtx;
   }
 
   private async checkAlarms(): Promise<void> {
@@ -49,6 +69,8 @@ export class AlarmService {
 
         if (alarm.audioData) {
           await this.playAudio(alarm.audioData);
+        } else {
+          await this.playBeep();
         }
       }
 
@@ -62,17 +84,43 @@ export class AlarmService {
   }
 
   private async playAudio(audioData: ArrayBuffer): Promise<void> {
-    const ctx = new AudioContext();
+    const ctx = this.getAudioContext();
     try {
+      if (ctx.state === 'suspended') await ctx.resume();
       const buffer = await ctx.decodeAudioData(audioData.slice(0));
       const source = ctx.createBufferSource();
       source.buffer = buffer;
       source.connect(ctx.destination);
       source.start();
-      source.onended = () => ctx.close();
+      await new Promise<void>(resolve => { source.onended = () => resolve(); });
     } catch (error) {
-      ctx.close();
-      console.error('AlarmService: error playing audio', error);
+      console.error('AlarmService: error playing audio, falling back to beep', error);
+      await this.playBeep();
     }
+  }
+
+  /** Plays three short tones as a system-beep fallback. */
+  private async playBeep(): Promise<void> {
+    const ctx = this.getAudioContext();
+    try { if (ctx.state === 'suspended') await ctx.resume(); } catch { /* no user gesture yet */ }
+
+    const beep = (startTime: number) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.3, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+      osc.start(startTime);
+      osc.stop(startTime + 0.35);
+    };
+
+    const t = ctx.currentTime;
+    beep(t);
+    beep(t + 0.45);
+    beep(t + 0.9);
+    await new Promise<void>(resolve => setTimeout(resolve, 1400));
   }
 }
